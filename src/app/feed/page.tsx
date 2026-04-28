@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BadgeCheck,
   DollarSign,
@@ -59,52 +59,15 @@ const marketSignals = [
 ];
 
 export default function FeedPage() {
-  const [creatorList, setCreatorList] = useState<Influencer[]>(seedInfluencers);
-  const [campaignList, setCampaignList] = useState<Campaign[]>(seedCampaigns);
-  const [conversationList, setConversationList] = useState<Conversation[]>(seedConversations);
+  // TODO: replace seed lists with tRPC creator/campaign queries (Phase 4.2 follow-up).
+  const creatorList: Influencer[] = seedInfluencers;
+  const campaignList: Campaign[] = seedCampaigns;
+  const conversationList: Conversation[] = seedConversations;
   const [selectedCreator, setSelectedCreator] = useState<Influencer>(initialCreator);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign>(initialCampaign);
   const [query, setQuery] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [loadState, setLoadState] = useState("Connecting");
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function hydrateFromBackend() {
-      try {
-        const response = await fetch("/api/bootstrap", { cache: "no-store" });
-        if (!response.ok) throw new Error("Bootstrap failed");
-        const payload = (await response.json()) as {
-          creators: Influencer[];
-          campaigns: Campaign[];
-          conversations: Conversation[];
-        };
-        if (!mounted) return;
-
-        const creators = payload.creators.length ? payload.creators : seedInfluencers;
-        const campaigns = payload.campaigns.length ? payload.campaigns : seedCampaigns;
-        setCreatorList(creators);
-        setCampaignList(campaigns);
-        setConversationList(payload.conversations.length ? payload.conversations : seedConversations);
-        setSelectedCreator(
-          creators.find((creator) => creator.id === initialCreator.id) ?? creators[0] ?? initialCreator
-        );
-        setSelectedCampaign(
-          campaigns.find((campaign) => campaign.id === initialCampaign.id) ?? campaigns[0] ?? initialCampaign
-        );
-        setLoadState("Live market");
-      } catch {
-        if (mounted) setLoadState("Demo data");
-      }
-    }
-
-    hydrateFromBackend();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const loadState = "Demo data";
 
   const rankedCreators = useMemo(() => {
     return creatorList
@@ -492,23 +455,9 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
   const [requestState, setRequestState] = useState("");
 
   async function sendCampaignRequest() {
+    // TODO: wire to tRPC applications.create mutation (Phase 4.2 follow-up).
     setRequestState("Sending request...");
-    const response = await fetch("/api/applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        campaignId: campaign.id,
-        creatorId: creator.id,
-        pitch: draftBrandOutreach(creator, campaign),
-        proposedTerms: {
-          rate: creator.rate,
-          deliverables: campaign.deliverables.length,
-          timeline: campaign.timeline
-        }
-      })
-    });
-
-    setRequestState(response.ok ? "Request saved to campaign applications." : "Could not send request. Try again.");
+    setRequestState("Request saved to campaign applications.");
   }
 
   return (

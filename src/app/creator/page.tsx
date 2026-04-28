@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { BadgeCheck, Bell, BriefcaseBusiness, DollarSign, Play, Plus, Sparkles, TrendingUp, Users } from "lucide-react";
 import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -45,29 +45,9 @@ const notifications = [
 ];
 
 export default function CreatorPortalPage() {
-  const [creator, setCreator] = useState<Influencer>(defaultCreator);
-  const [campaigns, setCampaigns] = useState<Campaign[]>(seedCampaigns);
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function hydrate() {
-      const response = await fetch("/api/bootstrap", { cache: "no-store" }).catch(() => null);
-      if (!response?.ok) return;
-      const payload = (await response.json()) as { creators: Influencer[]; campaigns: Campaign[] };
-      if (!mounted) return;
-      setCreator(
-        payload.creators.find((item) => item.id === defaultCreator.id) ?? payload.creators[0] ?? defaultCreator
-      );
-      setCampaigns(payload.campaigns.length ? payload.campaigns : seedCampaigns);
-    }
-
-    hydrate();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  // TODO: replace seed data with tRPC creator.byHandle + campaign.list (Phase 4.2 follow-up).
+  const creator: Influencer = defaultCreator;
+  const campaigns: Campaign[] = seedCampaigns;
 
   const rate = suggestRate(creator);
   const activeOpportunities = useMemo(

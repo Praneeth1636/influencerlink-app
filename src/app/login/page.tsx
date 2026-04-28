@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,56 +15,20 @@ export default function LoginPage() {
   const [name, setName] = useState("");
   const [accountType, setAccountType] = useState<"creator" | "brand">("creator");
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
+  const [isSubmitting] = useState(false);
   const isSignIn = mode === "signin";
 
-  function portalFor(user?: { accountType?: string }) {
-    return user?.accountType === "brand" || user?.accountType === "agency" || user?.accountType === "manager"
-      ? "/feed"
-      : "/creator";
-  }
-
-  async function submitAuth(event: React.FormEvent<HTMLFormElement>) {
+  // TODO: replace this prototype form with Clerk's <SignIn /> component.
+  // The protected-route middleware redirects unauthenticated users to Clerk's
+  // hosted sign-in already; this page survives only because it is still linked
+  // from a few public marketing pages.
+  function submitAuth(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
-    setIsSubmitting(true);
-
-    const response = await fetch(isSignIn ? "/api/auth/signin" : "/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(isSignIn ? { email } : { email, name, accountType })
-    });
-
-    setIsSubmitting(false);
-
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-      setError(payload?.error ?? "Something went wrong. Please try again.");
-      return;
-    }
-
-    const payload = (await response.json()) as { user?: { accountType?: string } };
-    router.push(portalFor(payload.user));
-    router.refresh();
+    setError("Authentication is migrating to Clerk. Use Clerk's hosted sign-in.");
   }
 
-  async function continueWithGoogle() {
-    setError("");
-    setIsSubmitting(true);
-    const response = await fetch("/api/auth/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "demo@influencerlink.ai" })
-    });
-    setIsSubmitting(false);
-    if (!response.ok) {
-      setError("Unable to start demo session.");
-      return;
-    }
-    const payload = (await response.json()) as { user?: { accountType?: string } };
-    router.push(portalFor(payload.user));
-    router.refresh();
+  function continueWithGoogle() {
+    setError("Authentication is migrating to Clerk. Use Clerk's hosted sign-in.");
   }
 
   return (

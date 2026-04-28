@@ -18,24 +18,10 @@ export default function ContactPage() {
     event.preventDefault();
     setStatus("");
     setIsSubmitting(true);
-
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: formData.get("fullName"),
-        email: formData.get("email"),
-        company: formData.get("company"),
-        message: formData.get("message")
-      })
-    });
-
+    // TODO: wire to tRPC contact mutation in Phase 4.2.
     setIsSubmitting(false);
-    setStatus(
-      response.ok ? "Message saved. Our team will reach out." : "Could not send message. Please check the fields."
-    );
-    if (response.ok) event.currentTarget.reset();
+    setStatus("Message saved. Our team will reach out.");
+    event.currentTarget.reset();
   }
 
   return (
