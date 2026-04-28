@@ -10,3 +10,9 @@
 - `@testing-library/user-event`: realistic keyboard and pointer interactions in unit tests.
 - `msw`: request mocking for networked client/server boundaries without hardcoded fetch shims.
 - `@playwright/test`: critical path browser smoke tests for the Next.js app.
+
+## Phase 1.5 observability
+
+- `@sentry/nextjs`: official Sentry SDK for Next.js client, server, and edge error capture.
+- `posthog-js`: product analytics client with React provider support for page views and future events.
+- `pino`: structured JSON server logging with low overhead and redaction support.
