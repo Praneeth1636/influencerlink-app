@@ -1,6 +1,7 @@
 import { relations, type InferInsertModel, type InferSelectModel } from "drizzle-orm";
 import {
   boolean,
+  index,
   integer,
   jsonb,
   numeric,
@@ -143,27 +144,41 @@ export const platformMetrics = pgTable("platform_metrics", {
   audienceGeoJson: jsonb("audience_geo_json").$type<Record<string, number>>().notNull().default({})
 });
 
-export const creatorAggregates = pgTable("creator_aggregates", {
-  creatorId: uuid("creator_id")
-    .primaryKey()
-    .references(() => creators.id, { onDelete: "cascade" }),
-  totalReach: integer("total_reach").notNull().default(0),
-  weightedEngagement: numeric("weighted_engagement", { precision: 6, scale: 3 }).notNull().default("0"),
-  primaryNiche: text("primary_niche"),
-  computedAt: timestamp("computed_at", { withTimezone: true }).notNull().defaultNow()
-});
+export const creatorAggregates = pgTable(
+  "creator_aggregates",
+  {
+    creatorId: uuid("creator_id")
+      .primaryKey()
+      .references(() => creators.id, { onDelete: "cascade" }),
+    totalReach: integer("total_reach").notNull().default(0),
+    weightedEngagement: numeric("weighted_engagement", { precision: 6, scale: 3 }).notNull().default("0"),
+    primaryNiche: text("primary_niche"),
+    computedAt: timestamp("computed_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    index("creator_aggregates_search_idx").on(
+      table.primaryNiche,
+      table.totalReach.desc(),
+      table.weightedEngagement.desc()
+    )
+  ]
+);
 
-export const posts = pgTable("posts", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  authorType: postAuthorTypeEnum("author_type").notNull(),
-  authorId: uuid("author_id").notNull(),
-  body: text("body").notNull(),
-  mediaJson: jsonb("media_json").$type<Array<Record<string, unknown>>>().notNull().default([]),
-  type: postTypeEnum("type").notNull().default("update"),
-  visibility: postVisibilityEnum("visibility").notNull().default("public"),
-  ...timestamps,
-  ...updatedTimestamp
-});
+export const posts = pgTable(
+  "posts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    authorType: postAuthorTypeEnum("author_type").notNull(),
+    authorId: uuid("author_id").notNull(),
+    body: text("body").notNull(),
+    mediaJson: jsonb("media_json").$type<Array<Record<string, unknown>>>().notNull().default([]),
+    type: postTypeEnum("type").notNull().default("update"),
+    visibility: postVisibilityEnum("visibility").notNull().default("public"),
+    ...timestamps,
+    ...updatedTimestamp
+  },
+  (table) => [index("posts_author_created_at_idx").on(table.authorType, table.authorId, table.createdAt.desc())]
+);
 
 export const postLikes = pgTable(
   "post_likes",
@@ -223,15 +238,19 @@ export const postHashtags = pgTable(
   (table) => [primaryKey({ columns: [table.postId, table.hashtagId] })]
 );
 
-export const follows = pgTable("follows", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  followerId: uuid("follower_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  followedType: followedTypeEnum("followed_type").notNull(),
-  followedId: uuid("followed_id").notNull(),
-  ...timestamps
-});
+export const follows = pgTable(
+  "follows",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    followerId: uuid("follower_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    followedType: followedTypeEnum("followed_type").notNull(),
+    followedId: uuid("followed_id").notNull(),
+    ...timestamps
+  },
+  (table) => [index("follows_follower_created_at_idx").on(table.followerId, table.createdAt.desc())]
+);
 
 export const endorsements = pgTable("endorsements", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -325,21 +344,25 @@ export const threadParticipants = pgTable(
   (table) => [primaryKey({ columns: [table.threadId, table.userId] })]
 );
 
-export const messages = pgTable("messages", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  threadId: uuid("thread_id")
-    .notNull()
-    .references(() => messageThreads.id, { onDelete: "cascade" }),
-  senderId: uuid("sender_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  body: text("body").notNull(),
-  attachments: jsonb("attachments").$type<Array<Record<string, unknown>>>().notNull().default([]),
-  replyToId: uuid("reply_to_id"),
-  ...timestamps,
-  editedAt: timestamp("edited_at", { withTimezone: true }),
-  deletedAt: timestamp("deleted_at", { withTimezone: true })
-});
+export const messages = pgTable(
+  "messages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    threadId: uuid("thread_id")
+      .notNull()
+      .references(() => messageThreads.id, { onDelete: "cascade" }),
+    senderId: uuid("sender_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    body: text("body").notNull(),
+    attachments: jsonb("attachments").$type<Array<Record<string, unknown>>>().notNull().default([]),
+    replyToId: uuid("reply_to_id"),
+    ...timestamps,
+    editedAt: timestamp("edited_at", { withTimezone: true }),
+    deletedAt: timestamp("deleted_at", { withTimezone: true })
+  },
+  (table) => [index("messages_thread_created_at_idx").on(table.threadId, table.createdAt.desc())]
+);
 
 export const notifications = pgTable("notifications", {
   id: uuid("id").primaryKey().defaultRandom(),

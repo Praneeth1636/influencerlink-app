@@ -8,6 +8,13 @@
       "when": 1777401245486,
       "tag": "0000_clever_mongoose",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777403192826,
+      "tag": "0001_breezy_strong_guy",
+      "breakpoints": true
     }
   ]
 }
