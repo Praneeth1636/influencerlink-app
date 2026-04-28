@@ -1,7 +1,6 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
-import nextPlugin from "@next/eslint-plugin-next";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,16 +23,7 @@ const eslintConfig = [
       "next-env.d.ts"
     ]
   },
-  {
-    plugins: {
-      "@next/next": nextPlugin
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules
-    }
-  },
-  ...compat.extends("next/typescript", "plugin:tailwindcss/recommended"),
+  ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:tailwindcss/recommended"),
   {
     rules: {
       "@typescript-eslint/no-explicit-any": [
