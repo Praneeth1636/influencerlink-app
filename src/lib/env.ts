@@ -31,7 +31,10 @@ export const env = createEnv({
     INNGEST_SIGNING_KEY: requiredString,
     RESEND_API_KEY: requiredString,
     SENTRY_DSN: requiredUrl,
-    ENCRYPTION_KEY: requiredString,
+    ENCRYPTION_KEY: z
+      .string()
+      .length(64, "ENCRYPTION_KEY must be 64 hex chars. Generate: openssl rand -hex 32")
+      .regex(/^[0-9a-f]+$/i, "ENCRYPTION_KEY must be hex"),
     INFLUENCERLINK_DB_PATH: z.string().min(1).optional(),
     NODE_ENV: z.enum(["development", "test", "production"]).default("development")
   },
