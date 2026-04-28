@@ -1,22 +1,9 @@
 "use client";
 
-import posthog from "posthog-js";
 import { PostHogProvider as Provider } from "posthog-js/react";
 import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-
-if (typeof window !== "undefined" && posthogKey) {
-  posthog.init(posthogKey, {
-    api_host: "https://us.i.posthog.com",
-    capture_pageview: false,
-    capture_pageleave: true,
-    loaded: (client) => {
-      if (process.env.NODE_ENV === "development") client.debug(false);
-    }
-  });
-}
+import { posthog, posthogKey } from "@/lib/posthog";
 
 function PageViewTracker() {
   const pathname = usePathname();
