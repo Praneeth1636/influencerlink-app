@@ -10,7 +10,8 @@ import {
   primaryKey,
   text,
   timestamp,
-  uuid
+  uuid,
+  vector
 } from "drizzle-orm/pg-core";
 
 const timestamps = {
@@ -457,6 +458,21 @@ export const reports = pgTable("reports", {
   ...updatedTimestamp
 });
 
+export const embeddingEntityEnum = pgEnum("embedding_entity", ["creator", "campaign"]);
+
+export const embeddings = pgTable(
+  "embeddings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    entityType: embeddingEntityEnum("entity_type").notNull(),
+    entityId: uuid("entity_id").notNull(),
+    model: text("model").notNull(),
+    embedding: vector("embedding", { dimensions: 1536 }).notNull(),
+    ...timestamps
+  },
+  (table) => [index("embeddings_entity_idx").on(table.entityType, table.entityId)]
+);
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   creator: one(creators),
   brandMemberships: many(brandMembers),
@@ -502,3 +518,5 @@ export type Job = InferSelectModel<typeof jobs>;
 export type NewJob = InferInsertModel<typeof jobs>;
 export type Post = InferSelectModel<typeof posts>;
 export type NewPost = InferInsertModel<typeof posts>;
+export type Embedding = InferSelectModel<typeof embeddings>;
+export type NewEmbedding = InferInsertModel<typeof embeddings>;

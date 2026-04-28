@@ -15,6 +15,13 @@
       "when": 1777403192826,
       "tag": "0001_breezy_strong_guy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777403689962,
+      "tag": "0002_pale_zuras",
+      "breakpoints": true
     }
   ]
 }
