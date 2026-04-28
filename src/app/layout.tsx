@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
+import { TRPCProvider } from "@/lib/trpc/client";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <PostHogProvider>
-          <ClerkProvider>{children}</ClerkProvider>
-        </PostHogProvider>
+        <ClerkProvider>
+          <TRPCProvider>
+            <PostHogProvider>{children}</PostHogProvider>
+          </TRPCProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
