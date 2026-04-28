@@ -1,19 +1,77 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
-import { campaigns, conversations, influencers, type Campaign, type Influencer } from "@/data/marketplace";
+import {
+  campaigns,
+  conversations,
+  influencers,
+  type Campaign,
+  type Conversation,
+  type Influencer
+} from "@/data/marketplace";
 
 type SqlValue = string | number | null;
+type SqliteStatement = {
+  all: (...params: SqlValue[]) => unknown[];
+  get: (...params: SqlValue[]) => unknown;
+  run: (...params: SqlValue[]) => unknown;
+};
+type SqliteDatabase = {
+  exec: (sql: string) => void;
+  prepare: (sql: string) => SqliteStatement;
+};
+type DatabaseSyncConstructor = new (filename: string) => SqliteDatabase;
+type AppUser = ReturnType<typeof userFromRow>;
+type MemorySession = {
+  tokenHash: string;
+  userId: string;
+  expiresAt: string;
+};
+type MemoryState = {
+  creators: Influencer[];
+  campaigns: Campaign[];
+  conversations: Conversation[];
+  users: AppUser[];
+  sessions: MemorySession[];
+  applications: Array<{ id: string; campaignId: string; creatorId: string }>;
+  contactMessages: Array<{ id: string }>;
+};
 
 const dataDir = path.join(process.cwd(), "data");
 const dbPath = process.env.INFLUENCERLINK_DB_PATH ?? path.join(dataDir, "influencerlink.sqlite");
+const require = createRequire(import.meta.url);
+let databaseSyncConstructor: DatabaseSyncConstructor | null | undefined;
 
 type DbGlobal = typeof globalThis & {
-  influencerLinkDb?: DatabaseSync;
+  influencerLinkDb?: SqliteDatabase;
+  influencerLinkMemoryDb?: MemoryState;
 };
 
+function loadDatabaseSync() {
+  if (databaseSyncConstructor !== undefined) return databaseSyncConstructor;
+
+  try {
+    databaseSyncConstructor = (require("node:sqlite") as { DatabaseSync: DatabaseSyncConstructor }).DatabaseSync;
+  } catch {
+    databaseSyncConstructor = null;
+  }
+
+  return databaseSyncConstructor;
+}
+
+function shouldUseMemoryDb() {
+  return process.env.CI === "true" || process.env.INFLUENCERLINK_DB_DRIVER === "memory" || !loadDatabaseSync();
+}
+
 function getConnection() {
+  const DatabaseSync = loadDatabaseSync();
+  if (!DatabaseSync) {
+    throw new Error(
+      "node:sqlite is unavailable. Set INFLUENCERLINK_DB_DRIVER=memory or run with a Node version that includes node:sqlite."
+    );
+  }
+
   if (!(globalThis as DbGlobal).influencerLinkDb) {
     fs.mkdirSync(dataDir, { recursive: true });
     const db = new DatabaseSync(dbPath);
@@ -26,7 +84,23 @@ function getConnection() {
   return (globalThis as DbGlobal).influencerLinkDb!;
 }
 
-function initDatabase(db: DatabaseSync) {
+function getMemoryState() {
+  if (!(globalThis as DbGlobal).influencerLinkMemoryDb) {
+    (globalThis as DbGlobal).influencerLinkMemoryDb = {
+      creators: influencers.map((creator) => ({ ...creator })),
+      campaigns: campaigns.map((campaign) => ({ ...campaign })),
+      conversations: conversations.map((conversation) => ({ ...conversation })),
+      users: [],
+      sessions: [],
+      applications: [],
+      contactMessages: []
+    };
+  }
+
+  return (globalThis as DbGlobal).influencerLinkMemoryDb!;
+}
+
+function initDatabase(db: SqliteDatabase) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -157,7 +231,7 @@ function initDatabase(db: DatabaseSync) {
   if (seeded.count === 0) seedDatabase(db);
 }
 
-function seedDatabase(db: DatabaseSync) {
+function seedDatabase(db: SqliteDatabase) {
   const now = new Date().toISOString();
 
   const insertCreator = db.prepare(`
@@ -310,10 +384,26 @@ function campaignFromRow(row: Record<string, unknown>): Campaign {
 
 export const db = {
   raw() {
+    if (shouldUseMemoryDb()) return getMemoryState();
     return getConnection();
   },
 
   listCreators(filters?: { q?: string; niche?: string; maxRate?: number }) {
+    if (shouldUseMemoryDb()) {
+      return getMemoryState()
+        .creators.filter((creator) => {
+          const matchesQuery = filters?.q
+            ? `${creator.name} ${creator.handle} ${creator.niche} ${creator.city} ${creator.audience}`
+                .toLowerCase()
+                .includes(filters.q.toLowerCase())
+            : true;
+          const matchesNiche = filters?.niche && filters.niche !== "All" ? creator.niche === filters.niche : true;
+          const matchesRate = filters?.maxRate ? creator.rate <= filters.maxRate : true;
+          return matchesQuery && matchesNiche && matchesRate;
+        })
+        .sort((a, b) => Number(b.verified) - Number(a.verified) || b.totalReach - a.totalReach);
+    }
+
     const clauses: string[] = [];
     const params: SqlValue[] = [];
 
@@ -338,21 +428,33 @@ export const db = {
   },
 
   getCreator(idValue: string) {
+    if (shouldUseMemoryDb()) return getMemoryState().creators.find((creator) => creator.id === idValue) ?? null;
+
     const row = getConnection().prepare("SELECT * FROM creator_profiles WHERE id = ?").get(idValue);
     return row ? creatorFromRow(row as Record<string, unknown>) : null;
   },
 
   listCampaigns() {
+    if (shouldUseMemoryDb()) return getMemoryState().campaigns;
+
     const rows = getConnection().prepare("SELECT * FROM campaigns ORDER BY created_at DESC").all();
     return rows.map((row) => campaignFromRow(row as Record<string, unknown>));
   },
 
   getCampaign(idValue: string) {
+    if (shouldUseMemoryDb()) return getMemoryState().campaigns.find((campaign) => campaign.id === idValue) ?? null;
+
     const row = getConnection().prepare("SELECT * FROM campaigns WHERE id = ?").get(idValue);
     return row ? campaignFromRow(row as Record<string, unknown>) : null;
   },
 
   listConversations(creatorId?: string) {
+    if (shouldUseMemoryDb()) {
+      return getMemoryState().conversations.filter((conversation) =>
+        creatorId ? conversation.influencerId === creatorId : true
+      );
+    }
+
     const rows = creatorId
       ? getConnection()
           .prepare("SELECT * FROM conversations WHERE influencer_id = ? ORDER BY updated_at DESC")
@@ -372,6 +474,21 @@ export const db = {
   createUser(input: { email: string; name: string; accountType: "creator" | "brand" | "agency" | "manager" }) {
     const userId = id("user");
     const now = new Date().toISOString();
+
+    if (shouldUseMemoryDb()) {
+      const user = {
+        id: userId,
+        email: input.email.toLowerCase(),
+        name: input.name,
+        accountType: input.accountType,
+        verificationStatus: "verified",
+        subscriptionTier: "free",
+        createdAt: now
+      };
+      getMemoryState().users.push(user);
+      return user;
+    }
+
     getConnection()
       .prepare(
         "INSERT INTO users (id, email, name, account_type, verification_status, subscription_tier, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
@@ -381,11 +498,15 @@ export const db = {
   },
 
   getUserByEmail(email: string) {
+    if (shouldUseMemoryDb()) return getMemoryState().users.find((user) => user.email === email.toLowerCase()) ?? null;
+
     const row = getConnection().prepare("SELECT * FROM users WHERE email = ?").get(email.toLowerCase());
     return row ? userFromRow(row as Record<string, unknown>) : null;
   },
 
   getUserById(idValue: string) {
+    if (shouldUseMemoryDb()) return getMemoryState().users.find((user) => user.id === idValue) ?? null;
+
     const row = getConnection().prepare("SELECT * FROM users WHERE id = ?").get(idValue);
     return row ? userFromRow(row as Record<string, unknown>) : null;
   },
@@ -395,6 +516,12 @@ export const db = {
     const tokenHash = hashToken(token);
     const now = new Date();
     const expires = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 14);
+
+    if (shouldUseMemoryDb()) {
+      getMemoryState().sessions.push({ tokenHash, userId, expiresAt: expires.toISOString() });
+      return { token, expiresAt: expires };
+    }
+
     getConnection()
       .prepare("INSERT INTO sessions (token_hash, user_id, expires_at, created_at) VALUES (?, ?, ?, ?)")
       .run(tokenHash, userId, expires.toISOString(), now.toISOString());
@@ -402,6 +529,15 @@ export const db = {
   },
 
   getUserBySession(token: string) {
+    if (shouldUseMemoryDb()) {
+      const tokenHash = hashToken(token);
+      const now = new Date().toISOString();
+      const session = getMemoryState().sessions.find(
+        (memorySession) => memorySession.tokenHash === tokenHash && memorySession.expiresAt > now
+      );
+      return session ? this.getUserById(session.userId) : null;
+    }
+
     const row = getConnection()
       .prepare(
         "SELECT users.* FROM sessions JOIN users ON users.id = sessions.user_id WHERE sessions.token_hash = ? AND sessions.expires_at > ?"
@@ -411,11 +547,24 @@ export const db = {
   },
 
   deleteSession(token: string) {
+    if (shouldUseMemoryDb()) {
+      const tokenHash = hashToken(token);
+      const state = getMemoryState();
+      state.sessions = state.sessions.filter((session) => session.tokenHash !== tokenHash);
+      return;
+    }
+
     getConnection().prepare("DELETE FROM sessions WHERE token_hash = ?").run(hashToken(token));
   },
 
   createContactMessage(input: { fullName: string; email: string; company?: string; message: string }) {
     const messageId = id("contact");
+
+    if (shouldUseMemoryDb()) {
+      getMemoryState().contactMessages.push({ id: messageId });
+      return { id: messageId, status: "new" };
+    }
+
     getConnection()
       .prepare(
         "INSERT INTO contact_messages (id, full_name, email, company, message, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
@@ -439,6 +588,16 @@ export const db = {
     proposedTerms?: Record<string, unknown>;
   }) {
     const applicationId = id("app");
+
+    if (shouldUseMemoryDb()) {
+      getMemoryState().applications.push({
+        id: applicationId,
+        campaignId: input.campaignId,
+        creatorId: input.creatorId
+      });
+      return { id: applicationId, status: "pending" };
+    }
+
     getConnection()
       .prepare(
         "INSERT INTO applications (id, campaign_id, creator_id, pitch, proposed_terms_json, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
@@ -456,6 +615,16 @@ export const db = {
   },
 
   metrics() {
+    if (shouldUseMemoryDb()) {
+      const state = getMemoryState();
+      return {
+        creatorCount: state.creators.length,
+        campaignCount: state.campaigns.length,
+        applicationCount: state.applications.length,
+        contactCount: state.contactMessages.length
+      };
+    }
+
     const conn = getConnection();
     const creatorCount = (conn.prepare("SELECT COUNT(*) AS count FROM creator_profiles").get() as { count: number })
       .count;
