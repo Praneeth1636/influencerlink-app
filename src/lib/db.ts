@@ -331,7 +331,9 @@ export const db = {
     }
 
     const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-    const rows = getConnection().prepare(`SELECT * FROM creator_profiles ${where} ORDER BY verified DESC, total_reach DESC`).all(...params);
+    const rows = getConnection()
+      .prepare(`SELECT * FROM creator_profiles ${where} ORDER BY verified DESC, total_reach DESC`)
+      .all(...params);
     return rows.map((row) => creatorFromRow(row as Record<string, unknown>));
   },
 
@@ -352,7 +354,9 @@ export const db = {
 
   listConversations(creatorId?: string) {
     const rows = creatorId
-      ? getConnection().prepare("SELECT * FROM conversations WHERE influencer_id = ? ORDER BY updated_at DESC").all(creatorId)
+      ? getConnection()
+          .prepare("SELECT * FROM conversations WHERE influencer_id = ? ORDER BY updated_at DESC")
+          .all(creatorId)
       : getConnection().prepare("SELECT * FROM conversations ORDER BY updated_at DESC").all();
     return rows.map((row) => ({
       id: String((row as Record<string, unknown>).id),
@@ -416,11 +420,24 @@ export const db = {
       .prepare(
         "INSERT INTO contact_messages (id, full_name, email, company, message, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
       )
-      .run(messageId, input.fullName, input.email.toLowerCase(), input.company ?? null, input.message, "new", new Date().toISOString());
+      .run(
+        messageId,
+        input.fullName,
+        input.email.toLowerCase(),
+        input.company ?? null,
+        input.message,
+        "new",
+        new Date().toISOString()
+      );
     return { id: messageId, status: "new" };
   },
 
-  createApplication(input: { campaignId: string; creatorId: string; pitch: string; proposedTerms?: Record<string, unknown> }) {
+  createApplication(input: {
+    campaignId: string;
+    creatorId: string;
+    pitch: string;
+    proposedTerms?: Record<string, unknown>;
+  }) {
     const applicationId = id("app");
     getConnection()
       .prepare(
@@ -440,10 +457,13 @@ export const db = {
 
   metrics() {
     const conn = getConnection();
-    const creatorCount = (conn.prepare("SELECT COUNT(*) AS count FROM creator_profiles").get() as { count: number }).count;
+    const creatorCount = (conn.prepare("SELECT COUNT(*) AS count FROM creator_profiles").get() as { count: number })
+      .count;
     const campaignCount = (conn.prepare("SELECT COUNT(*) AS count FROM campaigns").get() as { count: number }).count;
-    const applicationCount = (conn.prepare("SELECT COUNT(*) AS count FROM applications").get() as { count: number }).count;
-    const contactCount = (conn.prepare("SELECT COUNT(*) AS count FROM contact_messages").get() as { count: number }).count;
+    const applicationCount = (conn.prepare("SELECT COUNT(*) AS count FROM applications").get() as { count: number })
+      .count;
+    const contactCount = (conn.prepare("SELECT COUNT(*) AS count FROM contact_messages").get() as { count: number })
+      .count;
     return { creatorCount, campaignCount, applicationCount, contactCount };
   }
 };

@@ -44,7 +44,7 @@ export const MaskContainer = ({
       transition={{ backgroundColor: { duration: 0.3 } }}
     >
       <motion.div
-        className="absolute flex h-full w-full items-center justify-center bg-black text-6xl [mask-image:url(/mask.svg)] [mask-repeat:no-repeat] [mask-size:40px]"
+        className="absolute flex h-full w-full items-center justify-center bg-black [mask-image:url(/mask.svg)] [mask-size:40px] [mask-repeat:no-repeat] text-6xl"
         animate={{
           maskPosition: `${mousePosition.x - maskSize / 2}px ${mousePosition.y - maskSize / 2}px`,
           maskSize: `${maskSize}px`

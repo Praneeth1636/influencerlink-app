@@ -2,24 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import {
-  BadgeCheck,
-  Bell,
-  BriefcaseBusiness,
-  CalendarDays,
-  DollarSign,
-  Eye,
-  MessageCircle,
-  Play,
-  Plus,
-  Sparkles,
-  TrendingUp,
-  Users
-} from "lucide-react";
+import { BadgeCheck, Bell, BriefcaseBusiness, DollarSign, Play, Plus, Sparkles, TrendingUp, Users } from "lucide-react";
 import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { campaigns as seedCampaigns, influencers as seedInfluencers, type Campaign, type Influencer } from "@/data/marketplace";
+import {
+  campaigns as seedCampaigns,
+  influencers as seedInfluencers,
+  type Campaign,
+  type Influencer
+} from "@/data/marketplace";
 import { buildCreatorPitch, formatNumber, suggestRate } from "@/lib/agents";
 
 const defaultCreator = seedInfluencers.find((creator) => creator.id === "sara") ?? seedInfluencers[0];
@@ -64,7 +56,9 @@ export default function CreatorPortalPage() {
       if (!response?.ok) return;
       const payload = (await response.json()) as { creators: Influencer[]; campaigns: Campaign[] };
       if (!mounted) return;
-      setCreator(payload.creators.find((item) => item.id === defaultCreator.id) ?? payload.creators[0] ?? defaultCreator);
+      setCreator(
+        payload.creators.find((item) => item.id === defaultCreator.id) ?? payload.creators[0] ?? defaultCreator
+      );
       setCampaigns(payload.campaigns.length ? payload.campaigns : seedCampaigns);
     }
 
@@ -76,7 +70,10 @@ export default function CreatorPortalPage() {
   }, []);
 
   const rate = suggestRate(creator);
-  const activeOpportunities = useMemo(() => campaigns.filter((campaign) => campaign.niche === creator.niche || campaign.status !== "Draft"), [campaigns, creator.niche]);
+  const activeOpportunities = useMemo(
+    () => campaigns.filter((campaign) => campaign.niche === creator.niche || campaign.status !== "Draft"),
+    [campaigns, creator.niche]
+  );
 
   return (
     <main className="min-h-screen bg-[#080809] text-white">
@@ -84,23 +81,36 @@ export default function CreatorPortalPage() {
 
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1380px] items-center gap-4 px-5 py-4">
-          <Link className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10" href="/creator" aria-label="InfluencerLink creator portal">
+          <Link
+            className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
+            href="/creator"
+            aria-label="InfluencerLink creator portal"
+          >
             <span />
             <span />
             <span />
           </Link>
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-white/38">Creator Portal</p>
+            <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">Creator Portal</p>
             <p className="hidden text-sm text-white/60 sm:block">Profile, proof, posts, and deals</p>
           </div>
           <nav className="ml-auto hidden items-center gap-2 md:flex">
-            <Link className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white" href="/creator">
+            <Link
+              className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white"
+              href="/creator"
+            >
               Profile
             </Link>
-            <a className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white" href="#posts">
+            <a
+              className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white"
+              href="#posts"
+            >
               Posts
             </a>
-            <a className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white" href="#opportunities">
+            <a
+              className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 hover:bg-white/[0.06] hover:text-white"
+              href="#opportunities"
+            >
               Opportunities
             </a>
             <Link className="rounded-xl px-3 py-2 text-sm font-bold text-[#ffb49c] hover:bg-[#D85A30]/10" href="/feed">
@@ -123,7 +133,9 @@ export default function CreatorPortalPage() {
                       <h1 className="text-4xl font-black tracking-[-0.05em]">{creator.name}</h1>
                       <BadgeCheck className="h-6 w-6 text-[#ffb49c]" />
                     </div>
-                    <p className="mt-2 text-sm text-white/50">{creator.niche} creator · {creator.city} · {creator.audience}</p>
+                    <p className="mt-2 text-sm text-white/50">
+                      {creator.niche} creator · {creator.city} · {creator.audience}
+                    </p>
                   </div>
                 </div>
                 <Button className="h-11 rounded-xl bg-[#D85A30] px-5 font-black text-white hover:bg-[#c54f29]">
@@ -149,7 +161,9 @@ export default function CreatorPortalPage() {
               {creatorPosts.map((post) => (
                 <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5" key={post.title}>
                   <div className="flex items-center justify-between">
-                    <Badge className="rounded-full bg-[#D85A30]/10 text-[#ffb49c] hover:bg-[#D85A30]/10">{post.type}</Badge>
+                    <Badge className="rounded-full bg-[#D85A30]/10 text-[#ffb49c] hover:bg-[#D85A30]/10">
+                      {post.type}
+                    </Badge>
                     <Play className="h-4 w-4 text-white/34" />
                   </div>
                   <h2 className="mt-5 text-xl font-black tracking-[-0.04em]">{post.title}</h2>
@@ -164,15 +178,22 @@ export default function CreatorPortalPage() {
             <SectionHeader eyebrow="Matched opportunities" title="Campaigns that fit your audience and rates." />
             <div className="grid gap-3">
               {activeOpportunities.map((campaign) => (
-                <article className="grid gap-4 rounded-2xl border border-white/10 bg-white/[0.045] p-5 md:grid-cols-[minmax(0,1fr)_auto]" key={campaign.id}>
+                <article
+                  className="grid gap-4 rounded-2xl border border-white/10 bg-white/[0.045] p-5 md:grid-cols-[minmax(0,1fr)_auto]"
+                  key={campaign.id}
+                >
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-white/35">{campaign.brand}</p>
+                    <p className="text-[11px] font-black tracking-[0.18em] text-white/35 uppercase">{campaign.brand}</p>
                     <h3 className="mt-2 text-xl font-black tracking-[-0.04em]">{campaign.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-white/55">{campaign.goal}</p>
                   </div>
                   <div className="grid gap-2 md:min-w-48">
-                    <span className="rounded-xl border border-[#D85A30]/20 bg-[#D85A30]/10 px-3 py-2 text-sm font-black text-[#ffb49c]">{campaign.budgetRange}</span>
-                    <span className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/52">{campaign.timeline}</span>
+                    <span className="rounded-xl border border-[#D85A30]/20 bg-[#D85A30]/10 px-3 py-2 text-sm font-black text-[#ffb49c]">
+                      {campaign.budgetRange}
+                    </span>
+                    <span className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/52">
+                      {campaign.timeline}
+                    </span>
                   </div>
                 </article>
               ))}
@@ -188,7 +209,10 @@ export default function CreatorPortalPage() {
             </div>
             <div className="mt-5 grid gap-3">
               {notifications.map((notification) => (
-                <p className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm leading-5 text-white/58" key={notification}>
+                <p
+                  className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm leading-5 text-white/58"
+                  key={notification}
+                >
                   {notification}
                 </p>
               ))}
@@ -229,11 +253,23 @@ export default function CreatorPortalPage() {
   );
 }
 
-function CreatorMetric({ icon: Icon, label, value, highlighted = false }: { icon: typeof Users; label: string; value: string; highlighted?: boolean }) {
+function CreatorMetric({
+  icon: Icon,
+  label,
+  value,
+  highlighted = false
+}: {
+  icon: typeof Users;
+  label: string;
+  value: string;
+  highlighted?: boolean;
+}) {
   return (
-    <div className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-white/[0.04]"}`}>
+    <div
+      className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-white/[0.04]"}`}
+    >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-black uppercase tracking-[0.16em] text-white/35">{label}</span>
+        <span className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">{label}</span>
         <Icon className={`h-4 w-4 ${highlighted ? "text-[#ffb49c]" : "text-white/34"}`} />
       </div>
       <p className="mt-3 text-2xl font-black tracking-[-0.05em]">{value}</p>
@@ -243,7 +279,9 @@ function CreatorMetric({ icon: Icon, label, value, highlighted = false }: { icon
 
 function CreatorAvatar({ creator, className }: { creator: Influencer; className?: string }) {
   return (
-    <Avatar className={`bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ${className ?? ""}`}>
+    <Avatar
+      className={`bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ${className ?? ""}`}
+    >
       <AvatarFallback className="bg-transparent text-black">{initials(creator.name)}</AvatarFallback>
       <AvatarBadge className="bg-emerald-400" />
     </Avatar>
@@ -253,8 +291,8 @@ function CreatorAvatar({ creator, className }: { creator: Influencer; className?
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">{eyebrow}</p>
-      <h2 className="mt-2 text-[22px] font-black leading-tight tracking-[-0.04em] text-white">{title}</h2>
+      <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">{eyebrow}</p>
+      <h2 className="mt-2 text-[22px] leading-tight font-black tracking-[-0.04em] text-white">{title}</h2>
     </div>
   );
 }

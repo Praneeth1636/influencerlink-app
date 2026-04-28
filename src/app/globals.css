@@ -231,7 +231,14 @@ label:not([class]) {
     radial-gradient(circle at 48% 55%, rgba(255, 255, 255, 0.13) 0 1px, transparent 2px),
     radial-gradient(circle at 66% 45%, rgba(255, 255, 255, 0.14) 0 1px, transparent 2px),
     radial-gradient(circle at 78% 56%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px);
-  background-size: 22px 14px, 16px 11px, 18px 12px, 19px 13px, 17px 12px, 20px 14px, 18px 13px;
+  background-size:
+    22px 14px,
+    16px 11px,
+    18px 12px,
+    19px 13px,
+    17px 12px,
+    20px 14px,
+    18px 13px;
   border-radius: 18px;
   height: 250px;
   margin-top: 70px;
@@ -255,7 +262,9 @@ label:not([class]) {
   background: rgba(45, 115, 255, 0.5);
   border-radius: 999px;
   bottom: 73px;
-  box-shadow: 0 0 28px rgba(45, 115, 255, 0.85), 0 -70px 36px rgba(45, 115, 255, 0.28);
+  box-shadow:
+    0 0 28px rgba(45, 115, 255, 0.85),
+    0 -70px 36px rgba(45, 115, 255, 0.28);
   height: 22px;
   left: 58%;
   position: absolute;

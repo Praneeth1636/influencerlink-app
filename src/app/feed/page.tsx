@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   BadgeCheck,
-  CalendarDays,
   DollarSign,
   Layers3,
   MessageCircle,
@@ -43,7 +42,6 @@ import {
 } from "@/data/marketplace";
 import { campaignBrief, draftBrandOutreach, formatNumber, scoreInfluencer, suggestRate } from "@/lib/agents";
 
-const CORAL = "#D85A30";
 const initialCreator = seedInfluencers.find((creator) => creator.id === "sara") ?? seedInfluencers[0];
 const initialCampaign = seedCampaigns.find((campaign) => campaign.id === "glossier-summer") ?? seedCampaigns[0];
 
@@ -89,8 +87,12 @@ export default function FeedPage() {
         setCreatorList(creators);
         setCampaignList(campaigns);
         setConversationList(payload.conversations.length ? payload.conversations : seedConversations);
-        setSelectedCreator(creators.find((creator) => creator.id === initialCreator.id) ?? creators[0] ?? initialCreator);
-        setSelectedCampaign(campaigns.find((campaign) => campaign.id === initialCampaign.id) ?? campaigns[0] ?? initialCampaign);
+        setSelectedCreator(
+          creators.find((creator) => creator.id === initialCreator.id) ?? creators[0] ?? initialCreator
+        );
+        setSelectedCampaign(
+          campaigns.find((campaign) => campaign.id === initialCampaign.id) ?? campaigns[0] ?? initialCampaign
+        );
         setLoadState("Live market");
       } catch {
         if (mounted) setLoadState("Demo data");
@@ -106,7 +108,11 @@ export default function FeedPage() {
 
   const rankedCreators = useMemo(() => {
     return creatorList
-      .filter((creator) => `${creator.name} ${creator.niche} ${creator.city} ${creator.audience}`.toLowerCase().includes(query.toLowerCase()))
+      .filter((creator) =>
+        `${creator.name} ${creator.niche} ${creator.city} ${creator.audience}`
+          .toLowerCase()
+          .includes(query.toLowerCase())
+      )
       .sort((a, b) => getMatchScore(b, selectedCampaign) - getMatchScore(a, selectedCampaign));
   }, [creatorList, query, selectedCampaign]);
 
@@ -118,7 +124,9 @@ export default function FeedPage() {
   const bestMatch = rankedCreators[0] ?? selectedCreator;
   const bestMatchScore = getMatchScore(bestMatch, selectedCampaign);
   const selectedConversation =
-    conversationList.find((conversation) => conversation.influencerId === selectedCreator.id) ?? conversationList[0] ?? seedConversations[0];
+    conversationList.find((conversation) => conversation.influencerId === selectedCreator.id) ??
+    conversationList[0] ??
+    seedConversations[0];
   const suggestedRate = suggestRate(selectedCreator);
 
   function openCreatorProfile(creator: Influencer) {
@@ -130,23 +138,27 @@ export default function FeedPage() {
     <Sheet open={isProfileOpen} onOpenChange={setIsProfileOpen}>
       <main className="min-h-screen bg-[#080809] text-white">
         <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(216,90,48,0.16),transparent_28%),radial-gradient(circle_at_90%_8%,rgba(168,85,247,0.12),transparent_24%)]" />
-        <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:56px_56px] opacity-35 [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
+        <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_80%)] bg-[size:56px_56px] opacity-35" />
 
         <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
           <div className="mx-auto flex max-w-[1380px] items-center gap-4 px-5 py-4">
-            <Link className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10" href="/feed" aria-label="InfluencerLink feed">
+            <Link
+              className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
+              href="/feed"
+              aria-label="InfluencerLink feed"
+            >
               <span />
               <span />
               <span />
             </Link>
             <div className="min-w-0">
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-white/38">InfluencerLink</p>
+              <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">InfluencerLink</p>
               <p className="hidden text-sm text-white/60 sm:block">Creator marketplace OS</p>
             </div>
             <label className="relative ml-auto hidden w-full max-w-[420px] md:block">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
+              <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-white/38" />
               <input
-                className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.06] pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-[#D85A30]/60 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#D85A30]/10"
+                className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.06] pr-4 pl-11 text-sm text-white transition outline-none placeholder:text-white/35 focus:border-[#D85A30]/60 focus:bg-white/[0.08] focus:ring-4 focus:ring-[#D85A30]/10"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search creators, niches, audience..."
@@ -156,21 +168,27 @@ export default function FeedPage() {
               <span className="h-2 w-2 rounded-full bg-[#D85A30] shadow-[0_0_18px_rgba(216,90,48,0.85)]" />
               {loadState}
             </span>
-            <Link className="hidden rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c] sm:block" href="/creator">
+            <Link
+              className="hidden rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c] sm:block"
+              href="/creator"
+            >
               Creator portal
             </Link>
-            <Link className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-white/25 hover:text-white" href="/login">
+            <Link
+              className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-white/25 hover:text-white"
+              href="/login"
+            >
               Sign out
             </Link>
           </div>
         </header>
 
         <section className="relative z-10 mx-auto grid max-w-[1380px] gap-6 px-5 py-7 lg:grid-cols-[300px_minmax(0,1fr)]">
-          <aside className="order-2 grid content-start gap-5 lg:order-none lg:sticky lg:top-24">
+          <aside className="order-2 grid content-start gap-5 lg:sticky lg:top-24 lg:order-none">
             <CreatorSidebarCard creator={selectedCreator} onOpen={() => openCreatorProfile(selectedCreator)} />
 
             <Panel className="p-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">Navigation</p>
+              <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Navigation</p>
               <div className="mt-4 grid gap-1">
                 {[
                   ["Creators", "#creators", Users],
@@ -197,7 +215,7 @@ export default function FeedPage() {
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">AI desk</p>
+                  <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">AI desk</p>
                   <h2 className="text-base font-black">Next action</h2>
                 </div>
               </div>
@@ -209,7 +227,7 @@ export default function FeedPage() {
             </Panel>
 
             <Panel className="overflow-hidden p-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">Creative assets</p>
+              <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Creative assets</p>
               <div className="mt-4 flex justify-center">
                 <ImagesBadge
                   text="Beauty launch board"
@@ -236,11 +254,12 @@ export default function FeedPage() {
               </div>
 
               <div className="mt-6 max-w-5xl">
-                <h1 className="text-[clamp(32px,5vw,68px)] font-black leading-[0.96] tracking-[-0.055em] text-white">
+                <h1 className="text-[clamp(32px,5vw,68px)] leading-[0.96] font-black tracking-[-0.055em] text-white">
                   Creator campaigns, matched by verified influence.
                 </h1>
                 <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/55 md:text-base">
-                  Discover creators, compare performance, and start brand collaborations from one focused marketplace dashboard.
+                  Discover creators, compare performance, and start brand collaborations from one focused marketplace
+                  dashboard.
                 </p>
               </div>
 
@@ -275,10 +294,14 @@ export default function FeedPage() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-[11px] font-black uppercase tracking-[0.16em] text-white/35">{campaign.brand}</p>
-                          <h3 className="mt-2 text-base font-black leading-tight">{campaign.title}</h3>
+                          <p className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">
+                            {campaign.brand}
+                          </p>
+                          <h3 className="mt-2 text-base leading-tight font-black">{campaign.title}</h3>
                         </div>
-                        <span className={`rounded-full px-2.5 py-1 text-[11px] font-black ${isSelected ? "bg-[#D85A30] text-white" : "bg-white/8 text-white/55"}`}>
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-[11px] font-black ${isSelected ? "bg-[#D85A30] text-white" : "bg-white/8 text-white/55"}`}
+                        >
                           {campaign.status}
                         </span>
                       </div>
@@ -297,9 +320,9 @@ export default function FeedPage() {
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <SectionHeader eyebrow="Creator discovery" title="Top matches for this campaign." />
                 <label className="relative block md:hidden">
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/38" />
+                  <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-white/38" />
                   <input
-                    className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.06] pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none"
+                    className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.06] pr-4 pl-11 text-sm text-white outline-none placeholder:text-white/35"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="Search creators..."
@@ -309,7 +332,12 @@ export default function FeedPage() {
 
               <div className="grid gap-4 xl:grid-cols-2">
                 {rankedCreators.map((creator) => (
-                  <CreatorCard campaign={selectedCampaign} creator={creator} key={creator.id} onOpen={() => openCreatorProfile(creator)} />
+                  <CreatorCard
+                    campaign={selectedCampaign}
+                    creator={creator}
+                    key={creator.id}
+                    onOpen={() => openCreatorProfile(creator)}
+                  />
                 ))}
               </div>
             </section>
@@ -318,7 +346,9 @@ export default function FeedPage() {
               <Panel className="p-5" id="workspace">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <SectionHeader eyebrow="Workspace" title={`${selectedCampaign.brand} campaign`} />
-                  <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">{selectedCampaign.status}</Badge>
+                  <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    {selectedCampaign.status}
+                  </Badge>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-white/55">{campaignBrief(selectedCampaign)}</p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -326,7 +356,11 @@ export default function FeedPage() {
                     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={deliverable.id}>
                       <div className="flex items-center justify-between gap-3">
                         <span className="text-sm font-bold text-white/72">{deliverable.title}</span>
-                        <span className={`rounded-full px-2.5 py-1 text-[11px] font-black ${statusTone(deliverable.status)}`}>{deliverable.status}</span>
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-[11px] font-black ${statusTone(deliverable.status)}`}
+                        >
+                          {deliverable.status}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -345,7 +379,10 @@ export default function FeedPage() {
                 </div>
                 <div className="mt-4 grid gap-2">
                   {marketSignals.map((signal) => (
-                    <p className="rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2 text-[13px] leading-5 text-white/52" key={signal}>
+                    <p
+                      className="rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2 text-[13px] leading-5 text-white/52"
+                      key={signal}
+                    >
                       {signal}
                     </p>
                   ))}
@@ -373,7 +410,9 @@ function CreatorSidebarCard({ creator, onOpen }: { creator: Influencer; onOpen: 
         <div className="mt-4 flex items-start justify-between gap-3">
           <div>
             <h2 className="text-2xl font-black tracking-[-0.04em]">{creator.name}</h2>
-            <p className="mt-1 text-sm text-white/48">{creator.niche} · {creator.city}</p>
+            <p className="mt-1 text-sm text-white/48">
+              {creator.niche} · {creator.city}
+            </p>
           </div>
           {creator.verified && <BadgeCheck className="h-5 w-5 text-[#ffb49c]" />}
         </div>
@@ -391,16 +430,26 @@ function CreatorCard({ creator, campaign, onOpen }: { creator: Influencer; campa
   const score = getMatchScore(creator, campaign);
   const tier = matchTier(score);
   return (
-    <article className={`rounded-2xl border bg-white/[0.045] p-5 transition hover:-translate-y-0.5 hover:bg-white/[0.06] ${tier.card}`}>
+    <article
+      className={`rounded-2xl border bg-white/[0.045] p-5 transition hover:-translate-y-0.5 hover:bg-white/[0.06] ${tier.card}`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
-          <CreatorAvatar creator={creator} className="h-14 w-14 text-base ring-4 ring-white/8" showBadge={creator.availability === "Available"} />
+          <CreatorAvatar
+            creator={creator}
+            className="h-14 w-14 text-base ring-4 ring-white/8"
+            showBadge={creator.availability === "Available"}
+          />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="truncate text-xl font-black tracking-[-0.035em]">{creator.name}</h3>
-              {creator.verified && <Badge className="rounded-full bg-white/8 text-white/62 hover:bg-white/8">Verified</Badge>}
+              {creator.verified && (
+                <Badge className="rounded-full bg-white/8 text-white/62 hover:bg-white/8">Verified</Badge>
+              )}
             </div>
-            <p className="mt-1 text-[13px] text-white/45">{creator.handle} · {creator.niche} · {creator.city}</p>
+            <p className="mt-1 text-[13px] text-white/45">
+              {creator.handle} · {creator.niche} · {creator.city}
+            </p>
           </div>
         </div>
         <MatchPill score={score} />
@@ -417,14 +466,17 @@ function CreatorCard({ creator, campaign, onOpen }: { creator: Influencer; campa
 
       <div className="mt-5 flex flex-wrap gap-2">
         {creator.platforms.map((platform) => (
-          <span className={`rounded-full px-3 py-1.5 text-[11px] font-black ring-1 ${platformTone[platform]}`} key={platform}>
+          <span
+            className={`rounded-full px-3 py-1.5 text-[11px] font-black ring-1 ${platformTone[platform]}`}
+            key={platform}
+          >
             {platform}
           </span>
         ))}
       </div>
 
       <div className="mt-5 flex flex-col justify-between gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center">
-        <span className="text-xs font-bold leading-5 text-white/38">{creator.audience}</span>
+        <span className="text-xs leading-5 font-bold text-white/38">{creator.audience}</span>
         <Button className={`h-10 rounded-xl px-4 text-sm font-black ${tier.button}`} onClick={onOpen}>
           Open profile
           <Send className="ml-2 h-4 w-4" />
@@ -468,7 +520,11 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
       <div className="grid gap-6 px-6 pb-7">
         <SheetHeader className="-mt-14 text-left">
           <div className="flex items-end justify-between gap-4">
-            <CreatorAvatar creator={creator} className="h-28 w-28 border-4 border-[#0b0b0d] text-3xl" showBadge={creator.availability === "Available"} />
+            <CreatorAvatar
+              creator={creator}
+              className="h-28 w-28 border-4 border-[#0b0b0d] text-3xl"
+              showBadge={creator.availability === "Available"}
+            />
             <MatchPill score={matchScore} />
           </div>
           <div className="pt-4">
@@ -480,9 +536,17 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         </SheetHeader>
 
         <div className="flex flex-wrap gap-2">
-          {creator.verified && <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">Verified performance</Badge>}
-          <Badge className="rounded-full bg-emerald-300/12 text-emerald-100 hover:bg-emerald-300/12">{creator.availability}</Badge>
-          <Badge className="rounded-full bg-white/8 text-white/65 hover:bg-white/8">Brand safety {creator.brandSafety}</Badge>
+          {creator.verified && (
+            <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+              Verified performance
+            </Badge>
+          )}
+          <Badge className="rounded-full bg-emerald-300/12 text-emerald-100 hover:bg-emerald-300/12">
+            {creator.availability}
+          </Badge>
+          <Badge className="rounded-full bg-white/8 text-white/65 hover:bg-white/8">
+            Brand safety {creator.brandSafety}
+          </Badge>
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -501,17 +565,22 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         </section>
 
         <section className="grid gap-3">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">Platform mix</h3>
+          <h3 className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Platform mix</h3>
           {creator.socialAccounts.map((account) => (
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={account.platform}>
               <div className="flex items-center justify-between gap-4">
-                <span className={`rounded-full px-3 py-1.5 text-[11px] font-black ring-1 ${platformTone[account.platform]}`}>
+                <span
+                  className={`rounded-full px-3 py-1.5 text-[11px] font-black ring-1 ${platformTone[account.platform]}`}
+                >
                   {account.platform}
                 </span>
                 <span className="text-sm text-white/42">Synced {account.lastSyncedAt}</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-[#D85A30]" style={{ width: `${Math.min(100, account.engagementRate * 12)}%` }} />
+                <div
+                  className="h-full rounded-full bg-[#D85A30]"
+                  style={{ width: `${Math.min(100, account.engagementRate * 12)}%` }}
+                />
               </div>
               <div className="mt-3 flex justify-between text-sm">
                 <span className="font-black">{formatNumber(account.followers)} followers</span>
@@ -522,10 +591,13 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         </section>
 
         <section className="grid gap-3">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">Campaign proof</h3>
+          <h3 className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Campaign proof</h3>
           <div className="grid gap-3 md:grid-cols-2">
             {creator.collaborations.map((collaboration) => (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={`${collaboration.brand}-${collaboration.title}`}>
+              <div
+                className="rounded-2xl border border-white/10 bg-white/[0.04] p-4"
+                key={`${collaboration.brand}-${collaboration.title}`}
+              >
                 <p className="font-black">{collaboration.brand}</p>
                 <p className="mt-1 text-sm text-white/50">{collaboration.title}</p>
                 <p className="mt-4 text-2xl font-black tracking-[-0.04em]">{formatNumber(collaboration.reach)}</p>
@@ -545,12 +617,25 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         </section>
 
         <SheetFooter className="gap-3 sm:flex-col">
-          {requestState && <p className="rounded-2xl border border-emerald-200/15 bg-emerald-300/10 px-4 py-3 text-sm text-emerald-100">{requestState}</p>}
+          {requestState && (
+            <p className="rounded-2xl border border-emerald-200/15 bg-emerald-300/10 px-4 py-3 text-sm text-emerald-100">
+              {requestState}
+            </p>
+          )}
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-            <Button className="h-12 rounded-xl bg-[#D85A30] text-white hover:bg-[#c54f29]" onClick={sendCampaignRequest}>
+            <Button
+              className="h-12 rounded-xl bg-[#D85A30] text-white hover:bg-[#c54f29]"
+              onClick={sendCampaignRequest}
+            >
               Send campaign request
             </Button>
-            <SheetClose render={<Button className="h-12 rounded-xl border-white/15 text-white hover:bg-white/10" variant="outline">Close</Button>} />
+            <SheetClose
+              render={
+                <Button className="h-12 rounded-xl border-white/15 text-white hover:bg-white/10" variant="outline">
+                  Close
+                </Button>
+              }
+            />
           </div>
         </SheetFooter>
       </div>
@@ -560,7 +645,10 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
 
 function Panel({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <article className={`rounded-2xl border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/10 backdrop-blur-xl ${className}`} id={id}>
+    <article
+      className={`rounded-2xl border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/10 backdrop-blur-xl ${className}`}
+      id={id}
+    >
       {children}
     </article>
   );
@@ -580,9 +668,11 @@ function StatBannerItem({
   sublabel?: string;
 }) {
   return (
-    <div className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-black/18"}`}>
+    <div
+      className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-black/18"}`}
+    >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-black uppercase tracking-[0.16em] text-white/38">{label}</span>
+        <span className="text-[11px] font-black tracking-[0.16em] text-white/38 uppercase">{label}</span>
         <Icon className={`h-4 w-4 ${highlighted ? "text-[#ffb49c]" : "text-white/34"}`} />
       </div>
       <p className="mt-3 text-3xl font-black tracking-[-0.05em]">{value}</p>
@@ -594,7 +684,7 @@ function StatBannerItem({
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-      <span className="block text-[11px] font-black uppercase tracking-[0.15em] text-white/34">{label}</span>
+      <span className="block text-[11px] font-black tracking-[0.15em] text-white/34 uppercase">{label}</span>
       <strong className="mt-1 block text-lg font-black tracking-[-0.04em] text-white">{value}</strong>
     </div>
   );
@@ -604,7 +694,7 @@ function ProfileStat({ icon: Icon, label, value }: { icon: typeof Users; label: 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
       <Icon className="h-4 w-4 text-[#ffb49c]" />
-      <span className="mt-4 block text-[11px] font-black uppercase tracking-[0.15em] text-white/34">{label}</span>
+      <span className="mt-4 block text-[11px] font-black tracking-[0.15em] text-white/34 uppercase">{label}</span>
       <strong className="mt-1 block text-2xl font-black tracking-[-0.05em] text-white">{value}</strong>
     </div>
   );
@@ -615,7 +705,7 @@ function MatchPill({ score }: { score: number }) {
   return (
     <div className={`grid h-14 w-16 shrink-0 place-items-center rounded-xl border text-center ${tier.pill}`}>
       <strong className="text-lg font-black tracking-[-0.04em]">{score}%</strong>
-      <span className="-mt-2 text-[10px] font-black uppercase tracking-[0.12em] opacity-70">match</span>
+      <span className="-mt-2 text-[10px] font-black tracking-[0.12em] uppercase opacity-70">match</span>
     </div>
   );
 }
@@ -623,17 +713,29 @@ function MatchPill({ score }: { score: number }) {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/35">{eyebrow}</p>
-      <h2 className="mt-2 text-[28px] font-black leading-tight tracking-[-0.045em] text-white">{title}</h2>
+      <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">{eyebrow}</p>
+      <h2 className="mt-2 text-[28px] leading-tight font-black tracking-[-0.045em] text-white">{title}</h2>
     </div>
   );
 }
 
-function CreatorAvatar({ creator, className, showBadge = false }: { creator: Influencer; className?: string; showBadge?: boolean }) {
+function CreatorAvatar({
+  creator,
+  className,
+  showBadge = false
+}: {
+  creator: Influencer;
+  className?: string;
+  showBadge?: boolean;
+}) {
   return (
-    <Avatar className={`bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ${className ?? ""}`}>
+    <Avatar
+      className={`bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ${className ?? ""}`}
+    >
       <AvatarFallback className="bg-transparent text-black">{initials(creator.name)}</AvatarFallback>
-      {showBadge && <AvatarBadge className={creator.availability === "Available" ? "bg-emerald-400" : "bg-amber-400"} />}
+      {showBadge && (
+        <AvatarBadge className={creator.availability === "Available" ? "bg-emerald-400" : "bg-amber-400"} />
+      )}
     </Avatar>
   );
 }

@@ -16,7 +16,9 @@ export async function POST(request: Request) {
   if (!body.name || body.name.trim().length < 2) return badRequest("Full name is required.");
 
   const existing = db.getUserByEmail(body.email);
-  const user = existing ?? db.createUser({ email: body.email, name: body.name.trim(), accountType: body.accountType ?? "creator" });
+  const user =
+    existing ??
+    db.createUser({ email: body.email, name: body.name.trim(), accountType: body.accountType ?? "creator" });
   const session = db.createSession(user.id);
   await setSessionCookie(session.token, session.expiresAt);
 

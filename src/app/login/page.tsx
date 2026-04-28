@@ -21,7 +21,9 @@ export default function LoginPage() {
   const isSignIn = mode === "signin";
 
   function portalFor(user?: { accountType?: string }) {
-    return user?.accountType === "brand" || user?.accountType === "agency" || user?.accountType === "manager" ? "/feed" : "/creator";
+    return user?.accountType === "brand" || user?.accountType === "agency" || user?.accountType === "manager"
+      ? "/feed"
+      : "/creator";
   }
 
   async function submitAuth(event: React.FormEvent<HTMLFormElement>) {
@@ -71,8 +73,8 @@ export default function LoginPage() {
       <section className="relative hidden min-h-screen overflow-hidden bg-[#090a12] lg:flex lg:items-center lg:justify-center">
         <BackgroundRippleEffect />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_38%_18%,rgba(34,50,92,0.24),transparent_24%),linear-gradient(165deg,rgba(22,24,36,0.9)_0%,rgba(8,9,16,0.96)_44%,rgba(3,4,9,1)_100%)]" />
-        <div className="absolute -left-24 top-14 h-44 w-[115%] -rotate-12 bg-[#151724]/80 shadow-[0_20px_90px_rgba(0,0,0,0.45)]" />
-        <div className="absolute -bottom-32 right-6 h-[520px] w-[420px] -rotate-[18deg] rounded-[44px] border border-white/5 bg-[#11131f]/80 shadow-[0_0_120px_rgba(37,67,143,0.12)]" />
+        <div className="absolute top-14 -left-24 h-44 w-[115%] -rotate-12 bg-[#151724]/80 shadow-[0_20px_90px_rgba(0,0,0,0.45)]" />
+        <div className="absolute right-6 -bottom-32 h-[520px] w-[420px] rotate-[-18deg] rounded-[44px] border border-white/5 bg-[#11131f]/80 shadow-[0_0_120px_rgba(37,67,143,0.12)]" />
         <div className="absolute bottom-20 left-1/2 h-[420px] w-[290px] -translate-x-1/4 rotate-[8deg] rounded-[42px] border border-white/5 bg-[#0d0f19]/80 shadow-[0_0_90px_rgba(255,255,255,0.04)]" />
 
         <div className="relative z-[1] grid justify-items-center gap-5">
@@ -103,7 +105,9 @@ export default function LoginPage() {
             </div>
             <h2 className="text-[42px] font-bold tracking-[-0.03em]">{isSignIn ? "Sign in" : "Sign up"}</h2>
             <p className="text-xl text-[#9f9f9f]">
-              {isSignIn ? "Welcome back! Please sign in to continue." : "Choose creator or company and enter the right portal."}
+              {isSignIn
+                ? "Welcome back! Please sign in to continue."
+                : "Choose creator or company and enter the right portal."}
             </p>
           </div>
 
@@ -141,14 +145,14 @@ export default function LoginPage() {
               <Label className="text-lg font-semibold text-[#dfdfdf]" htmlFor="email">
                 Email address
               </Label>
-                <Input
-                  className="h-[62px] rounded-xl border-[#303030] bg-[#282828] px-5 text-xl text-white placeholder:text-[#929292]"
-                  id="email"
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="hello@app.com"
-                  type="email"
-                  value={email}
-                />
+              <Input
+                className="h-[62px] rounded-xl border-[#303030] bg-[#282828] px-5 text-xl text-white placeholder:text-[#929292]"
+                id="email"
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="hello@app.com"
+                type="email"
+                value={email}
+              />
             </div>
 
             {!isSignIn && (
@@ -177,20 +181,36 @@ export default function LoginPage() {
 
             {error && <p className="rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p>}
 
-            <Button className="mt-3 h-[60px] rounded-xl bg-[#2d73ff] text-xl font-semibold text-white shadow-[0_18px_40px_rgba(45,115,255,0.24)] hover:bg-[#2167f2]" disabled={isSubmitting} type="submit">
+            <Button
+              className="mt-3 h-[60px] rounded-xl bg-[#2d73ff] text-xl font-semibold text-white shadow-[0_18px_40px_rgba(45,115,255,0.24)] hover:bg-[#2167f2]"
+              disabled={isSubmitting}
+              type="submit"
+            >
               {isSubmitting ? "Working..." : isSignIn ? "Continue" : "Create account"}
             </Button>
           </form>
 
           <p className="text-center text-xl text-[#9f9f9f]">
             {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button className="font-bold text-white" onClick={() => setMode(isSignIn ? "signup" : "signin")} type="button">
+            <button
+              className="font-bold text-white"
+              onClick={() => setMode(isSignIn ? "signup" : "signin")}
+              type="button"
+            >
               {isSignIn ? "Sign up" : "Sign in"}
             </button>
           </p>
 
           <p className="text-center text-base text-[#666]">
-            © InfluencerLink · <Link className="hover:text-white" href="/about">About</Link> · <Link className="hover:text-white" href="/contact">Contact</Link> · Privacy · Terms
+            © InfluencerLink ·{" "}
+            <Link className="hover:text-white" href="/about">
+              About
+            </Link>{" "}
+            ·{" "}
+            <Link className="hover:text-white" href="/contact">
+              Contact
+            </Link>{" "}
+            · Privacy · Terms
           </p>
         </div>
       </section>

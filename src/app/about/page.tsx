@@ -20,13 +20,18 @@ export default function AboutPage() {
             The professional network for creator-brand deals.
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-neutral-300 md:text-xl">
-            InfluencerLink helps creators prove their value and helps brands discover, contact, and manage the right partners.
+            InfluencerLink helps creators prove their value and helps brands discover, contact, and manage the right
+            partners.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-full bg-white px-6 text-black hover:bg-neutral-200">
               <Link href="/feed">Explore feed</Link>
             </Button>
-            <Button asChild variant="outline" className="rounded-full border-white/20 bg-white/5 px-6 text-white hover:bg-white/10">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full border-white/20 bg-white/5 px-6 text-white hover:bg-white/10"
+            >
               <Link href="/contact">Contact us</Link>
             </Button>
           </div>
@@ -38,7 +43,8 @@ export default function AboutPage() {
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold md:text-6xl">About us</h2>
             <p className="mt-5 text-lg leading-8 text-neutral-200 md:text-xl">
-              We are building the creator economy’s LinkedIn: profiles, discovery, outreach, campaign workspaces, payments, and reputation in one place.
+              We are building the creator economy’s LinkedIn: profiles, discovery, outreach, campaign workspaces,
+              payments, and reputation in one place.
             </p>
           </div>
         </WavyBackground>
@@ -63,7 +69,10 @@ export default function AboutPage() {
               Start with a working marketplace, then layer in verified analytics, AI agents, contracts, and escrow.
             </p>
           </div>
-          <Button asChild className="rounded-lg bg-white px-8 py-3 text-sm font-medium text-neutral-900 hover:bg-neutral-100">
+          <Button
+            asChild
+            className="rounded-lg bg-white px-8 py-3 text-sm font-medium text-neutral-900 hover:bg-neutral-100"
+          >
             <Link href="/feed">View product</Link>
           </Button>
         </div>

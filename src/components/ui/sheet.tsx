@@ -11,7 +11,9 @@ function SheetTrigger({
   render,
   children,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Trigger> & { render?: React.ReactElement<{ className?: string }> }) {
+}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Trigger> & {
+  render?: React.ReactElement<{ className?: string }>;
+}) {
   if (render) {
     return (
       <SheetPrimitive.Trigger asChild {...props}>
@@ -27,7 +29,9 @@ function SheetClose({
   render,
   children,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close> & { render?: React.ReactElement<{ className?: string }> }) {
+}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close> & {
+  render?: React.ReactElement<{ className?: string }>;
+}) {
   if (render) {
     return (
       <SheetPrimitive.Close asChild {...props}>
@@ -70,14 +74,14 @@ const SheetContent = React.forwardRef<
       <SheetPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 flex flex-col gap-4 bg-background p-6 text-foreground shadow-lg outline-none",
+          "bg-background text-foreground fixed z-50 flex flex-col gap-4 p-6 shadow-lg outline-none",
           sideClasses[side],
           className
         )}
         {...props}
       >
         {children}
-        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring">
+        <SheetPrimitive.Close className="focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:outline-none">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
@@ -99,7 +103,7 @@ const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <SheetPrimitive.Title ref={ref} className={cn("text-lg font-semibold text-foreground", className)} {...props} />
+  <SheetPrimitive.Title ref={ref} className={cn("text-foreground text-lg font-semibold", className)} {...props} />
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
@@ -107,7 +111,7 @@ const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <SheetPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  <SheetPrimitive.Description ref={ref} className={cn("text-muted-foreground text-sm", className)} {...props} />
 ));
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
 

@@ -26,19 +26,22 @@ export function ImagesBadge({
 
   return (
     <button
-      className={cn("group relative inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-white backdrop-blur", className)}
+      className={cn(
+        "group relative inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-white backdrop-blur",
+        className
+      )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       type="button"
     >
       <span className="relative" style={{ width: folderSize.width, height: folderSize.height }}>
         {images.slice(0, 3).map((image, index) => (
-          <img
-            alt=""
-            className="absolute rounded-md border border-white/20 object-cover shadow-lg transition-all duration-300"
+          <span
+            aria-hidden="true"
+            className="absolute rounded-md border border-white/20 bg-cover bg-center shadow-lg transition-all duration-300"
             key={image}
-            src={image}
             style={{
+              backgroundImage: `url(${image})`,
               width: hovered ? hoverImageSize.width : teaserImageSize.width,
               height: hovered ? hoverImageSize.height : teaserImageSize.height,
               left: hovered ? index * hoverSpread - hoverSpread : index * 6,

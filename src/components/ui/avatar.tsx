@@ -28,7 +28,10 @@ const AvatarFallback = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
-    className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted text-sm font-semibold", className)}
+    className={cn(
+      "bg-muted flex h-full w-full items-center justify-center rounded-full text-sm font-semibold",
+      className
+    )}
     {...props}
   />
 ));
@@ -37,7 +40,10 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 function AvatarBadge({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
     <span
-      className={cn("absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-600", className)}
+      className={cn(
+        "border-background absolute right-0 bottom-0 h-3 w-3 rounded-full border-2 bg-green-600",
+        className
+      )}
       {...props}
     />
   );
@@ -51,7 +57,7 @@ function AvatarGroupCount({ className, ...props }: React.HTMLAttributes<HTMLDivE
   return (
     <div
       className={cn(
-        "flex h-10 w-10 items-center justify-center rounded-full border-2 border-background bg-muted text-sm font-semibold text-muted-foreground",
+        "bg-muted border-background text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold",
         className
       )}
       {...props}

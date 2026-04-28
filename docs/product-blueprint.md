@@ -25,11 +25,13 @@ InfluencerLink is a professional network and marketplace for creator-brand partn
 ## Architecture Direction
 
 Client apps share one API surface:
+
 - Web app: Next.js or React.
 - iOS: Swift.
 - Android: Kotlin.
 
 Backend domains:
+
 - Identity and access control.
 - Creator and brand profiles.
 - Social platform integrations.
@@ -40,6 +42,7 @@ Backend domains:
 - Analytics and moderation.
 
 Data layer:
+
 - PostgreSQL for transactional records.
 - Elasticsearch for creator discovery.
 - Redis for cache, queues, and presence.
@@ -47,9 +50,11 @@ Data layer:
 - S3-compatible storage for media uploads.
 
 Real-time:
+
 - WebSockets through Pusher, Socket.io, or a dedicated realtime service.
 
 Social ingestion:
+
 - Platform adapters for Instagram Graph API, TikTok Business API, YouTube Data API, and other networks.
 - Queue-based sync jobs that respect rate limits and normalize metrics into creator profiles and search indexes.
 

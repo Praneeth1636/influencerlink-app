@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+corepack pnpm exec lint-staged
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm format:check

@@ -32,7 +32,9 @@ export default function ContactPage() {
     });
 
     setIsSubmitting(false);
-    setStatus(response.ok ? "Message saved. Our team will reach out." : "Could not send message. Please check the fields.");
+    setStatus(
+      response.ok ? "Message saved. Our team will reach out." : "Could not send message. Please check the fields."
+    );
     if (response.ok) event.currentTarget.reset();
   }
 
@@ -54,7 +56,8 @@ export default function ContactPage() {
               </div>
               <h1 className="text-[52px] font-bold tracking-[-0.04em] md:text-[68px]">Contact us</h1>
               <p className="max-w-[690px] text-[22px] leading-[1.45] text-[#a8a8a8] md:text-[25px]">
-                We are always looking for ways to improve our creator marketplace. Contact us and let us know how we can help you.
+                We are always looking for ways to improve our creator marketplace. Contact us and let us know how we can
+                help you.
               </p>
             </div>
 
@@ -119,7 +122,7 @@ export default function ContactPage() {
                   Message
                 </Label>
                 <textarea
-                  className="min-h-[156px] rounded-lg border border-[#2f2f2f] bg-[#292929] px-5 py-5 text-xl text-white placeholder:text-[#7f7f7f] focus:outline-none focus:ring-2 focus:ring-[#2d73ff]"
+                  className="min-h-[156px] rounded-lg border border-[#2f2f2f] bg-[#292929] px-5 py-5 text-xl text-white placeholder:text-[#7f7f7f] focus:ring-2 focus:ring-[#2d73ff] focus:outline-none"
                   id="contact-message"
                   name="message"
                   placeholder="Type your message here"
@@ -128,7 +131,11 @@ export default function ContactPage() {
 
               {status && <p className="rounded-lg bg-white/5 px-4 py-3 text-base text-[#d6d6d6]">{status}</p>}
 
-              <Button className="h-[50px] w-fit rounded-lg bg-[#2b2b2b] px-6 text-xl font-semibold text-white hover:bg-[#343434]" disabled={isSubmitting} type="submit">
+              <Button
+                className="h-[50px] w-fit rounded-lg bg-[#2b2b2b] px-6 text-xl font-semibold text-white hover:bg-[#343434]"
+                disabled={isSubmitting}
+                type="submit"
+              >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </form>

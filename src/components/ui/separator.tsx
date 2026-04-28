@@ -9,7 +9,7 @@ const Separator = React.forwardRef<
     ref={ref}
     role="separator"
     aria-orientation={orientation}
-    className={cn(orientation === "horizontal" ? "h-px w-full" : "h-full w-px", "shrink-0 bg-border", className)}
+    className={cn(orientation === "horizontal" ? "h-px w-full" : "h-full w-px", "bg-border shrink-0", className)}
     {...props}
   />
 ));
