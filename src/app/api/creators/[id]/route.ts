@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/prototype-db";
 import { json, notFound } from "@/lib/api";
 
 export const runtime = "nodejs";

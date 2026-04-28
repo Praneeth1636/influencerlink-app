@@ -1,5 +1,5 @@
 import { badRequest, json, readJson } from "@/lib/api";
-import { db } from "@/lib/db";
+import { db } from "@/lib/prototype-db";
 import { setSessionCookie } from "@/lib/auth";
 
 export const runtime = "nodejs";

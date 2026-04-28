@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/prototype-db";
 import { json } from "@/lib/api";
 import { routeLogger } from "@/lib/observability/logger";
 

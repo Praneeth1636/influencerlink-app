@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/prototype-db";
 import { getCurrentUser } from "@/lib/auth";
 import { json } from "@/lib/api";
 

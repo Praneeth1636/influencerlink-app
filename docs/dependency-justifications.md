@@ -16,3 +16,9 @@
 - `@sentry/nextjs`: official Sentry SDK for Next.js client, server, and edge error capture.
 - `posthog-js`: product analytics client with React provider support for page views and future events.
 - `pino`: structured JSON server logging with low overhead and redaction support.
+
+## Phase 2.1 database schema
+
+- `drizzle-orm`: typed Postgres schema and query foundation for the real CreatorLink data model.
+- `@neondatabase/serverless`: Neon Postgres driver for the locked production stack.
+- `drizzle-kit`: migration generation and Drizzle Studio tooling for schema lifecycle work.
