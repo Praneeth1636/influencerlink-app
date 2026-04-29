@@ -5,7 +5,7 @@ import superjson from "superjson";
 import { z } from "zod";
 import { requireBrandMember, requireCreator, requireUser } from "@/lib/auth/rbac";
 import { db as defaultDb } from "@/lib/db/client";
-import { brandMembers, creators, users, type Creator, type User } from "@/lib/db/schema";
+import { brandMembers, creators, users, type BrandMember, type Creator, type User } from "@/lib/db/schema";
 
 export type Database = typeof defaultDb;
 
@@ -21,6 +21,8 @@ export type TRPCContext = {
   db: Database;
   user: User | null;
   brandId?: string;
+  creator?: Creator;
+  brandMember?: BrandMember;
 };
 
 export async function createTRPCContext(options: CreateTRPCContextOptions): Promise<TRPCContext> {
@@ -58,7 +60,23 @@ export const createCallerFactory = t.createCallerFactory;
 export const publicProcedure = t.procedure;
 
 export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
-  const user = ctx.user ?? (await requireUser());
+  let user = ctx.user;
+
+  if (typeof user === "undefined") {
+    try {
+      user = await requireUser();
+    } catch {
+      user = null;
+    }
+  }
+
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required"
+    });
+  }
+
   return next({
     ctx: {
       ...ctx,
@@ -68,11 +86,11 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
 });
 
 export const creatorProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  let creator: Creator | undefined;
+  let creator = ctx.creator;
 
-  if (ctx.user) {
+  if (!creator && ctx.user) {
     [creator] = await ctx.db.select().from(creators).where(eq(creators.userId, ctx.user.id)).limit(1);
-  } else {
+  } else if (!creator) {
     ({ creator } = await requireCreator());
   }
 
@@ -91,15 +109,19 @@ export const creatorProcedure = protectedProcedure.use(async ({ ctx, next }) => 
   });
 });
 
-export const brandProcedure = protectedProcedure.use(async ({ ctx, input, next }) => {
+export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(async ({ ctx, input, next }) => {
   const { brandId } = brandProcedureInput.parse(input);
   const user = ctx.user ?? (await requireUser());
 
-  let [member] = await ctx.db
-    .select()
-    .from(brandMembers)
-    .where(and(eq(brandMembers.brandId, brandId), eq(brandMembers.userId, user.id)))
-    .limit(1);
+  let member = ctx.brandMember?.brandId === brandId && ctx.brandMember.userId === user.id ? ctx.brandMember : undefined;
+
+  if (!member) {
+    [member] = await ctx.db
+      .select()
+      .from(brandMembers)
+      .where(and(eq(brandMembers.brandId, brandId), eq(brandMembers.userId, user.id)))
+      .limit(1);
+  }
 
   if (!member) {
     ({ member } = await requireBrandMember(brandId));
