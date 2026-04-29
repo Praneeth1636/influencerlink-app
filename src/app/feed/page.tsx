@@ -41,6 +41,8 @@ import {
   type Platform
 } from "@/data/marketplace";
 import { campaignBrief, draftBrandOutreach, formatNumber, scoreInfluencer, suggestRate } from "@/lib/agents";
+import { buildFeedDashboardData } from "@/lib/feed/dashboard-data";
+import { trpc } from "@/lib/trpc/client";
 
 const initialCreator = seedInfluencers.find((creator) => creator.id === "sara") ?? seedInfluencers[0];
 const initialCampaign = seedCampaigns.find((campaign) => campaign.id === "glossier-summer") ?? seedCampaigns[0];
@@ -59,15 +61,28 @@ const marketSignals = [
 ];
 
 export default function FeedPage() {
-  // TODO: replace seed lists with tRPC creator/campaign queries (Phase 4.2 follow-up).
-  const creatorList: Influencer[] = seedInfluencers;
+  const creatorQuery = trpc.creator.list.useQuery({ limit: 20 }, { retry: false });
+  const postQuery = trpc.post.list.useQuery({ limit: 12 }, { retry: false });
+  const feedData = buildFeedDashboardData({
+    creatorData: creatorQuery.data,
+    postData: postQuery.data,
+    creatorsLoading: creatorQuery.isLoading,
+    postsLoading: postQuery.isLoading,
+    creatorsError: creatorQuery.isError,
+    postsError: postQuery.isError,
+    fallbackCreators: seedInfluencers
+  });
+  const creatorList: Influencer[] = feedData.creators;
   const campaignList: Campaign[] = seedCampaigns;
   const conversationList: Conversation[] = seedConversations;
-  const [selectedCreator, setSelectedCreator] = useState<Influencer>(initialCreator);
+  const [selectedCreatorId, setSelectedCreatorId] = useState(initialCreator.id);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign>(initialCampaign);
   const [query, setQuery] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const loadState = "Demo data";
+  const loadState = feedData.label;
+
+  const selectedCreator =
+    creatorList.find((creator) => creator.id === selectedCreatorId) ?? creatorList[0] ?? initialCreator;
 
   const rankedCreators = useMemo(() => {
     return creatorList
@@ -93,7 +108,7 @@ export default function FeedPage() {
   const suggestedRate = suggestRate(selectedCreator);
 
   function openCreatorProfile(creator: Influencer) {
-    setSelectedCreator(creator);
+    setSelectedCreatorId(creator.id);
     setIsProfileOpen(true);
   }
 
@@ -200,6 +215,17 @@ export default function FeedPage() {
                     "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=300&q=80"
                   ]}
                 />
+              </div>
+            </Panel>
+
+            <Panel className="p-4">
+              <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Data layer</p>
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                <div className="flex items-center gap-2">
+                  <span className={`h-2 w-2 rounded-full ${feedStateDot(feedData.state)}`} />
+                  <p className="text-sm font-black">{feedData.label}</p>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-white/48">{feedData.message}</p>
               </div>
             </Panel>
           </aside>
@@ -352,6 +378,41 @@ export default function FeedPage() {
                 </div>
               </Panel>
             </section>
+
+            <Panel className="p-5" id="live-feed">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <SectionHeader eyebrow="Feed API" title="Live posts from tRPC." />
+                <Badge className="rounded-full bg-white/8 text-white/58 hover:bg-white/8">
+                  {feedData.posts.length} posts
+                </Badge>
+              </div>
+              <div className="mt-4 grid gap-3">
+                {feedData.state === "loading" && (
+                  <FeedStateCard title="Loading live feed" body="Pulling posts through TanStack Query." />
+                )}
+                {feedData.state === "offline" && (
+                  <FeedStateCard title="Feed API unavailable" body="Check DATABASE_URL and the tRPC route locally." />
+                )}
+                {feedData.state === "empty" && (
+                  <FeedStateCard
+                    title="No database posts yet"
+                    body="Run the seed script once Phase 2 seed data lands."
+                  />
+                )}
+                {feedData.state === "live" &&
+                  feedData.posts.map((post) => (
+                    <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={post.id}>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                          {post.authorType}
+                        </Badge>
+                        <span className="text-xs font-bold text-white/35">{post.type}</span>
+                      </div>
+                      <p className="mt-3 text-sm leading-6 text-white/62">{post.body}</p>
+                    </article>
+                  ))}
+              </div>
+            </Panel>
           </section>
         </section>
 
@@ -603,6 +664,15 @@ function Panel({ children, className = "", id }: { children: React.ReactNode; cl
   );
 }
 
+function FeedStateCard({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm font-black">{title}</p>
+      <p className="mt-1 text-xs leading-5 text-white/48">{body}</p>
+    </div>
+  );
+}
+
 function StatBannerItem({
   icon: Icon,
   label,
@@ -720,6 +790,13 @@ function statusTone(status: string) {
   if (status === "Revisions") return "bg-[#D85A30]/12 text-[#ffb49c]";
   if (status === "In progress") return "bg-purple-300/12 text-purple-100";
   return "bg-white/8 text-white/52";
+}
+
+function feedStateDot(state: string) {
+  if (state === "live") return "bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.7)]";
+  if (state === "loading") return "bg-sky-300 shadow-[0_0_18px_rgba(125,211,252,0.7)]";
+  if (state === "empty") return "bg-amber-300 shadow-[0_0_18px_rgba(252,211,77,0.7)]";
+  return "bg-[#D85A30] shadow-[0_0_18px_rgba(216,90,48,0.75)]";
 }
 
 function initials(name: string) {
