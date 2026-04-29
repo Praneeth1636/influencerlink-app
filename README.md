@@ -72,5 +72,5 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 
 1. Run the seed against the shared Neon database once credentials are configured.
 2. Connect the jobs UI to authenticated create/apply forms and quota checks.
-3. Move routes into the locked `src/app/(marketing)`, `src/app/(auth)`, and `src/app/(app)` structure.
-4. Add realtime presence/read receipts for messages and persisted feed interaction counts.
+3. Add realtime presence/read receipts for messages and persisted feed interaction counts.
+4. Per-group layouts: shared chrome for `(app)` (auth header/sidebar) and `(marketing)` (marketing header/footer).
