@@ -11,6 +11,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Phase 3 auth: Clerk webhook support, onboarding schemas/actions, RBAC helpers, and guarded server-side role checks.
 - Phase 4 API foundation: tRPC, TanStack Query provider, Zod inputs, domain routers, audit logging, rate limiting, structured error handling, and direct caller tests.
 - Current bridge work: `/feed` now consumes tRPC creator and post queries through TanStack Query with loading, empty, offline, and live states while preserving demo fallback data until seed data is available.
+- Current data work: deterministic Drizzle seed data can populate 50 creators, 10 brands, and 100 posts for local product testing.
 
 ## Stack
 
@@ -26,6 +27,13 @@ The repo has moved past the static prototype foundation and now has the backend 
 ```bash
 pnpm install
 pnpm dev
+```
+
+With a configured Neon/Postgres database:
+
+```bash
+pnpm db:migrate
+pnpm db:seed
 ```
 
 For local builds without all production integrations configured:
@@ -56,7 +64,7 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 
 ## Next Build Areas
 
-1. Seed the production database with realistic creators, brands, posts, and follows.
+1. Run the seed against the shared Neon database once credentials are configured.
 2. Replace remaining prototype-only data on profile, discovery, company, jobs, and messaging screens.
 3. Move routes into the locked `src/app/(marketing)`, `src/app/(auth)`, and `src/app/(app)` structure.
 4. Build the full feed composer and post interaction loop.
