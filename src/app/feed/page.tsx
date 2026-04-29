@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import {
   BadgeCheck,
@@ -41,6 +42,13 @@ import {
   type Platform
 } from "@/data/marketplace";
 import { campaignBrief, draftBrandOutreach, formatNumber, scoreInfluencer, suggestRate } from "@/lib/agents";
+import {
+  buildComposerPayload,
+  feedPostTypes,
+  validateComposerDraft,
+  type ComposerDraft,
+  type FeedPostType
+} from "@/lib/feed/composer";
 import { buildFeedDashboardData } from "@/lib/feed/dashboard-data";
 import { trpc } from "@/lib/trpc/client";
 
@@ -80,6 +88,12 @@ export default function FeedPage() {
   const [query, setQuery] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const loadState = feedData.label;
+  const trpcUtils = trpc.useUtils();
+  const createPostMutation = trpc.post.create.useMutation({
+    onSuccess: async () => {
+      await Promise.all([trpcUtils.post.list.invalidate(), trpcUtils.creator.list.invalidate()]);
+    }
+  });
 
   const selectedCreator =
     creatorList.find((creator) => creator.id === selectedCreatorId) ?? creatorList[0] ?? initialCreator;
@@ -265,6 +279,20 @@ export default function FeedPage() {
                 />
               </div>
             </Panel>
+
+            <FeedComposer
+              isPosting={createPostMutation.isPending}
+              onSubmit={async (draft) => {
+                await createPostMutation.mutateAsync(buildComposerPayload(draft));
+              }}
+              status={
+                createPostMutation.isError
+                  ? createPostMutation.error.message
+                  : createPostMutation.isSuccess
+                    ? "Post published to the live feed."
+                    : null
+              }
+            />
 
             <section className="grid gap-4" id="campaigns">
               <SectionHeader eyebrow="Campaigns" title="Choose a brief to rank the marketplace." />
@@ -507,6 +535,148 @@ function CreatorCard({ creator, campaign, onOpen }: { creator: Influencer; campa
         </Button>
       </div>
     </article>
+  );
+}
+
+function FeedComposer({
+  isPosting,
+  onSubmit,
+  status
+}: {
+  isPosting: boolean;
+  onSubmit: (draft: ComposerDraft) => Promise<void>;
+  status: string | null;
+}) {
+  const [draft, setDraft] = useState<ComposerDraft>({
+    body: "",
+    type: "update",
+    visibility: "public",
+    sourceUrl: ""
+  });
+  const [localMessage, setLocalMessage] = useState<string | null>(null);
+  const selectedType = feedPostTypes.find((type) => type.value === draft.type) ?? feedPostTypes[0];
+  const validation = validateComposerDraft(draft);
+  const visibleMessage = localMessage ?? status;
+
+  async function submitComposer(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextValidation = validateComposerDraft(draft);
+
+    if (!nextValidation.ok) {
+      setLocalMessage(nextValidation.message);
+      return;
+    }
+
+    setLocalMessage(null);
+    await onSubmit(draft);
+    setDraft({
+      body: "",
+      type: "update",
+      visibility: "public",
+      sourceUrl: ""
+    });
+  }
+
+  return (
+    <Panel className="p-5" id="composer">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <SectionHeader eyebrow="Composer" title="Post to the creator market." />
+        <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+          {selectedType.label}
+        </Badge>
+      </div>
+
+      <form className="mt-5 grid gap-4" onSubmit={submitComposer}>
+        <div className="grid gap-2 md:grid-cols-5">
+          {feedPostTypes.map((type) => {
+            const isSelected = draft.type === type.value;
+            const isDisabled = type.value === "job_share";
+
+            return (
+              <button
+                aria-pressed={isSelected}
+                className={`min-h-16 rounded-xl border px-3 py-2 text-left transition ${
+                  isSelected
+                    ? "border-[#D85A30]/55 bg-[#D85A30]/12 text-white"
+                    : "border-white/10 bg-white/[0.04] text-white/56 hover:border-white/25 hover:text-white"
+                } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                disabled={isDisabled}
+                key={type.value}
+                onClick={() => {
+                  setLocalMessage(null);
+                  setDraft((current) => ({ ...current, type: type.value as FeedPostType }));
+                }}
+                type="button"
+              >
+                <span className="block text-sm font-black">{type.label}</span>
+                <span className="mt-1 line-clamp-2 block text-[11px] leading-4 opacity-60">{type.description}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <label className="grid gap-2">
+          <span className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">Post body</span>
+          <textarea
+            className="min-h-32 resize-none rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-white outline-none placeholder:text-white/32 focus:border-[#D85A30]/55 focus:ring-4 focus:ring-[#D85A30]/10"
+            onChange={(event) => {
+              setLocalMessage(null);
+              setDraft((current) => ({ ...current, body: event.target.value }));
+            }}
+            placeholder="Share a creator win, campaign proof, content drop, or open-to-collabs signal..."
+            value={draft.body}
+          />
+        </label>
+
+        {draft.type === "content_drop" && (
+          <label className="grid gap-2">
+            <span className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">Content link</span>
+            <input
+              className="h-11 rounded-xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none placeholder:text-white/32 focus:border-[#D85A30]/55"
+              onChange={(event) => {
+                setLocalMessage(null);
+                setDraft((current) => ({ ...current, sourceUrl: event.target.value }));
+              }}
+              placeholder="https://www.tiktok.com/@creator/video/..."
+              value={draft.sourceUrl}
+            />
+          </label>
+        )}
+
+        <div className="flex flex-col justify-between gap-3 border-t border-white/10 pt-4 md:flex-row md:items-center">
+          <div>
+            <p className="text-sm font-bold text-white/62">{selectedType.description}</p>
+            {draft.type === "open_to_work" && (
+              <p className="mt-1 text-xs text-[#ffb49c]">
+                Publishing this also marks your creator profile open to collabs.
+              </p>
+            )}
+            {visibleMessage && <p className="mt-2 text-xs font-bold text-white/45">{visibleMessage}</p>}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              className="h-11 rounded-xl border border-white/10 bg-[#151518] px-3 text-sm font-bold text-white/64 outline-none focus:border-[#D85A30]/55"
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, visibility: event.target.value as ComposerDraft["visibility"] }))
+              }
+              value={draft.visibility}
+            >
+              <option value="public">Public</option>
+              <option value="connections">Connections</option>
+            </select>
+            <Button
+              className="h-11 rounded-xl bg-[#D85A30] px-5 text-sm font-black text-white hover:bg-[#c54f29]"
+              disabled={isPosting || !validation.ok}
+              type="submit"
+            >
+              {isPosting ? "Posting..." : "Publish post"}
+              <Send className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </form>
+    </Panel>
   );
 }
 

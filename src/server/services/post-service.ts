@@ -47,6 +47,10 @@ export async function createPost(db: Database, user: User, input: CreatePostInpu
     }
   }
 
+  if (input.type === "job_share" && input.authorType !== "brand") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Only brands can share jobs to the feed" });
+  }
+
   const [created] = await db
     .insert(posts)
     .values({
@@ -58,6 +62,10 @@ export async function createPost(db: Database, user: User, input: CreatePostInpu
       visibility: input.visibility
     })
     .returning();
+
+  if (input.type === "open_to_work" && input.authorType === "creator") {
+    await db.update(creators).set({ openToCollabs: true, updatedAt: new Date() }).where(eq(creators.id, authorId!));
+  }
 
   await writeAuditLog(db, {
     user,
