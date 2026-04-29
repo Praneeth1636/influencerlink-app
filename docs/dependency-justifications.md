@@ -37,3 +37,7 @@
 ## Auth UI
 
 - `@clerk/themes`: official Clerk appearance themes used by the shared login, signup, and app user menu styling.
+
+## Billing
+
+- `stripe`: official Stripe SDK used for Checkout session creation, Customer Portal sessions, and webhook signature verification.

@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { BILLING_PLANS, BRAND_FREE_PLAN, CREATOR_FREE_PLAN, formatPlanPrice } from "@/lib/billing/plans";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 import type { BillingAccountSummary } from "@/server/services/billing-service";
+import { CheckoutButton, CustomerPortalButton } from "./billing-actions";
 
 export default async function BillingSettingsPage() {
   const summary = await getSummary();
   const accounts = [summary.creator, summary.brand].filter(isBillingAccountSummary);
+  const brandAccountId = summary.brand?.accountId;
 
   return (
     <main className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8">
@@ -93,6 +95,15 @@ export default async function BillingSettingsPage() {
                   </li>
                 ))}
               </ul>
+              {plan.priceCents > 0 && plan.interval !== "custom" ? (
+                <div className="mt-5">
+                  <CheckoutButton
+                    audience={plan.audience}
+                    brandId={plan.audience === "brand" ? brandAccountId : undefined}
+                    planId={plan.id}
+                  />
+                </div>
+              ) : null}
             </article>
           ))}
         </div>
@@ -119,6 +130,7 @@ function buildFallbackAccount(audience: "creator" | "brand", ownerLabel: string)
 
   return {
     audience,
+    accountId: audience === "creator" ? "seed-creator" : "seed-brand",
     ownerLabel,
     plan,
     priceLabel: formatPlanPrice(plan),
@@ -158,6 +170,10 @@ function AccountUsageCard({ account }: { account: BillingAccountSummary }) {
           <p className="text-sm font-black text-[#ffb49c]">{account.plan.name}</p>
           <p className="mt-1 text-xs font-bold text-white/45">{account.priceLabel}</p>
         </div>
+      </div>
+
+      <div className="mt-5">
+        <CustomerPortalButton brandId={account.audience === "brand" ? account.accountId : undefined} />
       </div>
 
       <div className="mt-6 grid gap-4">

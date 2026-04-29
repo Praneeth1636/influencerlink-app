@@ -37,7 +37,11 @@ import {
   markAllNotificationsRead,
   markNotificationRead
 } from "@/server/services/notification-service";
-import { getBillingSummary } from "@/server/services/billing-service";
+import {
+  createCheckoutSession,
+  createCustomerPortalSession,
+  getBillingSummary
+} from "@/server/services/billing-service";
 
 const serviceMocks = vi.hoisted(() => ({
   creator: {
@@ -99,7 +103,9 @@ const serviceMocks = vi.hoisted(() => ({
     markAllNotificationsRead: vi.fn()
   },
   billing: {
-    getBillingSummary: vi.fn()
+    getBillingSummary: vi.fn(),
+    createCheckoutSession: vi.fn(),
+    createCustomerPortalSession: vi.fn()
   }
 }));
 
@@ -494,8 +500,18 @@ describe("appRouter Phase 4.2 routers", () => {
     };
 
     vi.mocked(getBillingSummary).mockResolvedValueOnce(summary);
+    vi.mocked(createCheckoutSession).mockResolvedValueOnce({ url: "https://checkout.stripe.test/session" });
+    vi.mocked(createCustomerPortalSession).mockResolvedValueOnce({ url: "https://billing.stripe.test/session" });
 
     await expect(caller().billing.summary({ brandId })).resolves.toEqual(summary);
+    await expect(
+      caller().billing.createCheckoutSession({ planId: "brand-growth", audience: "brand", brandId })
+    ).resolves.toEqual({
+      url: "https://checkout.stripe.test/session"
+    });
+    await expect(caller().billing.createPortalSession({ brandId })).resolves.toEqual({
+      url: "https://billing.stripe.test/session"
+    });
   });
 
   it.each([
@@ -561,7 +577,12 @@ describe("appRouter Phase 4.2 routers", () => {
     ["notification.unreadCount", () => caller({ user: null }).notification.unreadCount()],
     ["notification.markRead", () => caller({ user: null }).notification.markRead({ notificationId })],
     ["notification.markAllRead", () => caller({ user: null }).notification.markAllRead()],
-    ["billing.summary", () => caller({ user: null }).billing.summary({})]
+    ["billing.summary", () => caller({ user: null }).billing.summary({})],
+    [
+      "billing.createCheckoutSession",
+      () => caller({ user: null }).billing.createCheckoutSession({ planId: "brand-growth", audience: "brand", brandId })
+    ],
+    ["billing.createPortalSession", () => caller({ user: null }).billing.createPortalSession({ brandId })]
   ])("%s rejects unauthenticated callers", async (_name, run) => {
     await expectUnauthorized(run);
   });

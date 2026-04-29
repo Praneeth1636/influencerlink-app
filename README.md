@@ -22,7 +22,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Current applicant work: `/jobs/[id]/applicants` gives brand recruiters a Kanban-style pipeline to review submitted creators and move applications through submitted, shortlisted, hired, and rejected.
 - Current creator jobs work: `/jobs/saved` gives creators a workspace for saved briefs and application history, backed by save/unsave and creator application tRPC procedures.
 - Current notification work: `/notifications` surfaces workspace alerts from the real notification router, and job applications now notify recruiters while status changes notify creators.
-- Current billing work: `/settings/billing` shows creator and brand plan usage, and free-tier quotas now gate creator applications, brand briefs, brand DMs, and creator search runs server-side.
+- Current billing work: `/settings/billing` shows creator and brand plan usage, free-tier quotas gate key actions server-side, and Stripe Checkout, Customer Portal, and subscription webhooks are wired into the billing router.
 
 ## Stack
 
@@ -76,6 +76,6 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 ## Next Build Areas
 
 1. Run the seed against the shared Neon database once credentials are configured.
-2. Connect Stripe Checkout, Customer Portal, and webhooks to activate paid subscriptions.
+2. Add Stripe price/product configuration docs and run an end-to-end paid plan test with real test-mode keys.
 3. Add realtime presence/read receipts for messages and persisted feed interaction counts.
 4. Add notification fanout delivery through Supabase Realtime and Resend digests.
