@@ -3,6 +3,7 @@ import { brandRouter } from "./brand";
 import { creatorRouter } from "./creator";
 import { followRouter } from "./follow";
 import { inboxRouter } from "./inbox";
+import { jobRouter } from "./job";
 import { orgRouter } from "./org";
 import { postRouter } from "./post";
 
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   follow: followRouter,
   inbox: inboxRouter,
+  job: jobRouter,
   brand: brandRouter,
   org: orgRouter
 });

@@ -12,6 +12,7 @@ import {
 import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
 import { listThreads } from "@/server/services/inbox-service";
+import { applyToJob, createJob, getJobById, listJobs } from "@/server/services/job-service";
 import { getBrandBySlug, getBrandProfileBySlug, updateBrand } from "@/server/services/brand-service";
 import { inviteBrandMember } from "@/server/services/org-service";
 
@@ -42,6 +43,12 @@ const serviceMocks = vi.hoisted(() => ({
     listThreads: vi.fn(),
     markThreadRead: vi.fn()
   },
+  job: {
+    listJobs: vi.fn(),
+    getJobById: vi.fn(),
+    createJob: vi.fn(),
+    applyToJob: vi.fn()
+  },
   brand: {
     getBrandById: vi.fn(),
     getBrandBySlug: vi.fn(),
@@ -59,6 +66,7 @@ vi.mock("@/server/services/creator-service", () => serviceMocks.creator);
 vi.mock("@/server/services/post-service", () => serviceMocks.post);
 vi.mock("@/server/services/follow-service", () => serviceMocks.follow);
 vi.mock("@/server/services/inbox-service", () => serviceMocks.inbox);
+vi.mock("@/server/services/job-service", () => serviceMocks.job);
 vi.mock("@/server/services/brand-service", () => serviceMocks.brand);
 vi.mock("@/server/services/org-service", () => serviceMocks.org);
 
@@ -70,6 +78,7 @@ const brandId = "33333333-3333-4333-8333-333333333333";
 const postId = "44444444-4444-4444-8444-444444444444";
 const threadId = "55555555-5555-4555-8555-555555555555";
 const memberUserId = "66666666-6666-4666-8666-666666666666";
+const jobId = "99999999-9999-4999-8999-999999999999";
 const now = new Date("2026-01-01T00:00:00.000Z");
 
 const user: User = {
@@ -216,6 +225,84 @@ describe("appRouter Phase 4.2 routers", () => {
     await expect(caller().inbox.listThreads({ limit: 10 })).resolves.toEqual([threadPreview]);
   });
 
+  it("job router lists, reads, creates, and applies to briefs", async () => {
+    const brand = {
+      id: brandId,
+      slug: "glossier",
+      name: "Glossier",
+      tagline: null,
+      about: null,
+      websiteUrl: null,
+      logoUrl: null,
+      coverUrl: null,
+      industry: "Beauty",
+      sizeRange: "51-200",
+      hqLocation: "New York, NY",
+      verified: true,
+      followerCount: 0,
+      createdAt: now,
+      updatedAt: now
+    };
+    const job = {
+      id: jobId,
+      brandId,
+      postedById: userId,
+      title: "Summer launch creator brief",
+      description: "Create short-form content for a summer product launch.",
+      deliverables: [{ title: "1 TikTok video" }],
+      niches: ["Beauty"],
+      minFollowers: 100_000,
+      minEngagement: "4.000",
+      budgetMinCents: 250_000,
+      budgetMaxCents: 500_000,
+      deadline: now,
+      location: null,
+      remote: true,
+      status: "open" as const,
+      applicationCount: 3,
+      createdAt: now,
+      updatedAt: now
+    };
+    const application = {
+      id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      jobId,
+      creatorId,
+      pitch: "I can make this launch feel native to beauty audiences.",
+      proposedRateCents: 320_000,
+      attachments: [],
+      status: "submitted" as const,
+      createdAt: now,
+      updatedAt: now
+    };
+    const thread = { id: threadId, type: "job" as const, jobId, createdAt: now, lastMessageAt: now };
+
+    vi.mocked(listJobs).mockResolvedValueOnce([{ job, brand }]);
+    vi.mocked(getJobById).mockResolvedValueOnce({ job, brand });
+    vi.mocked(createJob).mockResolvedValueOnce(job);
+    vi.mocked(applyToJob).mockResolvedValueOnce({ application, thread });
+
+    await expect(caller().job.list({ limit: 10, niche: "Beauty" })).resolves.toEqual([{ job, brand }]);
+    await expect(caller().job.byId({ id: jobId })).resolves.toEqual({ job, brand });
+    await expect(
+      caller().job.create({
+        brandId,
+        title: job.title,
+        description: job.description,
+        deliverables: job.deliverables,
+        niches: job.niches,
+        remote: true,
+        status: "open"
+      })
+    ).resolves.toEqual(job);
+    await expect(
+      caller().job.applyToJob({
+        jobId,
+        pitch: application.pitch,
+        proposedRateCents: application.proposedRateCents
+      })
+    ).resolves.toEqual({ application, thread });
+  });
+
   it("brand router reads public pages and updates admin-owned brands", async () => {
     const brand = {
       id: brandId,
@@ -279,6 +366,25 @@ describe("appRouter Phase 4.2 routers", () => {
     ["follow.listFollowing", () => caller({ user: null }).follow.listFollowing({ limit: 10 })],
     ["inbox.listThreads", () => caller({ user: null }).inbox.listThreads({ limit: 10 })],
     ["inbox.markRead", () => caller({ user: null }).inbox.markRead({ threadId })],
+    [
+      "job.create",
+      () =>
+        caller({ user: null }).job.create({
+          brandId,
+          title: "Summer launch creator brief",
+          description: "Create short-form content for a summer product launch.",
+          deliverables: [{ title: "1 TikTok video" }],
+          niches: ["Beauty"]
+        })
+    ],
+    [
+      "job.applyToJob",
+      () =>
+        caller({ user: null }).job.applyToJob({
+          jobId,
+          pitch: "I can make this launch feel native to beauty audiences."
+        })
+    ],
     ["brand.update", () => caller({ user: null }).brand.update({ brandId, tagline: "New" })],
     ["org.invite", () => caller({ user: null }).org.invite({ brandId, userId: memberUserId, role: "viewer" })],
     ["org.removeMember", () => caller({ user: null }).org.removeMember({ brandId, userId: memberUserId })],

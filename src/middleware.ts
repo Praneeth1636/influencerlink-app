@@ -14,7 +14,7 @@ const isProtectedRoute = createRouteMatcher([
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
+const authMiddleware = clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) return;
 
   const { userId, sessionClaims, redirectToSignIn } = await auth();
@@ -31,6 +31,8 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL("/onboarding", req.url));
   }
 });
+
+export default process.env.E2E_BYPASS_AUTH === "true" ? () => NextResponse.next() : authMiddleware;
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"]

@@ -15,6 +15,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Current profile work: `/profile/[handle]` renders public creator profiles from tRPC with aggregate metrics, connected platforms, and creator posts.
 - Current brand work: `/company/[slug]` renders public brand pages from tRPC with team members, brand posts, and open jobs.
 - Current discovery work: `/search` renders creator discovery with keyword, niche, reach, and availability filters.
+- Current jobs work: `/jobs` and `/jobs/[id]` render public creator briefs from tRPC with seeded fallback data, and the job router now supports brand-created briefs plus creator applications that open job message threads.
 
 ## Stack
 
@@ -68,6 +69,6 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 ## Next Build Areas
 
 1. Run the seed against the shared Neon database once credentials are configured.
-2. Replace remaining prototype-only data on jobs and messaging screens.
+2. Connect the jobs UI to authenticated create/apply forms and quota checks.
 3. Move routes into the locked `src/app/(marketing)`, `src/app/(auth)`, and `src/app/(app)` structure.
 4. Build the full feed composer and post interaction loop.

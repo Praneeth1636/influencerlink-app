@@ -9,6 +9,7 @@ import {
   creatorPlatforms,
   creators,
   follows,
+  jobs,
   platformMetrics,
   posts,
   subscriptionPlans,
@@ -124,6 +125,52 @@ const locations = [
 ];
 const platformValues = ["instagram", "tiktok", "youtube", "linkedin"] as const;
 const postTypes = ["update", "milestone", "content_drop", "open_to_work", "job_share"] as const;
+const jobTemplates = [
+  {
+    title: "Summer skincare launch creator brief",
+    description:
+      "Create educational short-form content showing a realistic morning skincare routine with product integration and usage rights for paid social.",
+    deliverables: ["1 TikTok tutorial", "1 Instagram Reel", "3 story frames"],
+    niches: ["Beauty", "Skincare"],
+    minFollowers: 100_000,
+    minEngagement: "4.000",
+    budgetMinCents: 250_000,
+    budgetMaxCents: 650_000
+  },
+  {
+    title: "Wellness studio opening campaign",
+    description:
+      "Bring local creators into a new studio opening and document the experience through polished lifestyle content.",
+    deliverables: ["1 Instagram Reel", "1 static carousel", "Event attendance"],
+    niches: ["Fitness", "Lifestyle"],
+    minFollowers: 50_000,
+    minEngagement: "3.500",
+    budgetMinCents: 150_000,
+    budgetMaxCents: 420_000
+  },
+  {
+    title: "Creator-led restaurant discovery series",
+    description:
+      "Produce a restaurant discovery video that helps young professionals find high-intent dinner spots in major cities.",
+    deliverables: ["1 TikTok video", "Usage rights for 30 days"],
+    niches: ["Food", "Lifestyle"],
+    minFollowers: 75_000,
+    minEngagement: "4.200",
+    budgetMinCents: 180_000,
+    budgetMaxCents: 500_000
+  },
+  {
+    title: "SaaS workflow demo for creators",
+    description:
+      "Show how creator teams organize briefs, approvals, and content calendars with a practical workflow demo.",
+    deliverables: ["1 YouTube Short", "1 LinkedIn post", "Raw footage license"],
+    niches: ["Tech", "Business"],
+    minFollowers: 40_000,
+    minEngagement: "3.000",
+    budgetMinCents: 200_000,
+    budgetMaxCents: 700_000
+  }
+];
 
 export function buildSeedData() {
   const creatorSeeds = creatorNames.map((displayName, index): CreatorSeed => {
@@ -285,6 +332,35 @@ export function buildSeedData() {
     }))
   );
 
+  const jobRows = Array.from({ length: 20 }, (_, index): typeof jobs.$inferInsert => {
+    const brand = brandSeeds[index % brandSeeds.length]!;
+    const template = jobTemplates[index % jobTemplates.length]!;
+
+    return {
+      id: seedUuid(8_000 + index),
+      brandId: brand.id,
+      postedById: brand.ownerUserId,
+      title: `${brand.name}: ${template.title}`,
+      description: template.description,
+      deliverables: template.deliverables.map((title, deliverableIndex) => ({
+        title,
+        platform: deliverableIndex === 0 ? "TikTok" : deliverableIndex === 1 ? "Instagram" : "Mixed"
+      })),
+      niches: template.niches,
+      minFollowers: template.minFollowers + index * 8_000,
+      minEngagement: template.minEngagement,
+      budgetMinCents: template.budgetMinCents + index * 10_000,
+      budgetMaxCents: template.budgetMaxCents + index * 15_000,
+      deadline: new Date(Date.UTC(2026, 5, 12 + (index % 14), 23, 59, 0)),
+      location: index % 3 === 0 ? locations[index % locations.length] : null,
+      remote: index % 3 !== 0,
+      status: index % 9 === 8 ? "draft" : "open",
+      applicationCount: 8 + index * 3,
+      createdAt: new Date(Date.UTC(2026, 3, 20 + (index % 9), 10, index, 0)),
+      updatedAt: new Date(Date.UTC(2026, 3, 20 + (index % 9), 10, index, 0))
+    };
+  });
+
   const planRows: Array<typeof subscriptionPlans.$inferInsert> = [
     {
       id: seedUuid(7_000),
@@ -330,6 +406,7 @@ export function buildSeedData() {
     platformMetrics: metricRows,
     posts: postRows,
     follows: followRows,
+    jobs: jobRows,
     subscriptionPlans: planRows
   };
 }
@@ -463,6 +540,28 @@ export async function seedDatabase(db: SeedDatabase) {
 
   await db.insert(follows).values(data.follows).onConflictDoNothing({ target: follows.id });
   await db
+    .insert(jobs)
+    .values(data.jobs)
+    .onConflictDoUpdate({
+      target: jobs.id,
+      set: {
+        title: sql`excluded.title`,
+        description: sql`excluded.description`,
+        deliverables: sql`excluded.deliverables`,
+        niches: sql`excluded.niches`,
+        minFollowers: sql`excluded.min_followers`,
+        minEngagement: sql`excluded.min_engagement`,
+        budgetMinCents: sql`excluded.budget_min_cents`,
+        budgetMaxCents: sql`excluded.budget_max_cents`,
+        deadline: sql`excluded.deadline`,
+        location: sql`excluded.location`,
+        remote: sql`excluded.remote`,
+        status: sql`excluded.status`,
+        applicationCount: sql`excluded.application_count`,
+        updatedAt: new Date()
+      }
+    });
+  await db
     .insert(subscriptionPlans)
     .values(data.subscriptionPlans)
     .onConflictDoUpdate({
@@ -482,7 +581,8 @@ export async function seedDatabase(db: SeedDatabase) {
     creators: data.creators.length,
     brands: data.brands.length,
     posts: data.posts.length,
-    follows: data.follows.length
+    follows: data.follows.length,
+    jobs: data.jobs.length
   };
 }
 
