@@ -10,9 +10,12 @@ import {
   creators,
   follows,
   jobs,
+  messages,
+  messageThreads,
   platformMetrics,
   posts,
   subscriptionPlans,
+  threadParticipants,
   users
 } from "@/lib/db/schema";
 
@@ -361,6 +364,72 @@ export function buildSeedData() {
     };
   });
 
+  const threadRows = Array.from({ length: 12 }, (_, index): typeof messageThreads.$inferInsert => {
+    const job = jobRows[index % jobRows.length]!;
+
+    return {
+      id: seedUuid(9_000 + index),
+      type: index % 3 === 0 ? "job" : "direct",
+      jobId: index % 3 === 0 ? job.id : null,
+      createdAt: new Date(Date.UTC(2026, 3, 27, 9, index, 0)),
+      lastMessageAt: new Date(Date.UTC(2026, 3, 28, 16, index, 0))
+    };
+  });
+
+  const threadParticipantRows = threadRows.flatMap((thread, index): Array<typeof threadParticipants.$inferInsert> => {
+    const creator = creatorSeeds[index % creatorSeeds.length]!;
+    const brand = brandSeeds[index % brandSeeds.length]!;
+
+    return [
+      {
+        threadId: thread.id!,
+        userId: creator.userId,
+        role: "creator",
+        lastReadAt: index % 2 === 0 ? new Date(Date.UTC(2026, 3, 28, 15, index, 0)) : null,
+        muted: false
+      },
+      {
+        threadId: thread.id!,
+        userId: brand.ownerUserId,
+        role: "recruiter",
+        lastReadAt: new Date(Date.UTC(2026, 3, 28, 14, index, 0)),
+        muted: false
+      }
+    ];
+  });
+
+  const messageRows = threadRows.flatMap((thread, index): Array<typeof messages.$inferInsert> => {
+    const creator = creatorSeeds[index % creatorSeeds.length]!;
+    const brand = brandSeeds[index % brandSeeds.length]!;
+
+    return [
+      {
+        id: seedUuid(9_200 + index * 3),
+        threadId: thread.id!,
+        senderId: brand.ownerUserId,
+        body: `${brand.name} is interested in ${creator.displayName}'s ${creator.niches[0]?.toLowerCase()} audience for an upcoming creator brief.`,
+        attachments: [],
+        createdAt: new Date(Date.UTC(2026, 3, 28, 10, index, 0))
+      },
+      {
+        id: seedUuid(9_201 + index * 3),
+        threadId: thread.id!,
+        senderId: creator.userId,
+        body: `Love the direction. I can send concepts built around verified reach, audience fit, and usage rights.`,
+        attachments: [],
+        createdAt: new Date(Date.UTC(2026, 3, 28, 12, index, 0))
+      },
+      {
+        id: seedUuid(9_202 + index * 3),
+        threadId: thread.id!,
+        senderId: brand.ownerUserId,
+        body: `Perfect. Can you share two content angles and your rate for one Reel plus story frames?`,
+        attachments: [],
+        createdAt: new Date(Date.UTC(2026, 3, 28, 16, index, 0))
+      }
+    ];
+  });
+
   const planRows: Array<typeof subscriptionPlans.$inferInsert> = [
     {
       id: seedUuid(7_000),
@@ -407,6 +476,9 @@ export function buildSeedData() {
     posts: postRows,
     follows: followRows,
     jobs: jobRows,
+    messageThreads: threadRows,
+    threadParticipants: threadParticipantRows,
+    messages: messageRows,
     subscriptionPlans: planRows
   };
 }
@@ -562,6 +634,40 @@ export async function seedDatabase(db: SeedDatabase) {
       }
     });
   await db
+    .insert(messageThreads)
+    .values(data.messageThreads)
+    .onConflictDoUpdate({
+      target: messageThreads.id,
+      set: {
+        type: sql`excluded.type`,
+        jobId: sql`excluded.job_id`,
+        lastMessageAt: sql`excluded.last_message_at`
+      }
+    });
+  await db
+    .insert(threadParticipants)
+    .values(data.threadParticipants)
+    .onConflictDoUpdate({
+      target: [threadParticipants.threadId, threadParticipants.userId],
+      set: {
+        role: sql`excluded.role`,
+        lastReadAt: sql`excluded.last_read_at`,
+        muted: sql`excluded.muted`
+      }
+    });
+  await db
+    .insert(messages)
+    .values(data.messages)
+    .onConflictDoUpdate({
+      target: messages.id,
+      set: {
+        body: sql`excluded.body`,
+        attachments: sql`excluded.attachments`,
+        editedAt: sql`excluded.edited_at`,
+        deletedAt: sql`excluded.deleted_at`
+      }
+    });
+  await db
     .insert(subscriptionPlans)
     .values(data.subscriptionPlans)
     .onConflictDoUpdate({
@@ -582,7 +688,8 @@ export async function seedDatabase(db: SeedDatabase) {
     brands: data.brands.length,
     posts: data.posts.length,
     follows: data.follows.length,
-    jobs: data.jobs.length
+    jobs: data.jobs.length,
+    messages: data.messages.length
   };
 }
 

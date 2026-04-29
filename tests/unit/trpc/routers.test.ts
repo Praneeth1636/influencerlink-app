@@ -11,7 +11,7 @@ import {
 } from "@/server/services/creator-service";
 import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
-import { listThreads } from "@/server/services/inbox-service";
+import { getThreadById, listThreads, sendMessage, startDirectThread } from "@/server/services/inbox-service";
 import { applyToJob, createJob, getJobById, listJobs } from "@/server/services/job-service";
 import { getBrandBySlug, getBrandProfileBySlug, updateBrand } from "@/server/services/brand-service";
 import { inviteBrandMember } from "@/server/services/org-service";
@@ -40,8 +40,11 @@ const serviceMocks = vi.hoisted(() => ({
     listFollowing: vi.fn()
   },
   inbox: {
+    getThreadById: vi.fn(),
     listThreads: vi.fn(),
-    markThreadRead: vi.fn()
+    markThreadRead: vi.fn(),
+    sendMessage: vi.fn(),
+    startDirectThread: vi.fn()
   },
   job: {
     listJobs: vi.fn(),
@@ -225,6 +228,42 @@ describe("appRouter Phase 4.2 routers", () => {
     await expect(caller().inbox.listThreads({ limit: 10 })).resolves.toEqual([threadPreview]);
   });
 
+  it("inbox router reads threads and sends messages", async () => {
+    const thread = { id: threadId, type: "direct" as const, jobId: null, createdAt: now, lastMessageAt: now };
+    const participant = { threadId, userId, role: "member", lastReadAt: null, muted: false };
+    const message = {
+      id: "88888888-8888-4888-8888-888888888888",
+      threadId,
+      senderId: userId,
+      body: "Interested in a launch?",
+      attachments: [],
+      replyToId: null,
+      createdAt: now,
+      editedAt: null,
+      deletedAt: null
+    };
+    vi.mocked(getThreadById).mockResolvedValueOnce({
+      thread,
+      participant,
+      participants: [participant],
+      messages: [message]
+    });
+    vi.mocked(sendMessage).mockResolvedValueOnce(message);
+    vi.mocked(startDirectThread).mockResolvedValueOnce({ thread, message });
+
+    await expect(caller().inbox.threadById({ threadId })).resolves.toMatchObject({
+      thread: { id: threadId },
+      messages: [message]
+    });
+    await expect(caller().inbox.sendMessage({ threadId, body: "Sounds good" })).resolves.toEqual(message);
+    await expect(
+      caller().inbox.startDirectThread({ participantUserId: memberUserId, body: "Hi there" })
+    ).resolves.toEqual({
+      thread,
+      message
+    });
+  });
+
   it("job router lists, reads, creates, and applies to briefs", async () => {
     const brand = {
       id: brandId,
@@ -365,7 +404,13 @@ describe("appRouter Phase 4.2 routers", () => {
     ],
     ["follow.listFollowing", () => caller({ user: null }).follow.listFollowing({ limit: 10 })],
     ["inbox.listThreads", () => caller({ user: null }).inbox.listThreads({ limit: 10 })],
+    ["inbox.threadById", () => caller({ user: null }).inbox.threadById({ threadId })],
     ["inbox.markRead", () => caller({ user: null }).inbox.markRead({ threadId })],
+    ["inbox.sendMessage", () => caller({ user: null }).inbox.sendMessage({ threadId, body: "Hello" })],
+    [
+      "inbox.startDirectThread",
+      () => caller({ user: null }).inbox.startDirectThread({ participantUserId: memberUserId, body: "Hello" })
+    ],
     [
       "job.create",
       () =>

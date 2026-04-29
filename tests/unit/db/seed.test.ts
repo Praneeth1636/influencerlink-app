@@ -15,6 +15,9 @@ describe("buildSeedData", () => {
     expect(seed.posts).toHaveLength(100);
     expect(seed.follows).toHaveLength(120);
     expect(seed.jobs).toHaveLength(20);
+    expect(seed.messageThreads).toHaveLength(12);
+    expect(seed.threadParticipants).toHaveLength(24);
+    expect(seed.messages).toHaveLength(36);
     expect(seed.subscriptionPlans).toHaveLength(4);
   });
 
@@ -29,6 +32,8 @@ describe("buildSeedData", () => {
       ...seed.posts.map((row) => row.id),
       ...seed.follows.map((row) => row.id),
       ...seed.jobs.map((row) => row.id),
+      ...seed.messageThreads.map((row) => row.id),
+      ...seed.messages.map((row) => row.id),
       ...seed.subscriptionPlans.map((row) => row.id)
     ];
 
@@ -36,5 +41,6 @@ describe("buildSeedData", () => {
     expect(seed.creators[0]?.handle).toBe("sararivera");
     expect(seed.posts[0]?.authorType).toBe("creator");
     expect(seed.jobs[0]?.title).toContain("Glossier");
+    expect(seed.messages[0]?.body).toContain("Glossier");
   });
 });
