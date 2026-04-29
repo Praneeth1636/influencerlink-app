@@ -3,6 +3,7 @@ import { createTRPCRouter, creatorWriteProcedure, publicProcedure } from "@/serv
 import {
   getCreatorByHandle,
   getCreatorById,
+  getCreatorProfileByHandle,
   listCreators,
   searchCreators,
   updateCreatorProfile
@@ -42,6 +43,10 @@ export const creatorRouter = createTRPCRouter({
   byHandle: publicProcedure
     .input(z.object({ handle: z.string().min(3).max(30).toLowerCase() }))
     .query(({ ctx, input }) => getCreatorByHandle(ctx.db, input.handle)),
+
+  profile: publicProcedure
+    .input(z.object({ handle: z.string().min(3).max(30).toLowerCase() }))
+    .query(({ ctx, input }) => getCreatorProfileByHandle(ctx.db, input.handle)),
 
   search: publicProcedure
     .input(

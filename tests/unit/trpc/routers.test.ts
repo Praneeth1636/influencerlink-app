@@ -3,7 +3,12 @@ import type { BrandMember, Creator, User } from "@/lib/db/schema";
 import { appRouter } from "@/server/routers/_app";
 import type { Database, TRPCContext } from "@/server/trpc";
 import { createCallerFactory } from "@/server/trpc";
-import { getCreatorByHandle, listCreators, updateCreatorProfile } from "@/server/services/creator-service";
+import {
+  getCreatorByHandle,
+  getCreatorProfileByHandle,
+  listCreators,
+  updateCreatorProfile
+} from "@/server/services/creator-service";
 import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
 import { listThreads } from "@/server/services/inbox-service";
@@ -15,6 +20,7 @@ const serviceMocks = vi.hoisted(() => ({
     listCreators: vi.fn(),
     getCreatorById: vi.fn(),
     getCreatorByHandle: vi.fn(),
+    getCreatorProfileByHandle: vi.fn(),
     searchCreators: vi.fn(),
     updateCreatorProfile: vi.fn()
   },
@@ -128,6 +134,12 @@ describe("appRouter Phase 4.2 routers", () => {
   it("creator router lists and updates creators", async () => {
     vi.mocked(listCreators).mockResolvedValueOnce({ items: [{ creator, aggregate: null }], nextCursor: null });
     vi.mocked(getCreatorByHandle).mockResolvedValueOnce(creator);
+    vi.mocked(getCreatorProfileByHandle).mockResolvedValueOnce({
+      creator,
+      aggregate: null,
+      platforms: [],
+      posts: []
+    });
     vi.mocked(updateCreatorProfile).mockResolvedValueOnce({ ...creator, headline: "UGC strategist" });
 
     await expect(caller().creator.list({ niche: "beauty" })).resolves.toEqual({
@@ -135,6 +147,11 @@ describe("appRouter Phase 4.2 routers", () => {
       nextCursor: null
     });
     await expect(caller().creator.byHandle({ handle: "Sara" })).resolves.toMatchObject({ handle: "sara" });
+    await expect(caller().creator.profile({ handle: "Sara" })).resolves.toMatchObject({
+      creator: { handle: "sara" },
+      platforms: [],
+      posts: []
+    });
     await expect(caller().creator.update({ headline: "UGC strategist" })).resolves.toMatchObject({
       headline: "UGC strategist"
     });

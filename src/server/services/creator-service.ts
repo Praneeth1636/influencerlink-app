@@ -1,6 +1,14 @@
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, gte, ilike, or, sql } from "drizzle-orm";
-import { creatorAggregates, creators, type Creator, type User } from "@/lib/db/schema";
+import { and, desc, eq, gte, ilike, inArray, or, sql } from "drizzle-orm";
+import {
+  creatorAggregates,
+  creatorPlatforms,
+  creators,
+  platformMetrics,
+  posts,
+  type Creator,
+  type User
+} from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 
@@ -67,6 +75,65 @@ export async function getCreatorById(db: Database, id: string) {
 export async function getCreatorByHandle(db: Database, handle: string) {
   const [row] = await db.select().from(creators).where(eq(creators.handle, handle)).limit(1);
   return row ?? null;
+}
+
+export async function getCreatorProfileByHandle(db: Database, handle: string) {
+  const [profile] = await db
+    .select({
+      creator: creators,
+      aggregate: creatorAggregates
+    })
+    .from(creators)
+    .leftJoin(creatorAggregates, eq(creatorAggregates.creatorId, creators.id))
+    .where(eq(creators.handle, handle))
+    .limit(1);
+
+  if (!profile) {
+    return null;
+  }
+
+  const platformRows = await db
+    .select()
+    .from(creatorPlatforms)
+    .where(eq(creatorPlatforms.creatorId, profile.creator.id))
+    .orderBy(desc(creatorPlatforms.lastSyncedAt));
+
+  const metrics =
+    platformRows.length > 0
+      ? await db
+          .select()
+          .from(platformMetrics)
+          .where(
+            inArray(
+              platformMetrics.creatorPlatformId,
+              platformRows.map((platform) => platform.id)
+            )
+          )
+          .orderBy(desc(platformMetrics.snapshotDate))
+      : [];
+
+  const latestMetricsByPlatform = new Map<string, (typeof metrics)[number]>();
+  for (const metric of metrics) {
+    if (!latestMetricsByPlatform.has(metric.creatorPlatformId)) {
+      latestMetricsByPlatform.set(metric.creatorPlatformId, metric);
+    }
+  }
+
+  const creatorPosts = await db
+    .select()
+    .from(posts)
+    .where(and(eq(posts.authorType, "creator"), eq(posts.authorId, profile.creator.id)))
+    .orderBy(desc(posts.createdAt))
+    .limit(12);
+
+  return {
+    ...profile,
+    platforms: platformRows.map((platform) => ({
+      platform,
+      latestMetrics: latestMetricsByPlatform.get(platform.id) ?? null
+    })),
+    posts: creatorPosts
+  };
 }
 
 export async function searchCreators(db: Database, input: CreatorSearchInput) {
