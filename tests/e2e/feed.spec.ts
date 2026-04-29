@@ -55,8 +55,8 @@ test("brand brief builder renders the real job create form", async ({ page }) =>
 
   await expect(page).toHaveTitle(/InfluencerLink/);
   await expect(page.getByRole("heading", { name: "Create briefs creators can act on." })).toBeVisible();
-  await expect(page.getByLabel("Brand ID")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Publish brief" })).toBeVisible();
+  await expect(page.getByText(/No brand session found|Loading your brand teams/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Publish brief" })).toBeDisabled();
 });
 
 test("messages inbox and thread detail load conversations", async ({ page }) => {

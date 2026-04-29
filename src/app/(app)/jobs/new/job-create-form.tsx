@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,11 +29,29 @@ export function JobCreateForm() {
   const router = useRouter();
   const [values, setValues] = useState<JobCreateFormValues>(defaultValues);
   const [status, setStatus] = useState<string | null>(null);
+  const memberships = trpc.brand.myMemberships.useQuery(undefined, {
+    retry: false
+  });
   const mutation = trpc.job.create.useMutation();
+  const membershipRows = memberships.data ?? [];
+  const canPostForSelectedBrand = membershipRows.some(
+    (membership) =>
+      membership.brand.id === values.brandId && ["owner", "admin", "recruiter"].includes(membership.member.role)
+  );
 
   function updateValue<K extends keyof JobCreateFormValues>(key: K, value: JobCreateFormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
   }
+
+  useEffect(() => {
+    const firstWritableBrand = memberships.data?.find((membership) =>
+      ["owner", "admin", "recruiter"].includes(membership.member.role)
+    );
+
+    if (!values.brandId && firstWritableBrand) {
+      setValues((current) => ({ ...current, brandId: firstWritableBrand.brand.id }));
+    }
+  }, [memberships.data, values.brandId]);
 
   return (
     <form
@@ -61,15 +79,40 @@ export function JobCreateForm() {
         </div>
       </div>
 
-      <Field label="Brand ID" name="brandId">
-        <Input
-          className="rounded-xl border-white/10 bg-black/25 text-white placeholder:text-white/28 focus-visible:ring-[#D85A30]"
-          id="brandId"
-          onChange={(event) => updateValue("brandId", event.target.value)}
-          placeholder="Your brand UUID"
-          required
-          value={values.brandId}
-        />
+      <Field label="Brand" name="brandId">
+        {memberships.isLoading ? (
+          <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white/48">
+            Loading your brand teams...
+          </div>
+        ) : memberships.isError ? (
+          <BrandState
+            description="Sign in with a brand member account to publish briefs."
+            title="No brand session found"
+          />
+        ) : membershipRows.length === 0 ? (
+          <BrandState
+            description="Create or join a brand organization before posting campaign briefs."
+            title="No brand memberships yet"
+          />
+        ) : (
+          <select
+            className="h-11 rounded-xl border border-white/10 bg-black/25 px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+            id="brandId"
+            onChange={(event) => updateValue("brandId", event.target.value)}
+            required
+            value={values.brandId}
+          >
+            {membershipRows.map((membership) => (
+              <option
+                disabled={!["owner", "admin", "recruiter"].includes(membership.member.role)}
+                key={membership.brand.id}
+                value={membership.brand.id}
+              >
+                {membership.brand.name} · {membership.member.role}
+              </option>
+            ))}
+          </select>
+        )}
       </Field>
 
       <Field label="Campaign title" name="title">
@@ -203,13 +246,27 @@ export function JobCreateForm() {
 
       <Button
         className="h-11 rounded-xl bg-[#D85A30] font-black text-white hover:bg-[#c54f29]"
-        disabled={mutation.isPending}
+        disabled={mutation.isPending || memberships.isLoading || !canPostForSelectedBrand}
       >
         {mutation.isPending ? "Publishing..." : "Publish brief"}
       </Button>
 
       {status && <p className="text-sm leading-6 text-white/58">{status}</p>}
     </form>
+  );
+}
+
+function BrandState({ description, title }: { description: string; title: string }) {
+  return (
+    <div className="flex gap-3 rounded-xl border border-white/10 bg-black/25 p-4">
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/8 text-white/54">
+        <Building2 className="h-4 w-4" />
+      </div>
+      <div>
+        <p className="text-sm font-black text-white">{title}</p>
+        <p className="mt-1 text-sm leading-6 text-white/52">{description}</p>
+      </div>
+    </div>
   );
 }
 

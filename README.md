@@ -18,7 +18,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Current jobs work: `/jobs` and `/jobs/[id]` render public creator briefs from tRPC with seeded fallback data, and the job router now supports brand-created briefs plus creator applications that open job message threads.
 - Current feed work: `/feed` now includes a creator composer plus optimistic like, comment, and share controls backed by the tRPC post mutations.
 - Current messaging work: `/messages` and `/messages/[threadId]` render LinkedIn-style inbox threads, with backend support for reading threads, sending messages, and starting direct conversations.
-- Current job workflow work: creators can submit applications from a brief, and brand members can publish or draft new briefs from `/jobs/new` through the real tRPC mutations.
+- Current job workflow work: creators can submit applications from a brief, and brand members can publish or draft new briefs from `/jobs/new` through the real tRPC mutations with a brand membership picker.
 
 ## Stack
 
@@ -72,6 +72,6 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 ## Next Build Areas
 
 1. Run the seed against the shared Neon database once credentials are configured.
-2. Replace the temporary brand ID field on `/jobs/new` with a Clerk organization/brand picker.
+2. Add applicant management for brands: submitted, shortlisted, hired, and rejected states.
 3. Add quota checks for job posting and applications once billing plans are active.
 4. Add realtime presence/read receipts for messages and persisted feed interaction counts.

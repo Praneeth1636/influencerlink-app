@@ -31,7 +31,7 @@ export default function NewJobPage() {
           <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
             <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Next unlock</p>
             <p className="mt-3 text-sm leading-6 text-white/58">
-              The manual brand ID field will become an organization picker when the full brand team dashboard lands.
+              Next we can add a brand setup flow for teams that land here before creating their company profile.
             </p>
           </article>
         </aside>

@@ -71,6 +71,18 @@ export async function getBrandProfileBySlug(db: Database, slug: string) {
   };
 }
 
+export async function listBrandMemberships(db: Database, user: User) {
+  return db
+    .select({
+      member: brandMembers,
+      brand: brands
+    })
+    .from(brandMembers)
+    .innerJoin(brands, eq(brands.id, brandMembers.brandId))
+    .where(eq(brandMembers.userId, user.id))
+    .orderBy(desc(brandMembers.joinedAt));
+}
+
 export async function updateBrand(db: Database, user: User, brandMember: BrandMember, input: BrandUpdateInput) {
   assertBrandAdmin(brandMember);
 

@@ -13,7 +13,12 @@ import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
 import { getThreadById, listThreads, sendMessage, startDirectThread } from "@/server/services/inbox-service";
 import { applyToJob, createJob, getJobById, listJobs } from "@/server/services/job-service";
-import { getBrandBySlug, getBrandProfileBySlug, updateBrand } from "@/server/services/brand-service";
+import {
+  getBrandBySlug,
+  getBrandProfileBySlug,
+  listBrandMemberships,
+  updateBrand
+} from "@/server/services/brand-service";
 import { inviteBrandMember } from "@/server/services/org-service";
 
 const serviceMocks = vi.hoisted(() => ({
@@ -56,6 +61,7 @@ const serviceMocks = vi.hoisted(() => ({
     getBrandById: vi.fn(),
     getBrandBySlug: vi.fn(),
     getBrandProfileBySlug: vi.fn(),
+    listBrandMemberships: vi.fn(),
     updateBrand: vi.fn()
   },
   org: {
@@ -367,6 +373,7 @@ describe("appRouter Phase 4.2 routers", () => {
       posts: [],
       jobs: []
     });
+    vi.mocked(listBrandMemberships).mockResolvedValueOnce([{ brand, member: brandMember }]);
     vi.mocked(updateBrand).mockResolvedValueOnce({ ...brand, tagline: "Beauty that moves culture" });
 
     await expect(caller().brand.bySlug({ slug: "Glossier" })).resolves.toEqual(brand);
@@ -376,6 +383,7 @@ describe("appRouter Phase 4.2 routers", () => {
       posts: [],
       jobs: []
     });
+    await expect(caller().brand.myMemberships()).resolves.toEqual([{ brand, member: brandMember }]);
     await expect(caller().brand.update({ brandId, tagline: "Beauty that moves culture" })).resolves.toMatchObject({
       tagline: "Beauty that moves culture"
     });
@@ -431,6 +439,7 @@ describe("appRouter Phase 4.2 routers", () => {
         })
     ],
     ["brand.update", () => caller({ user: null }).brand.update({ brandId, tagline: "New" })],
+    ["brand.myMemberships", () => caller({ user: null }).brand.myMemberships()],
     ["org.invite", () => caller({ user: null }).org.invite({ brandId, userId: memberUserId, role: "viewer" })],
     ["org.removeMember", () => caller({ user: null }).org.removeMember({ brandId, userId: memberUserId })],
     ["org.updateRole", () => caller({ user: null }).org.updateRole({ brandId, userId: memberUserId, role: "admin" })]
