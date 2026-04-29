@@ -50,6 +50,15 @@ test("jobs board and job detail pages load open briefs", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Sign in to apply" })).toBeVisible();
 });
 
+test("brand brief builder renders the real job create form", async ({ page }) => {
+  await page.goto("/jobs/new");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Create briefs creators can act on." })).toBeVisible();
+  await expect(page.getByLabel("Brand ID")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Publish brief" })).toBeVisible();
+});
+
 test("messages inbox and thread detail load conversations", async ({ page }) => {
   await page.goto("/messages");
 

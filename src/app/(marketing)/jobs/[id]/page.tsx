@@ -4,6 +4,7 @@ import { ArrowLeft, BriefcaseBusiness, CalendarDays, CheckCircle2, DollarSign, M
 import { Badge } from "@/components/ui/badge";
 import { getSeedJobBoardItem, mapJobDetail } from "@/lib/jobs/job-board";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
+import { JobApplyForm } from "./apply-form";
 
 type JobDetailPageProps = {
   params: Promise<{
@@ -42,7 +43,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             </Link>
             <Link
               className="inline-flex h-10 items-center justify-center rounded-xl bg-[#D85A30] px-4 text-sm font-black text-white transition hover:bg-[#c54f29]"
-              href="/login"
+              href="#apply"
             >
               <Send className="mr-2 h-4 w-4" />
               Apply
@@ -118,19 +119,14 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         </article>
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <article className="rounded-2xl border border-[#D85A30]/25 bg-[#D85A30]/10 p-5">
+          <article className="rounded-2xl border border-[#D85A30]/25 bg-[#D85A30]/10 p-5" id="apply">
             <p className="text-[11px] font-black tracking-[0.2em] text-[#ffb49c] uppercase">Creator action</p>
             <h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">Apply with a tight pitch.</h2>
             <p className="mt-3 text-sm leading-6 text-white/58">
-              The backend application flow is wired now. Once auth UI is connected, creators can submit a pitch and the
-              app will create the application plus a job message thread.
+              Submit a short, specific pitch. CreatorLink creates the application and opens a job conversation with the
+              brand recruiter.
             </p>
-            <Link
-              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-white text-sm font-black text-black transition hover:bg-[#ffdfd2]"
-              href="/login"
-            >
-              Sign in to apply
-            </Link>
+            <JobApplyForm jobId={job.id} />
           </article>
 
           <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
