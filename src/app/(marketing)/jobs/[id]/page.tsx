@@ -37,9 +37,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           <div className="ml-auto flex items-center gap-3">
             <Link
               className="hidden h-10 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c] sm:inline-flex"
-              href={`/company/${job.brandSlug}`}
+              href={`/jobs/${job.id}/applicants`}
             >
-              View brand
+              Review applicants
             </Link>
             <Link
               className="inline-flex h-10 items-center justify-center rounded-xl bg-[#D85A30] px-4 text-sm font-black text-white transition hover:bg-[#c54f29]"

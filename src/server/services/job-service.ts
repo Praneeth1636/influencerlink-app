@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
 import {
   brands,
+  creatorAggregates,
+  creators,
   jobApplications,
   jobs,
   messageThreads,
@@ -43,6 +45,28 @@ export type JobApplyInput = {
   attachments: Array<Record<string, unknown>>;
 };
 
+export type JobApplicantListInput = {
+  brandId: string;
+  jobId: string;
+};
+
+export type JobApplicationStatus = "submitted" | "shortlisted" | "rejected" | "hired";
+
+export type JobApplicationStatusInput = {
+  brandId: string;
+  applicationId: string;
+  status: JobApplicationStatus;
+};
+
+function assertRecruiterAccess(member: BrandMember) {
+  if (!["owner", "admin", "recruiter"].includes(member.role)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Recruiter access required"
+    });
+  }
+}
+
 export async function listJobs(db: Database, input: JobListInput) {
   const filters = [
     eq(jobs.status, "open"),
@@ -78,12 +102,7 @@ export async function getJobById(db: Database, id: string) {
 }
 
 export async function createJob(db: Database, user: User, member: BrandMember, input: JobCreateInput) {
-  if (!["owner", "admin", "recruiter"].includes(member.role)) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Recruiter access required to post jobs"
-    });
-  }
+  assertRecruiterAccess(member);
 
   const [created] = await db
     .insert(jobs)
@@ -121,6 +140,96 @@ export async function createJob(db: Database, user: User, member: BrandMember, i
   });
 
   return created;
+}
+
+export async function listJobApplicants(db: Database, _user: User, member: BrandMember, input: JobApplicantListInput) {
+  assertRecruiterAccess(member);
+
+  const [job] = await db
+    .select({
+      job: jobs,
+      brand: brands
+    })
+    .from(jobs)
+    .innerJoin(brands, eq(brands.id, jobs.brandId))
+    .where(and(eq(jobs.id, input.jobId), eq(jobs.brandId, input.brandId)))
+    .limit(1);
+
+  if (!job) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Brand job not found"
+    });
+  }
+
+  const applicants = await db
+    .select({
+      application: jobApplications,
+      creator: creators,
+      aggregate: creatorAggregates
+    })
+    .from(jobApplications)
+    .innerJoin(creators, eq(creators.id, jobApplications.creatorId))
+    .leftJoin(creatorAggregates, eq(creatorAggregates.creatorId, creators.id))
+    .where(eq(jobApplications.jobId, input.jobId))
+    .orderBy(desc(jobApplications.createdAt));
+
+  return {
+    ...job,
+    applicants
+  };
+}
+
+export async function updateJobApplicationStatus(
+  db: Database,
+  user: User,
+  member: BrandMember,
+  input: JobApplicationStatusInput
+) {
+  assertRecruiterAccess(member);
+
+  const [application] = await db
+    .select({
+      application: jobApplications,
+      job: jobs
+    })
+    .from(jobApplications)
+    .innerJoin(jobs, eq(jobs.id, jobApplications.jobId))
+    .where(and(eq(jobApplications.id, input.applicationId), eq(jobs.brandId, input.brandId)))
+    .limit(1);
+
+  if (!application) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Application not found for this brand"
+    });
+  }
+
+  const [updated] = await db
+    .update(jobApplications)
+    .set({
+      status: input.status,
+      updatedAt: new Date()
+    })
+    .where(eq(jobApplications.id, input.applicationId))
+    .returning();
+
+  if (!updated) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Unable to update application"
+    });
+  }
+
+  await writeAuditLog(db, {
+    user,
+    action: "job_application.update_status",
+    entityType: "job_application",
+    entityId: input.applicationId,
+    metadata: { jobId: application.job.id, brandId: input.brandId, status: input.status }
+  });
+
+  return updated;
 }
 
 export async function applyToJob(db: Database, user: User, creator: Creator, input: JobApplyInput) {

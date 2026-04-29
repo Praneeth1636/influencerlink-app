@@ -15,6 +15,7 @@ describe("buildSeedData", () => {
     expect(seed.posts).toHaveLength(100);
     expect(seed.follows).toHaveLength(120);
     expect(seed.jobs).toHaveLength(20);
+    expect(seed.jobApplications).toHaveLength(80);
     expect(seed.messageThreads).toHaveLength(12);
     expect(seed.threadParticipants).toHaveLength(24);
     expect(seed.messages).toHaveLength(36);
@@ -32,6 +33,7 @@ describe("buildSeedData", () => {
       ...seed.posts.map((row) => row.id),
       ...seed.follows.map((row) => row.id),
       ...seed.jobs.map((row) => row.id),
+      ...seed.jobApplications.map((row) => row.id),
       ...seed.messageThreads.map((row) => row.id),
       ...seed.messages.map((row) => row.id),
       ...seed.subscriptionPlans.map((row) => row.id)

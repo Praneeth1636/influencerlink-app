@@ -59,6 +59,15 @@ test("brand brief builder renders the real job create form", async ({ page }) =>
   await expect(page.getByRole("button", { name: "Publish brief" })).toBeDisabled();
 });
 
+test("brand applicant pipeline loads seeded applications", async ({ page }) => {
+  await page.goto("/jobs/00000000-0000-4000-8000-000000008000/applicants");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Manage applicants for Glossier." })).toBeVisible();
+  await expect(page.getByText("Applicant pipeline")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Sara Rivera" })).toBeVisible();
+});
+
 test("messages inbox and thread detail load conversations", async ({ page }) => {
   await page.goto("/messages");
 

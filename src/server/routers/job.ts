@@ -1,6 +1,19 @@
 import { z } from "zod";
-import { brandWriteProcedure, createTRPCRouter, creatorWriteProcedure, publicProcedure } from "@/server/trpc";
-import { applyToJob, createJob, getJobById, listJobs } from "@/server/services/job-service";
+import {
+  brandProcedure,
+  brandWriteProcedure,
+  createTRPCRouter,
+  creatorWriteProcedure,
+  publicProcedure
+} from "@/server/trpc";
+import {
+  applyToJob,
+  createJob,
+  getJobById,
+  listJobApplicants,
+  listJobs,
+  updateJobApplicationStatus
+} from "@/server/services/job-service";
 
 const deliverableInput = z.record(z.string(), z.unknown());
 
@@ -42,6 +55,33 @@ export const jobRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) =>
       createJob(ctx.db, ctx.user, ctx.brandMember, {
+        ...input,
+        brandId: ctx.brandId
+      })
+    ),
+
+  applicants: brandProcedure
+    .input(
+      z.object({
+        jobId: z.string().uuid()
+      })
+    )
+    .query(({ ctx, input }) =>
+      listJobApplicants(ctx.db, ctx.user, ctx.brandMember, {
+        ...input,
+        brandId: ctx.brandId
+      })
+    ),
+
+  updateApplicationStatus: brandWriteProcedure
+    .input(
+      z.object({
+        applicationId: z.string().uuid(),
+        status: z.enum(["submitted", "shortlisted", "rejected", "hired"])
+      })
+    )
+    .mutation(({ ctx, input }) =>
+      updateJobApplicationStatus(ctx.db, ctx.user, ctx.brandMember, {
         ...input,
         brandId: ctx.brandId
       })

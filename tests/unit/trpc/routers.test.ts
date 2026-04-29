@@ -12,7 +12,14 @@ import {
 import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
 import { getThreadById, listThreads, sendMessage, startDirectThread } from "@/server/services/inbox-service";
-import { applyToJob, createJob, getJobById, listJobs } from "@/server/services/job-service";
+import {
+  applyToJob,
+  createJob,
+  getJobById,
+  listJobApplicants,
+  listJobs,
+  updateJobApplicationStatus
+} from "@/server/services/job-service";
 import {
   getBrandBySlug,
   getBrandProfileBySlug,
@@ -55,7 +62,9 @@ const serviceMocks = vi.hoisted(() => ({
     listJobs: vi.fn(),
     getJobById: vi.fn(),
     createJob: vi.fn(),
-    applyToJob: vi.fn()
+    applyToJob: vi.fn(),
+    listJobApplicants: vi.fn(),
+    updateJobApplicationStatus: vi.fn()
   },
   brand: {
     getBrandById: vi.fn(),
@@ -320,10 +329,17 @@ describe("appRouter Phase 4.2 routers", () => {
       updatedAt: now
     };
     const thread = { id: threadId, type: "job" as const, jobId, createdAt: now, lastMessageAt: now };
+    const applicants = {
+      job,
+      brand,
+      applicants: [{ application, creator, aggregate: null }]
+    };
 
     vi.mocked(listJobs).mockResolvedValueOnce([{ job, brand }]);
     vi.mocked(getJobById).mockResolvedValueOnce({ job, brand });
     vi.mocked(createJob).mockResolvedValueOnce(job);
+    vi.mocked(listJobApplicants).mockResolvedValueOnce(applicants);
+    vi.mocked(updateJobApplicationStatus).mockResolvedValueOnce({ ...application, status: "shortlisted" });
     vi.mocked(applyToJob).mockResolvedValueOnce({ application, thread });
 
     await expect(caller().job.list({ limit: 10, niche: "Beauty" })).resolves.toEqual([{ job, brand }]);
@@ -339,6 +355,14 @@ describe("appRouter Phase 4.2 routers", () => {
         status: "open"
       })
     ).resolves.toEqual(job);
+    await expect(caller().job.applicants({ brandId, jobId })).resolves.toEqual(applicants);
+    await expect(
+      caller().job.updateApplicationStatus({
+        brandId,
+        applicationId: application.id,
+        status: "shortlisted"
+      })
+    ).resolves.toMatchObject({ status: "shortlisted" });
     await expect(
       caller().job.applyToJob({
         jobId,
@@ -436,6 +460,16 @@ describe("appRouter Phase 4.2 routers", () => {
         caller({ user: null }).job.applyToJob({
           jobId,
           pitch: "I can make this launch feel native to beauty audiences."
+        })
+    ],
+    ["job.applicants", () => caller({ user: null }).job.applicants({ brandId, jobId })],
+    [
+      "job.updateApplicationStatus",
+      () =>
+        caller({ user: null }).job.updateApplicationStatus({
+          brandId,
+          applicationId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+          status: "shortlisted"
         })
     ],
     ["brand.update", () => caller({ user: null }).brand.update({ brandId, tagline: "New" })],

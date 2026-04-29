@@ -9,6 +9,7 @@ import {
   creatorPlatforms,
   creators,
   follows,
+  jobApplications,
   jobs,
   messages,
   messageThreads,
@@ -364,6 +365,32 @@ export function buildSeedData() {
     };
   });
 
+  const jobApplicationRows = jobRows.flatMap((job, jobIndex): Array<typeof jobApplications.$inferInsert> => {
+    const statuses: Array<typeof jobApplications.$inferInsert.status> = [
+      "submitted",
+      "shortlisted",
+      "rejected",
+      "hired"
+    ];
+
+    return Array.from({ length: 4 }, (_, applicationIndex): typeof jobApplications.$inferInsert => {
+      const creator = creatorSeeds[(jobIndex * 4 + applicationIndex) % creatorSeeds.length]!;
+      const proposedRateCents = creator.baseRateCents + applicationIndex * 25_000;
+
+      return {
+        id: seedUuid(8_500 + jobIndex * 10 + applicationIndex),
+        jobId: job.id!,
+        creatorId: creator.id,
+        pitch: `${creator.displayName} can turn this brief into ${creator.niches[0]?.toLowerCase()} content for an audience with verified reach and a clear brand fit.`,
+        proposedRateCents,
+        attachments: [],
+        status: statuses[(jobIndex + applicationIndex) % statuses.length],
+        createdAt: new Date(Date.UTC(2026, 3, 24 + (jobIndex % 5), 11, applicationIndex, 0)),
+        updatedAt: new Date(Date.UTC(2026, 3, 24 + (jobIndex % 5), 11, applicationIndex, 0))
+      };
+    });
+  });
+
   const threadRows = Array.from({ length: 12 }, (_, index): typeof messageThreads.$inferInsert => {
     const job = jobRows[index % jobRows.length]!;
 
@@ -476,6 +503,7 @@ export function buildSeedData() {
     posts: postRows,
     follows: followRows,
     jobs: jobRows,
+    jobApplications: jobApplicationRows,
     messageThreads: threadRows,
     threadParticipants: threadParticipantRows,
     messages: messageRows,
@@ -634,6 +662,19 @@ export async function seedDatabase(db: SeedDatabase) {
       }
     });
   await db
+    .insert(jobApplications)
+    .values(data.jobApplications)
+    .onConflictDoUpdate({
+      target: jobApplications.id,
+      set: {
+        pitch: sql`excluded.pitch`,
+        proposedRateCents: sql`excluded.proposed_rate_cents`,
+        attachments: sql`excluded.attachments`,
+        status: sql`excluded.status`,
+        updatedAt: new Date()
+      }
+    });
+  await db
     .insert(messageThreads)
     .values(data.messageThreads)
     .onConflictDoUpdate({
@@ -689,6 +730,7 @@ export async function seedDatabase(db: SeedDatabase) {
     posts: data.posts.length,
     follows: data.follows.length,
     jobs: data.jobs.length,
+    jobApplications: data.jobApplications.length,
     messages: data.messages.length
   };
 }
