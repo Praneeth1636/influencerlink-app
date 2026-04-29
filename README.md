@@ -20,6 +20,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Current messaging work: `/messages` and `/messages/[threadId]` render LinkedIn-style inbox threads, with backend support for reading threads, sending messages, and starting direct conversations.
 - Current job workflow work: creators can submit applications from a brief, and brand members can publish or draft new briefs from `/jobs/new` through the real tRPC mutations with a brand membership picker.
 - Current applicant work: `/jobs/[id]/applicants` gives brand recruiters a Kanban-style pipeline to review submitted creators and move applications through submitted, shortlisted, hired, and rejected.
+- Current creator jobs work: `/jobs/saved` gives creators a workspace for saved briefs and application history, backed by save/unsave and creator application tRPC procedures.
 
 ## Stack
 
@@ -73,6 +74,6 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 ## Next Build Areas
 
 1. Run the seed against the shared Neon database once credentials are configured.
-2. Add creator-side saved jobs and application history.
-3. Add quota checks for job posting and applications once billing plans are active.
-4. Add realtime presence/read receipts for messages and persisted feed interaction counts.
+2. Add quota checks for job posting and applications once billing plans are active.
+3. Add realtime presence/read receipts for messages and persisted feed interaction counts.
+4. Connect the job workspace to notifications when application statuses change.

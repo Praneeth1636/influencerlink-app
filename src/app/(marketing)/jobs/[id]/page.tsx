@@ -4,6 +4,7 @@ import { ArrowLeft, BriefcaseBusiness, CalendarDays, CheckCircle2, DollarSign, M
 import { Badge } from "@/components/ui/badge";
 import { getSeedJobBoardItem, mapJobDetail } from "@/lib/jobs/job-board";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
+import { SaveJobButton } from "../saved/save-job-button";
 import { JobApplyForm } from "./apply-form";
 
 type JobDetailPageProps = {
@@ -137,6 +138,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   {niche}
                 </span>
               ))}
+            </div>
+          </article>
+
+          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+            <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Creator workspace</p>
+            <p className="mt-3 text-sm leading-6 text-white/58">
+              Save this brief to compare it with other opportunities before pitching.
+            </p>
+            <div className="mt-5">
+              <SaveJobButton jobId={job.id} />
             </div>
           </article>
         </aside>

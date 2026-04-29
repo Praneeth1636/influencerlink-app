@@ -4,14 +4,18 @@ import {
   brandWriteProcedure,
   createTRPCRouter,
   creatorWriteProcedure,
+  creatorProcedure,
   publicProcedure
 } from "@/server/trpc";
 import {
   applyToJob,
   createJob,
   getJobById,
+  listCreatorJobWorkspace,
   listJobApplicants,
   listJobs,
+  saveJob,
+  unsaveJob,
   updateJobApplicationStatus
 } from "@/server/services/job-service";
 
@@ -86,6 +90,24 @@ export const jobRouter = createTRPCRouter({
         brandId: ctx.brandId
       })
     ),
+
+  creatorWorkspace: creatorProcedure.query(({ ctx }) => listCreatorJobWorkspace(ctx.db, ctx.user, ctx.creator)),
+
+  save: creatorWriteProcedure
+    .input(
+      z.object({
+        jobId: z.string().uuid()
+      })
+    )
+    .mutation(({ ctx, input }) => saveJob(ctx.db, ctx.user, ctx.creator, input)),
+
+  unsave: creatorWriteProcedure
+    .input(
+      z.object({
+        jobId: z.string().uuid()
+      })
+    )
+    .mutation(({ ctx, input }) => unsaveJob(ctx.db, ctx.user, ctx.creator, input)),
 
   applyToJob: creatorWriteProcedure
     .input(

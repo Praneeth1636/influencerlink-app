@@ -68,6 +68,15 @@ test("brand applicant pipeline loads seeded applications", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Sara Rivera" })).toBeVisible();
 });
 
+test("creator saved jobs workspace loads saved briefs and applications", async ({ page }) => {
+  await page.goto("/jobs/saved");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Track saved briefs and every creator application." })).toBeVisible();
+  await expect(page.getByText("Your pitch pipeline")).toBeVisible();
+  await expect(page.getByText("Briefs to revisit")).toBeVisible();
+});
+
 test("messages inbox and thread detail load conversations", async ({ page }) => {
   await page.goto("/messages");
 

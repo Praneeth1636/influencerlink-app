@@ -5,6 +5,7 @@ import {
   creatorAggregates,
   creators,
   jobApplications,
+  jobSavedByCreator,
   jobs,
   messageThreads,
   threadParticipants,
@@ -56,6 +57,10 @@ export type JobApplicationStatusInput = {
   brandId: string;
   applicationId: string;
   status: JobApplicationStatus;
+};
+
+export type JobSaveInput = {
+  jobId: string;
 };
 
 function assertRecruiterAccess(member: BrandMember) {
@@ -230,6 +235,90 @@ export async function updateJobApplicationStatus(
   });
 
   return updated;
+}
+
+export async function listCreatorJobWorkspace(db: Database, _user: User, creator: Creator) {
+  const applications = await db
+    .select({
+      application: jobApplications,
+      job: jobs,
+      brand: brands
+    })
+    .from(jobApplications)
+    .innerJoin(jobs, eq(jobs.id, jobApplications.jobId))
+    .innerJoin(brands, eq(brands.id, jobs.brandId))
+    .where(eq(jobApplications.creatorId, creator.id))
+    .orderBy(desc(jobApplications.createdAt));
+
+  const savedJobs = await db
+    .select({
+      saved: jobSavedByCreator,
+      job: jobs,
+      brand: brands
+    })
+    .from(jobSavedByCreator)
+    .innerJoin(jobs, eq(jobs.id, jobSavedByCreator.jobId))
+    .innerJoin(brands, eq(brands.id, jobs.brandId))
+    .where(eq(jobSavedByCreator.creatorId, creator.id))
+    .orderBy(desc(jobSavedByCreator.savedAt));
+
+  return {
+    applications,
+    savedJobs
+  };
+}
+
+export async function saveJob(db: Database, user: User, creator: Creator, input: JobSaveInput) {
+  const [job] = await db.select().from(jobs).where(eq(jobs.id, input.jobId)).limit(1);
+
+  if (!job || job.status !== "open") {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Open job not found"
+    });
+  }
+
+  await db
+    .insert(jobSavedByCreator)
+    .values({
+      jobId: input.jobId,
+      creatorId: creator.id
+    })
+    .onConflictDoNothing({
+      target: [jobSavedByCreator.jobId, jobSavedByCreator.creatorId]
+    });
+
+  await writeAuditLog(db, {
+    user,
+    action: "job.save",
+    entityType: "job",
+    entityId: input.jobId,
+    metadata: { creatorId: creator.id }
+  });
+
+  return {
+    jobId: input.jobId,
+    saved: true
+  };
+}
+
+export async function unsaveJob(db: Database, user: User, creator: Creator, input: JobSaveInput) {
+  await db
+    .delete(jobSavedByCreator)
+    .where(and(eq(jobSavedByCreator.jobId, input.jobId), eq(jobSavedByCreator.creatorId, creator.id)));
+
+  await writeAuditLog(db, {
+    user,
+    action: "job.unsave",
+    entityType: "job",
+    entityId: input.jobId,
+    metadata: { creatorId: creator.id }
+  });
+
+  return {
+    jobId: input.jobId,
+    saved: false
+  };
 }
 
 export async function applyToJob(db: Database, user: User, creator: Creator, input: JobApplyInput) {

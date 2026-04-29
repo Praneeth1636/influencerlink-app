@@ -48,6 +48,12 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           </div>
           <Link
             className="ml-auto rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+            href="/jobs/saved"
+          >
+            Saved jobs
+          </Link>
+          <Link
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
             href="/jobs/new"
           >
             Post brief

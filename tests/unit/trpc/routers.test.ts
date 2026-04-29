@@ -16,8 +16,11 @@ import {
   applyToJob,
   createJob,
   getJobById,
+  listCreatorJobWorkspace,
   listJobApplicants,
   listJobs,
+  saveJob,
+  unsaveJob,
   updateJobApplicationStatus
 } from "@/server/services/job-service";
 import {
@@ -64,6 +67,9 @@ const serviceMocks = vi.hoisted(() => ({
     createJob: vi.fn(),
     applyToJob: vi.fn(),
     listJobApplicants: vi.fn(),
+    listCreatorJobWorkspace: vi.fn(),
+    saveJob: vi.fn(),
+    unsaveJob: vi.fn(),
     updateJobApplicationStatus: vi.fn()
   },
   brand: {
@@ -339,6 +345,12 @@ describe("appRouter Phase 4.2 routers", () => {
     vi.mocked(getJobById).mockResolvedValueOnce({ job, brand });
     vi.mocked(createJob).mockResolvedValueOnce(job);
     vi.mocked(listJobApplicants).mockResolvedValueOnce(applicants);
+    vi.mocked(listCreatorJobWorkspace).mockResolvedValueOnce({
+      applications: [{ application, job, brand }],
+      savedJobs: [{ saved: { jobId, creatorId, savedAt: now }, job, brand }]
+    });
+    vi.mocked(saveJob).mockResolvedValueOnce({ jobId, saved: true });
+    vi.mocked(unsaveJob).mockResolvedValueOnce({ jobId, saved: false });
     vi.mocked(updateJobApplicationStatus).mockResolvedValueOnce({ ...application, status: "shortlisted" });
     vi.mocked(applyToJob).mockResolvedValueOnce({ application, thread });
 
@@ -355,6 +367,12 @@ describe("appRouter Phase 4.2 routers", () => {
         status: "open"
       })
     ).resolves.toEqual(job);
+    await expect(caller().job.creatorWorkspace()).resolves.toMatchObject({
+      applications: [{ application }],
+      savedJobs: [{ saved: { jobId } }]
+    });
+    await expect(caller().job.save({ jobId })).resolves.toEqual({ jobId, saved: true });
+    await expect(caller().job.unsave({ jobId })).resolves.toEqual({ jobId, saved: false });
     await expect(caller().job.applicants({ brandId, jobId })).resolves.toEqual(applicants);
     await expect(
       caller().job.updateApplicationStatus({
@@ -462,6 +480,9 @@ describe("appRouter Phase 4.2 routers", () => {
           pitch: "I can make this launch feel native to beauty audiences."
         })
     ],
+    ["job.creatorWorkspace", () => caller({ user: null }).job.creatorWorkspace()],
+    ["job.save", () => caller({ user: null }).job.save({ jobId })],
+    ["job.unsave", () => caller({ user: null }).job.unsave({ jobId })],
     ["job.applicants", () => caller({ user: null }).job.applicants({ brandId, jobId })],
     [
       "job.updateApplicationStatus",

@@ -10,6 +10,7 @@ import {
   creators,
   follows,
   jobApplications,
+  jobSavedByCreator,
   jobs,
   messages,
   messageThreads,
@@ -391,6 +392,14 @@ export function buildSeedData() {
     });
   });
 
+  const savedJobRows = creatorSeeds.slice(0, 20).flatMap((creator, creatorIndex) =>
+    Array.from({ length: 3 }, (_, savedIndex): typeof jobSavedByCreator.$inferInsert => ({
+      creatorId: creator.id,
+      jobId: jobRows[(creatorIndex + savedIndex * 3) % jobRows.length]!.id!,
+      savedAt: new Date(Date.UTC(2026, 3, 25 + (savedIndex % 3), 9, creatorIndex, 0))
+    }))
+  );
+
   const threadRows = Array.from({ length: 12 }, (_, index): typeof messageThreads.$inferInsert => {
     const job = jobRows[index % jobRows.length]!;
 
@@ -504,6 +513,7 @@ export function buildSeedData() {
     follows: followRows,
     jobs: jobRows,
     jobApplications: jobApplicationRows,
+    jobSavedByCreator: savedJobRows,
     messageThreads: threadRows,
     threadParticipants: threadParticipantRows,
     messages: messageRows,
@@ -675,6 +685,12 @@ export async function seedDatabase(db: SeedDatabase) {
       }
     });
   await db
+    .insert(jobSavedByCreator)
+    .values(data.jobSavedByCreator)
+    .onConflictDoNothing({
+      target: [jobSavedByCreator.jobId, jobSavedByCreator.creatorId]
+    });
+  await db
     .insert(messageThreads)
     .values(data.messageThreads)
     .onConflictDoUpdate({
@@ -731,6 +747,7 @@ export async function seedDatabase(db: SeedDatabase) {
     follows: data.follows.length,
     jobs: data.jobs.length,
     jobApplications: data.jobApplications.length,
+    savedJobs: data.jobSavedByCreator.length,
     messages: data.messages.length
   };
 }

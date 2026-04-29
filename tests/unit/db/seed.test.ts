@@ -16,6 +16,7 @@ describe("buildSeedData", () => {
     expect(seed.follows).toHaveLength(120);
     expect(seed.jobs).toHaveLength(20);
     expect(seed.jobApplications).toHaveLength(80);
+    expect(seed.jobSavedByCreator).toHaveLength(60);
     expect(seed.messageThreads).toHaveLength(12);
     expect(seed.threadParticipants).toHaveLength(24);
     expect(seed.messages).toHaveLength(36);
@@ -43,6 +44,7 @@ describe("buildSeedData", () => {
     expect(seed.creators[0]?.handle).toBe("sararivera");
     expect(seed.posts[0]?.authorType).toBe("creator");
     expect(seed.jobs[0]?.title).toContain("Glossier");
+    expect(seed.jobSavedByCreator[0]?.jobId).toBe(seed.jobs[0]?.id);
     expect(seed.messages[0]?.body).toContain("Glossier");
   });
 });
