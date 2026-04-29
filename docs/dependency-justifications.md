@@ -22,3 +22,12 @@
 - `drizzle-orm`: typed Postgres schema and query foundation for the real CreatorLink data model.
 - `@neondatabase/serverless`: Neon Postgres driver for the locked production stack.
 - `drizzle-kit`: migration generation and Drizzle Studio tooling for schema lifecycle work.
+
+## Phase 4 API foundation
+
+- `@trpc/server`: type-safe server router and procedure layer for the app API.
+- `@trpc/client`: browser/RSC client transport for tRPC calls.
+- `@trpc/react-query`: React bindings that connect tRPC procedures to TanStack Query.
+- `@tanstack/react-query`: client-side query cache, loading state, and mutation orchestration.
+- `superjson`: shared transformer so tRPC can safely serialize dates and richer values.
+- `svix`: Clerk webhook signature verification dependency used by `/api/webhooks/clerk`.
