@@ -33,3 +33,7 @@
 - `svix`: Clerk webhook signature verification dependency used by `/api/webhooks/clerk`.
 - `@upstash/redis`: serverless Redis REST client for request quota storage.
 - `@upstash/ratelimit`: sliding-window limiter used by tRPC read/write/AI procedure tiers.
+
+## Auth UI
+
+- `@clerk/themes`: official Clerk appearance themes used by the shared login, signup, and app user menu styling.
