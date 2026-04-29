@@ -7,6 +7,7 @@ import { requireBrandMember, requireUser } from "@/lib/auth/rbac";
 import { db as defaultDb } from "@/lib/db/client";
 import { brandMembers, creators, users, type BrandMember, type Creator, type User } from "@/lib/db/schema";
 import { enforceRateLimit, type RateLimitKind } from "@/lib/rate-limit";
+import { formatTRPCError, toTRPCError } from "@/server/trpc-errors";
 
 export type Database = typeof defaultDb;
 
@@ -49,7 +50,10 @@ export async function createTRPCContext(options: CreateTRPCContextOptions): Prom
 }
 
 const t = initTRPC.context<TRPCContext>().create({
-  transformer: superjson
+  transformer: superjson,
+  errorFormatter({ error, shape }) {
+    return formatTRPCError({ error, shape });
+  }
 });
 
 const brandProcedureInput = z.object({
@@ -58,6 +62,14 @@ const brandProcedureInput = z.object({
 
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
+
+const errorBoundaryMiddleware = t.middleware(async ({ next }) => {
+  try {
+    return await next();
+  } catch (error) {
+    throw toTRPCError(error);
+  }
+});
 
 function rateLimitProcedure(kind: RateLimitKind) {
   return t.middleware(async ({ ctx, path, next }) => {
@@ -175,11 +187,13 @@ const brandMiddleware = t.middleware(async ({ ctx, input, next }) => {
   });
 });
 
-export const publicProcedure = t.procedure.use(readRateLimit);
+const baseProcedure = t.procedure.use(errorBoundaryMiddleware);
+
+export const publicProcedure = baseProcedure.use(readRateLimit);
 export const protectedProcedure = publicProcedure.use(authMiddleware);
-export const protectedWriteProcedure = t.procedure.use(writeRateLimit).use(authMiddleware);
+export const protectedWriteProcedure = baseProcedure.use(writeRateLimit).use(authMiddleware);
 export const creatorProcedure = protectedProcedure.use(creatorMiddleware);
 export const creatorWriteProcedure = protectedWriteProcedure.use(creatorMiddleware);
 export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(brandMiddleware);
 export const brandWriteProcedure = protectedWriteProcedure.input(brandProcedureInput).use(brandMiddleware);
-export const aiProcedure = t.procedure.use(aiRateLimit).use(authMiddleware);
+export const aiProcedure = baseProcedure.use(aiRateLimit).use(authMiddleware);
