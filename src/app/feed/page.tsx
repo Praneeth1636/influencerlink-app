@@ -6,9 +6,11 @@ import { useMemo, useState } from "react";
 import {
   BadgeCheck,
   DollarSign,
+  Heart,
   Layers3,
   MessageCircle,
   Radio,
+  Repeat2,
   Search,
   Send,
   ShieldCheck,
@@ -49,7 +51,14 @@ import {
   type ComposerDraft,
   type FeedPostType
 } from "@/lib/feed/composer";
-import { buildFeedDashboardData } from "@/lib/feed/dashboard-data";
+import { buildFeedDashboardData, type PostListOutput } from "@/lib/feed/dashboard-data";
+import {
+  addCommentState,
+  addShareState,
+  buildInitialInteractionState,
+  toggleLikeState,
+  type FeedInteractionState
+} from "@/lib/feed/interactions";
 import { trpc } from "@/lib/trpc/client";
 
 const initialCreator = seedInfluencers.find((creator) => creator.id === "sara") ?? seedInfluencers[0];
@@ -428,17 +437,7 @@ export default function FeedPage() {
                   />
                 )}
                 {feedData.state === "live" &&
-                  feedData.posts.map((post) => (
-                    <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={post.id}>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
-                          {post.authorType}
-                        </Badge>
-                        <span className="text-xs font-bold text-white/35">{post.type}</span>
-                      </div>
-                      <p className="mt-3 text-sm leading-6 text-white/62">{post.body}</p>
-                    </article>
-                  ))}
+                  feedData.posts.map((post) => <LiveFeedPostCard key={post.id} post={post} />)}
               </div>
             </Panel>
           </section>
@@ -535,6 +534,188 @@ function CreatorCard({ creator, campaign, onOpen }: { creator: Influencer; campa
         </Button>
       </div>
     </article>
+  );
+}
+
+function LiveFeedPostCard({ post }: { post: PostListOutput[number] }) {
+  const [interaction, setInteraction] = useState<FeedInteractionState>(() => buildInitialInteractionState(post.id));
+  const [commentDraft, setCommentDraft] = useState("");
+  const [shareDraft, setShareDraft] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const likeMutation = trpc.post.like.useMutation();
+  const unlikeMutation = trpc.post.unlike.useMutation();
+  const commentMutation = trpc.post.comment.useMutation();
+  const shareMutation = trpc.post.share.useMutation();
+  const isBusy =
+    likeMutation.isPending || unlikeMutation.isPending || commentMutation.isPending || shareMutation.isPending;
+
+  async function handleLike() {
+    const wasLiked = interaction.liked;
+    setInteraction((current) => toggleLikeState(current));
+    setStatus(null);
+
+    try {
+      if (wasLiked) {
+        await unlikeMutation.mutateAsync({ postId: post.id });
+      } else {
+        await likeMutation.mutateAsync({ postId: post.id });
+      }
+    } catch {
+      setInteraction((current) => toggleLikeState(current));
+      setStatus("Sign in to like posts.");
+    }
+  }
+
+  async function handleComment(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const body = commentDraft.trim();
+
+    if (!body) {
+      setStatus("Write a comment first.");
+      return;
+    }
+
+    setInteraction((current) => addCommentState(current));
+    setCommentDraft("");
+    setStatus(null);
+
+    try {
+      await commentMutation.mutateAsync({ postId: post.id, body });
+      setStatus("Comment added.");
+    } catch {
+      setInteraction((current) => ({ ...current, commentCount: Math.max(0, current.commentCount - 1) }));
+      setCommentDraft(body);
+      setStatus("Sign in to comment.");
+    }
+  }
+
+  async function handleShare(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const body = shareDraft.trim();
+
+    setInteraction((current) => addShareState(current));
+    setShareDraft("");
+    setStatus(null);
+
+    try {
+      await shareMutation.mutateAsync({ postId: post.id, body: body || undefined });
+      setStatus("Shared to your network.");
+    } catch {
+      setInteraction((current) => ({ ...current, shareCount: Math.max(0, current.shareCount - 1) }));
+      setShareDraft(body);
+      setStatus("Sign in to share posts.");
+    }
+  }
+
+  return (
+    <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-white/18 hover:bg-white/[0.055]">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">{post.authorType}</Badge>
+          <span className="text-xs font-bold text-white/35">{formatPostType(post.type)}</span>
+        </div>
+        <span className="text-xs font-bold text-white/32">{formatPostTime(post.createdAt)}</span>
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-white/68">{post.body}</p>
+
+      {post.mediaJson.length > 0 && (
+        <div className="mt-4 grid gap-2">
+          {post.mediaJson.map((item, index) => (
+            <a
+              className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs font-bold text-[#ffb49c] transition hover:border-[#D85A30]/35"
+              href={typeof item.url === "string" ? item.url : "#"}
+              key={`${post.id}-${index}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {typeof item.url === "string" ? item.url : "Attached media"}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
+        <InteractionButton active={interaction.liked} disabled={isBusy} label="Like post" onClick={handleLike}>
+          <Heart className={`h-4 w-4 ${interaction.liked ? "fill-current" : ""}`} />
+          {interaction.likeCount}
+        </InteractionButton>
+        <span className="inline-flex h-9 items-center gap-2 rounded-xl border border-white/10 px-3 text-sm font-bold text-white/56">
+          <MessageCircle className="h-4 w-4" />
+          {interaction.commentCount}
+        </span>
+        <span className="inline-flex h-9 items-center gap-2 rounded-xl border border-white/10 px-3 text-sm font-bold text-white/56">
+          <Repeat2 className="h-4 w-4" />
+          {interaction.shareCount}
+        </span>
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <form className="flex gap-2" onSubmit={handleComment}>
+          <input
+            className="h-10 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#D85A30]/50"
+            onChange={(event) => setCommentDraft(event.target.value)}
+            placeholder="Add a quick comment"
+            value={commentDraft}
+          />
+          <Button
+            className="h-10 rounded-xl bg-white/8 px-3 text-white hover:bg-white/14"
+            disabled={isBusy}
+            type="submit"
+          >
+            Comment
+          </Button>
+        </form>
+
+        <form className="flex gap-2" onSubmit={handleShare}>
+          <input
+            className="h-10 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#D85A30]/50"
+            onChange={(event) => setShareDraft(event.target.value)}
+            placeholder="Share with a note"
+            value={shareDraft}
+          />
+          <Button
+            className="h-10 rounded-xl bg-white/8 px-3 text-white hover:bg-white/14"
+            disabled={isBusy}
+            type="submit"
+          >
+            Share
+          </Button>
+        </form>
+      </div>
+
+      {status && <p className="mt-3 text-xs font-bold text-white/42">{status}</p>}
+    </article>
+  );
+}
+
+function InteractionButton({
+  active,
+  children,
+  disabled,
+  label,
+  onClick
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  disabled: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-label={label}
+      className={`inline-flex h-9 items-center gap-2 rounded-xl border px-3 text-sm font-bold transition ${
+        active
+          ? "border-[#D85A30]/35 bg-[#D85A30]/14 text-[#ffb49c]"
+          : "border-white/10 bg-transparent text-white/56 hover:border-white/22 hover:text-white"
+      }`}
+      disabled={disabled}
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
   );
 }
 
@@ -967,6 +1148,19 @@ function feedStateDot(state: string) {
   if (state === "loading") return "bg-sky-300 shadow-[0_0_18px_rgba(125,211,252,0.7)]";
   if (state === "empty") return "bg-amber-300 shadow-[0_0_18px_rgba(252,211,77,0.7)]";
   return "bg-[#D85A30] shadow-[0_0_18px_rgba(216,90,48,0.75)]";
+}
+
+function formatPostType(type: string) {
+  return type.replaceAll("_", " ");
+}
+
+function formatPostTime(value: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(value);
 }
 
 function initials(name: string) {
