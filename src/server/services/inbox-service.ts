@@ -3,6 +3,7 @@ import { and, desc, eq, gt } from "drizzle-orm";
 import { messages, messageThreads, threadParticipants, type User } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
+import { assertQuotaAvailable } from "./billing-service";
 
 export async function listThreads(db: Database, user: User, input: { limit: number }) {
   const rows = await db
@@ -105,6 +106,8 @@ export async function sendMessage(
     replyToId?: string;
   }
 ) {
+  await assertQuotaAvailable(db, { user }, "dmsSent");
+
   const [participant] = await db
     .select()
     .from(threadParticipants)
@@ -146,6 +149,8 @@ export async function sendMessage(
 }
 
 export async function startDirectThread(db: Database, user: User, input: { participantUserId: string; body: string }) {
+  await assertQuotaAvailable(db, { user }, "dmsSent");
+
   if (input.participantUserId === user.id) {
     throw new TRPCError({
       code: "BAD_REQUEST",

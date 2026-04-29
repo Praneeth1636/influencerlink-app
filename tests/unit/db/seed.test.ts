@@ -21,7 +21,7 @@ describe("buildSeedData", () => {
     expect(seed.threadParticipants).toHaveLength(24);
     expect(seed.messages).toHaveLength(36);
     expect(seed.notifications).toHaveLength(80);
-    expect(seed.subscriptionPlans).toHaveLength(4);
+    expect(seed.subscriptionPlans).toHaveLength(7);
   });
 
   it("uses stable unique IDs so repeated seed runs stay idempotent", () => {

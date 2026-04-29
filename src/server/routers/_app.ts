@@ -1,4 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "@/server/trpc";
+import { billingRouter } from "./billing";
 import { brandRouter } from "./brand";
 import { creatorRouter } from "./creator";
 import { followRouter } from "./follow";
@@ -20,7 +21,8 @@ export const appRouter = createTRPCRouter({
   job: jobRouter,
   notification: notificationRouter,
   brand: brandRouter,
-  org: orgRouter
+  org: orgRouter,
+  billing: billingRouter
 });
 
 export type AppRouter = typeof appRouter;

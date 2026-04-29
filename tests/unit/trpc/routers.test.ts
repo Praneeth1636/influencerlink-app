@@ -7,6 +7,7 @@ import {
   getCreatorByHandle,
   getCreatorProfileByHandle,
   listCreators,
+  searchCreators,
   updateCreatorProfile
 } from "@/server/services/creator-service";
 import { createPost, likePost } from "@/server/services/post-service";
@@ -36,6 +37,7 @@ import {
   markAllNotificationsRead,
   markNotificationRead
 } from "@/server/services/notification-service";
+import { getBillingSummary } from "@/server/services/billing-service";
 
 const serviceMocks = vi.hoisted(() => ({
   creator: {
@@ -95,6 +97,9 @@ const serviceMocks = vi.hoisted(() => ({
     getUnreadNotificationCount: vi.fn(),
     markNotificationRead: vi.fn(),
     markAllNotificationsRead: vi.fn()
+  },
+  billing: {
+    getBillingSummary: vi.fn()
   }
 }));
 
@@ -106,6 +111,7 @@ vi.mock("@/server/services/job-service", () => serviceMocks.job);
 vi.mock("@/server/services/brand-service", () => serviceMocks.brand);
 vi.mock("@/server/services/org-service", () => serviceMocks.org);
 vi.mock("@/server/services/notification-service", () => serviceMocks.notification);
+vi.mock("@/server/services/billing-service", () => serviceMocks.billing);
 
 const createCaller = createCallerFactory(appRouter);
 const db = {} as Database;
@@ -189,6 +195,7 @@ describe("appRouter Phase 4.2 routers", () => {
       posts: []
     });
     vi.mocked(updateCreatorProfile).mockResolvedValueOnce({ ...creator, headline: "UGC strategist" });
+    vi.mocked(searchCreators).mockResolvedValueOnce([{ creator, aggregate: null }]);
 
     await expect(caller().creator.list({ niche: "beauty" })).resolves.toEqual({
       items: [{ creator, aggregate: null }],
@@ -200,6 +207,7 @@ describe("appRouter Phase 4.2 routers", () => {
       platforms: [],
       posts: []
     });
+    await expect(caller().creator.search({ query: "beauty" })).resolves.toEqual([{ creator, aggregate: null }]);
     await expect(caller().creator.update({ headline: "UGC strategist" })).resolves.toMatchObject({
       headline: "UGC strategist"
     });
@@ -478,8 +486,21 @@ describe("appRouter Phase 4.2 routers", () => {
     await expect(caller().notification.markAllRead()).resolves.toEqual({ updatedCount: 3 });
   });
 
+  it("billing router returns the current plan and usage summary", async () => {
+    const summary = {
+      creator: null,
+      brand: null,
+      plans: []
+    };
+
+    vi.mocked(getBillingSummary).mockResolvedValueOnce(summary);
+
+    await expect(caller().billing.summary({ brandId })).resolves.toEqual(summary);
+  });
+
   it.each([
     ["creator.update", () => caller({ user: null }).creator.update({ headline: "New headline" })],
+    ["creator.search", () => caller({ user: null }).creator.search({ query: "beauty" })],
     ["post.create", () => caller({ user: null }).post.create({ body: "Launch day" })],
     ["post.like", () => caller({ user: null }).post.like({ postId })],
     ["post.unlike", () => caller({ user: null }).post.unlike({ postId })],
@@ -539,7 +560,8 @@ describe("appRouter Phase 4.2 routers", () => {
     ["notification.list", () => caller({ user: null }).notification.list({ limit: 10 })],
     ["notification.unreadCount", () => caller({ user: null }).notification.unreadCount()],
     ["notification.markRead", () => caller({ user: null }).notification.markRead({ notificationId })],
-    ["notification.markAllRead", () => caller({ user: null }).notification.markAllRead()]
+    ["notification.markAllRead", () => caller({ user: null }).notification.markAllRead()],
+    ["billing.summary", () => caller({ user: null }).billing.summary({})]
   ])("%s rejects unauthenticated callers", async (_name, run) => {
     await expectUnauthorized(run);
   });

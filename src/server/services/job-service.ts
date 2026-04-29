@@ -15,6 +15,7 @@ import {
 } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
+import { assertQuotaAvailable } from "./billing-service";
 import { createNotification } from "./notification-service";
 
 export type JobListInput = {
@@ -109,6 +110,7 @@ export async function getJobById(db: Database, id: string) {
 
 export async function createJob(db: Database, user: User, member: BrandMember, input: JobCreateInput) {
   assertRecruiterAccess(member);
+  await assertQuotaAvailable(db, { user, brandId: input.brandId }, "jobsPosted");
 
   const [created] = await db
     .insert(jobs)
@@ -335,6 +337,8 @@ export async function unsaveJob(db: Database, user: User, creator: Creator, inpu
 }
 
 export async function applyToJob(db: Database, user: User, creator: Creator, input: JobApplyInput) {
+  await assertQuotaAvailable(db, { user, creator }, "applications");
+
   const [job] = await db.select().from(jobs).where(eq(jobs.id, input.jobId)).limit(1);
 
   if (!job || job.status !== "open") {

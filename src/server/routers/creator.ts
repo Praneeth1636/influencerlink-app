@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, creatorWriteProcedure, publicProcedure } from "@/server/trpc";
+import { createTRPCRouter, creatorWriteProcedure, protectedProcedure, publicProcedure } from "@/server/trpc";
 import {
   getCreatorByHandle,
   getCreatorById,
@@ -48,14 +48,14 @@ export const creatorRouter = createTRPCRouter({
     .input(z.object({ handle: z.string().min(3).max(30).toLowerCase() }))
     .query(({ ctx, input }) => getCreatorProfileByHandle(ctx.db, input.handle)),
 
-  search: publicProcedure
+  search: protectedProcedure
     .input(
       z.object({
         query: z.string().trim().min(1).max(120),
         limit: z.number().int().min(1).max(50).default(20)
       })
     )
-    .query(({ ctx, input }) => searchCreators(ctx.db, input)),
+    .query(({ ctx, input }) => searchCreators(ctx.db, ctx.user, input)),
 
   update: creatorWriteProcedure.input(creatorUpdateInput).mutation(({ ctx, input }) => {
     return updateCreatorProfile(ctx.db, ctx.user, ctx.creator, input);

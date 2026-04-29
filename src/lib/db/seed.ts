@@ -504,7 +504,7 @@ export function buildSeedData() {
       audience: "creator",
       priceCents: 0,
       interval: "month",
-      features: { posts: true, applicationsPerMonth: 5 }
+      features: { posts: true, applicationsPerMonth: 5, searchesPerMonth: 20 }
     },
     {
       id: seedUuid(7_001),
@@ -513,6 +513,22 @@ export function buildSeedData() {
       priceCents: 1_900,
       interval: "month",
       features: { applications: "unlimited", profileViews: true, analytics: true }
+    },
+    {
+      id: seedUuid(7_002),
+      name: "Creator Pro+",
+      audience: "creator",
+      priceCents: 4_900,
+      interval: "month",
+      features: { applications: "unlimited", verifiedFastTrack: true, aiDrafting: true }
+    },
+    {
+      id: seedUuid(7_009),
+      name: "Brand Free",
+      audience: "brand",
+      priceCents: 0,
+      interval: "month",
+      features: { jobsPerMonth: 1, dmsPerMonth: 5, searchesPerMonth: 5 }
     },
     {
       id: seedUuid(7_010),
@@ -529,6 +545,14 @@ export function buildSeedData() {
       priceCents: 49_900,
       interval: "month",
       features: { dmsPerMonth: 1000, jobs: "unlimited", aiMatching: true }
+    },
+    {
+      id: seedUuid(7_012),
+      name: "Brand Enterprise",
+      audience: "brand",
+      priceCents: 0,
+      interval: "month",
+      features: { sso: true, auditExports: true, sla: true }
     }
   ];
 

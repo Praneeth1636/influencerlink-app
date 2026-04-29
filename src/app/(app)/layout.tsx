@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/search", label: "Search" },
   { href: "/messages", label: "Messages" },
   { href: "/notifications", label: "Alerts" },
+  { href: "/settings/billing", label: "Billing" },
   { href: "/creator", label: "Creator" }
 ];
 

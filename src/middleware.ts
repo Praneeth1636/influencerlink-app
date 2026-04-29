@@ -14,6 +14,7 @@ const isProtectedRoute = createRouteMatcher([
   "/notifications(.*)",
   "/profile(.*)",
   "/search(.*)",
+  "/settings(.*)",
   "/onboarding(.*)"
 ]);
 

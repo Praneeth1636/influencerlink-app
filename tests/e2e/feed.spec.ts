@@ -98,3 +98,12 @@ test("notifications page loads workspace alerts", async ({ page }) => {
   await expect(page.getByText("Workspace alerts")).toBeVisible();
   await expect(page.getByRole("button", { name: "Mark all read" })).toBeVisible();
 });
+
+test("billing settings page loads plan usage", async ({ page }) => {
+  await page.goto("/settings/billing");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Turn CreatorLink into a paid marketplace." })).toBeVisible();
+  await expect(page.getByText("Plan catalog")).toBeVisible();
+  await expect(page.getByText("Brand Growth")).toBeVisible();
+});

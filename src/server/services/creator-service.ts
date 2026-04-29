@@ -11,6 +11,7 @@ import {
 } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
+import { assertQuotaAvailable, recordSearchRun } from "./billing-service";
 
 export type CreatorListInput = {
   limit: number;
@@ -136,10 +137,12 @@ export async function getCreatorProfileByHandle(db: Database, handle: string) {
   };
 }
 
-export async function searchCreators(db: Database, input: CreatorSearchInput) {
+export async function searchCreators(db: Database, user: User, input: CreatorSearchInput) {
+  await assertQuotaAvailable(db, { user }, "searchesRun");
+
   const query = `%${input.query}%`;
 
-  return db
+  const results = await db
     .select({
       creator: creators,
       aggregate: creatorAggregates
@@ -157,6 +160,13 @@ export async function searchCreators(db: Database, input: CreatorSearchInput) {
     )
     .orderBy(desc(creatorAggregates.totalReach), desc(creators.createdAt))
     .limit(input.limit);
+
+  await recordSearchRun(db, user, {
+    query: input.query,
+    filters: { limit: input.limit }
+  });
+
+  return results;
 }
 
 export async function updateCreatorProfile(db: Database, user: User, creator: Creator, input: CreatorUpdateInput) {
