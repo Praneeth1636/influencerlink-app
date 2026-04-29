@@ -12,7 +12,7 @@ import {
 import { createPost, likePost } from "@/server/services/post-service";
 import { followTarget, listFollowers } from "@/server/services/follow-service";
 import { listThreads } from "@/server/services/inbox-service";
-import { getBrandBySlug, updateBrand } from "@/server/services/brand-service";
+import { getBrandBySlug, getBrandProfileBySlug, updateBrand } from "@/server/services/brand-service";
 import { inviteBrandMember } from "@/server/services/org-service";
 
 const serviceMocks = vi.hoisted(() => ({
@@ -45,6 +45,7 @@ const serviceMocks = vi.hoisted(() => ({
   brand: {
     getBrandById: vi.fn(),
     getBrandBySlug: vi.fn(),
+    getBrandProfileBySlug: vi.fn(),
     updateBrand: vi.fn()
   },
   org: {
@@ -234,9 +235,21 @@ describe("appRouter Phase 4.2 routers", () => {
       updatedAt: now
     };
     vi.mocked(getBrandBySlug).mockResolvedValueOnce(brand);
+    vi.mocked(getBrandProfileBySlug).mockResolvedValueOnce({
+      brand,
+      team: [],
+      posts: [],
+      jobs: []
+    });
     vi.mocked(updateBrand).mockResolvedValueOnce({ ...brand, tagline: "Beauty that moves culture" });
 
     await expect(caller().brand.bySlug({ slug: "Glossier" })).resolves.toEqual(brand);
+    await expect(caller().brand.profile({ slug: "Glossier" })).resolves.toMatchObject({
+      brand: { slug: "glossier" },
+      team: [],
+      posts: [],
+      jobs: []
+    });
     await expect(caller().brand.update({ brandId, tagline: "Beauty that moves culture" })).resolves.toMatchObject({
       tagline: "Beauty that moves culture"
     });

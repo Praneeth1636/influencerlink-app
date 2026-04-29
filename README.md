@@ -13,6 +13,7 @@ The repo has moved past the static prototype foundation and now has the backend 
 - Current bridge work: `/feed` now consumes tRPC creator and post queries through TanStack Query with loading, empty, offline, and live states while preserving demo fallback data until seed data is available.
 - Current data work: deterministic Drizzle seed data can populate 50 creators, 10 brands, and 100 posts for local product testing.
 - Current profile work: `/profile/[handle]` renders public creator profiles from tRPC with aggregate metrics, connected platforms, and creator posts.
+- Current brand work: `/company/[slug]` renders public brand pages from tRPC with team members, brand posts, and open jobs.
 
 ## Stack
 
@@ -66,6 +67,6 @@ SKIP_ENV_VALIDATION=true pnpm test:e2e
 ## Next Build Areas
 
 1. Run the seed against the shared Neon database once credentials are configured.
-2. Replace remaining prototype-only data on discovery, company, jobs, and messaging screens.
+2. Replace remaining prototype-only data on discovery, jobs, and messaging screens.
 3. Move routes into the locked `src/app/(marketing)`, `src/app/(auth)`, and `src/app/(app)` structure.
 4. Build the full feed composer and post interaction loop.

@@ -15,3 +15,11 @@ test("public creator profile loads by handle", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Sara Rivera" })).toBeVisible();
   await expect(page.getByText("Connected accounts")).toBeVisible();
 });
+
+test("public company page loads by slug", async ({ page }) => {
+  await page.goto("/company/resy");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Resy" })).toBeVisible();
+  await expect(page.getByText("Public members")).toBeVisible();
+});

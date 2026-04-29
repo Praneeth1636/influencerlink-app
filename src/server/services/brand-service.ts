@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
-import { brands, type Brand, type BrandMember, type User } from "@/lib/db/schema";
+import { and, desc, eq } from "drizzle-orm";
+import { brandMembers, brands, jobs, posts, users, type Brand, type BrandMember, type User } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 
@@ -30,6 +30,45 @@ export async function getBrandById(db: Database, id: string) {
 export async function getBrandBySlug(db: Database, slug: string) {
   const [row] = await db.select().from(brands).where(eq(brands.slug, slug)).limit(1);
   return row ?? null;
+}
+
+export async function getBrandProfileBySlug(db: Database, slug: string) {
+  const brand = await getBrandBySlug(db, slug);
+
+  if (!brand) {
+    return null;
+  }
+
+  const team = await db
+    .select({
+      member: brandMembers,
+      user: users
+    })
+    .from(brandMembers)
+    .innerJoin(users, eq(users.id, brandMembers.userId))
+    .where(eq(brandMembers.brandId, brand.id))
+    .orderBy(desc(brandMembers.joinedAt));
+
+  const brandPosts = await db
+    .select()
+    .from(posts)
+    .where(and(eq(posts.authorType, "brand"), eq(posts.authorId, brand.id)))
+    .orderBy(desc(posts.createdAt))
+    .limit(12);
+
+  const activeJobs = await db
+    .select()
+    .from(jobs)
+    .where(and(eq(jobs.brandId, brand.id), eq(jobs.status, "open")))
+    .orderBy(desc(jobs.createdAt))
+    .limit(8);
+
+  return {
+    brand,
+    team,
+    posts: brandPosts,
+    jobs: activeJobs
+  };
 }
 
 export async function updateBrand(db: Database, user: User, brandMember: BrandMember, input: BrandUpdateInput) {

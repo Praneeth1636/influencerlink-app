@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { brandWriteProcedure, createTRPCRouter, publicProcedure } from "@/server/trpc";
-import { getBrandById, getBrandBySlug, updateBrand } from "@/server/services/brand-service";
+import { getBrandById, getBrandBySlug, getBrandProfileBySlug, updateBrand } from "@/server/services/brand-service";
 
 const brandUpdateInput = z.object({
   brandId: z.string().uuid(),
@@ -24,6 +24,10 @@ export const brandRouter = createTRPCRouter({
   bySlug: publicProcedure
     .input(z.object({ slug: z.string().min(2).max(80).toLowerCase() }))
     .query(({ ctx, input }) => getBrandBySlug(ctx.db, input.slug)),
+
+  profile: publicProcedure
+    .input(z.object({ slug: z.string().min(2).max(80).toLowerCase() }))
+    .query(({ ctx, input }) => getBrandProfileBySlug(ctx.db, input.slug)),
 
   update: brandWriteProcedure.input(brandUpdateInput).mutation(({ ctx, input }) => {
     const { brandId, ...patch } = input;
