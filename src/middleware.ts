@@ -11,6 +11,7 @@ const isProtectedRoute = createRouteMatcher([
   "/jobs/new",
   "/jobs/saved",
   "/messages(.*)",
+  "/notifications(.*)",
   "/profile(.*)",
   "/search(.*)",
   "/onboarding(.*)"

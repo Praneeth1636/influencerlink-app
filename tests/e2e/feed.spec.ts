@@ -89,3 +89,12 @@ test("messages inbox and thread detail load conversations", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Glossier" })).toBeVisible();
   await expect(page.getByPlaceholder("Write a message...")).toBeVisible();
 });
+
+test("notifications page loads workspace alerts", async ({ page }) => {
+  await page.goto("/notifications");
+
+  await expect(page).toHaveTitle(/InfluencerLink/);
+  await expect(page.getByRole("heading", { name: "Track every creator opportunity as it moves." })).toBeVisible();
+  await expect(page.getByText("Workspace alerts")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Mark all read" })).toBeVisible();
+});

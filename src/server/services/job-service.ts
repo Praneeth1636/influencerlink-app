@@ -15,6 +15,7 @@ import {
 } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
+import { createNotification } from "./notification-service";
 
 export type JobListInput = {
   limit: number;
@@ -196,10 +197,12 @@ export async function updateJobApplicationStatus(
   const [application] = await db
     .select({
       application: jobApplications,
-      job: jobs
+      job: jobs,
+      creator: creators
     })
     .from(jobApplications)
     .innerJoin(jobs, eq(jobs.id, jobApplications.jobId))
+    .innerJoin(creators, eq(creators.id, jobApplications.creatorId))
     .where(and(eq(jobApplications.id, input.applicationId), eq(jobs.brandId, input.brandId)))
     .limit(1);
 
@@ -233,6 +236,16 @@ export async function updateJobApplicationStatus(
     entityId: input.applicationId,
     metadata: { jobId: application.job.id, brandId: input.brandId, status: input.status }
   });
+
+  if (application.application.status !== input.status) {
+    await createNotification(db, {
+      userId: application.creator.userId,
+      type: "job_application.status_updated",
+      actorId: user.id,
+      entityType: "job_application",
+      entityId: input.applicationId
+    });
+  }
 
   return updated;
 }
@@ -402,6 +415,14 @@ export async function applyToJob(db: Database, user: User, creator: Creator, inp
     entityType: "job",
     entityId: input.jobId,
     metadata: { applicationId: application.id, threadId: thread?.id ?? null }
+  });
+
+  await createNotification(db, {
+    userId: job.postedById,
+    type: "job_application.submitted",
+    actorId: user.id,
+    entityType: "job_application",
+    entityId: application.id
   });
 
   return {

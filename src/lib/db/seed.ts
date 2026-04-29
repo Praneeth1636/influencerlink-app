@@ -14,6 +14,7 @@ import {
   jobs,
   messages,
   messageThreads,
+  notifications,
   platformMetrics,
   posts,
   subscriptionPlans,
@@ -466,6 +467,36 @@ export function buildSeedData() {
     ];
   });
 
+  const notificationRows = jobApplicationRows.slice(0, 40).flatMap((application, index) => {
+    const job = jobRows.find((row) => row.id === application.jobId)!;
+    const creator = creatorSeeds.find((row) => row.id === application.creatorId)!;
+    const submittedAt = application.createdAt ?? new Date(Date.UTC(2026, 3, 24, 12, index, 0));
+    const statusAt = application.updatedAt ?? submittedAt;
+
+    return [
+      {
+        id: seedUuid(9_500 + index * 2),
+        userId: job.postedById!,
+        type: "job_application.submitted",
+        actorId: creator.userId,
+        entityType: "job_application",
+        entityId: application.id!,
+        readAt: index % 3 === 0 ? submittedAt : null,
+        createdAt: submittedAt
+      },
+      {
+        id: seedUuid(9_501 + index * 2),
+        userId: creator.userId,
+        type: "job_application.status_updated",
+        actorId: job.postedById!,
+        entityType: "job_application",
+        entityId: application.id!,
+        readAt: index % 4 === 0 ? statusAt : null,
+        createdAt: statusAt
+      }
+    ] satisfies Array<typeof notifications.$inferInsert>;
+  });
+
   const planRows: Array<typeof subscriptionPlans.$inferInsert> = [
     {
       id: seedUuid(7_000),
@@ -517,6 +548,7 @@ export function buildSeedData() {
     messageThreads: threadRows,
     threadParticipants: threadParticipantRows,
     messages: messageRows,
+    notifications: notificationRows,
     subscriptionPlans: planRows
   };
 }
@@ -725,6 +757,19 @@ export async function seedDatabase(db: SeedDatabase) {
       }
     });
   await db
+    .insert(notifications)
+    .values(data.notifications)
+    .onConflictDoUpdate({
+      target: notifications.id,
+      set: {
+        type: sql`excluded.type`,
+        actorId: sql`excluded.actor_id`,
+        entityType: sql`excluded.entity_type`,
+        entityId: sql`excluded.entity_id`,
+        readAt: sql`excluded.read_at`
+      }
+    });
+  await db
     .insert(subscriptionPlans)
     .values(data.subscriptionPlans)
     .onConflictDoUpdate({
@@ -748,7 +793,8 @@ export async function seedDatabase(db: SeedDatabase) {
     jobs: data.jobs.length,
     jobApplications: data.jobApplications.length,
     savedJobs: data.jobSavedByCreator.length,
-    messages: data.messages.length
+    messages: data.messages.length,
+    notifications: data.notifications.length
   };
 }
 

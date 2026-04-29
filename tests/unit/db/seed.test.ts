@@ -20,6 +20,7 @@ describe("buildSeedData", () => {
     expect(seed.messageThreads).toHaveLength(12);
     expect(seed.threadParticipants).toHaveLength(24);
     expect(seed.messages).toHaveLength(36);
+    expect(seed.notifications).toHaveLength(80);
     expect(seed.subscriptionPlans).toHaveLength(4);
   });
 
@@ -37,6 +38,7 @@ describe("buildSeedData", () => {
       ...seed.jobApplications.map((row) => row.id),
       ...seed.messageThreads.map((row) => row.id),
       ...seed.messages.map((row) => row.id),
+      ...seed.notifications.map((row) => row.id),
       ...seed.subscriptionPlans.map((row) => row.id)
     ];
 
@@ -46,5 +48,6 @@ describe("buildSeedData", () => {
     expect(seed.jobs[0]?.title).toContain("Glossier");
     expect(seed.jobSavedByCreator[0]?.jobId).toBe(seed.jobs[0]?.id);
     expect(seed.messages[0]?.body).toContain("Glossier");
+    expect(seed.notifications[0]?.type).toBe("job_application.submitted");
   });
 });

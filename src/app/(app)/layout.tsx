@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/feed", label: "Feed" },
   { href: "/search", label: "Search" },
   { href: "/messages", label: "Messages" },
+  { href: "/notifications", label: "Alerts" },
   { href: "/creator", label: "Creator" }
 ];
 

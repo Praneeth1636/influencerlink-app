@@ -520,5 +520,7 @@ export type Job = InferSelectModel<typeof jobs>;
 export type NewJob = InferInsertModel<typeof jobs>;
 export type Post = InferSelectModel<typeof posts>;
 export type NewPost = InferInsertModel<typeof posts>;
+export type Notification = InferSelectModel<typeof notifications>;
+export type NewNotification = InferInsertModel<typeof notifications>;
 export type Embedding = InferSelectModel<typeof embeddings>;
 export type NewEmbedding = InferInsertModel<typeof embeddings>;

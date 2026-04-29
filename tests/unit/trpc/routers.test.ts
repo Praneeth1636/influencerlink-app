@@ -30,6 +30,12 @@ import {
   updateBrand
 } from "@/server/services/brand-service";
 import { inviteBrandMember } from "@/server/services/org-service";
+import {
+  getUnreadNotificationCount,
+  listNotifications,
+  markAllNotificationsRead,
+  markNotificationRead
+} from "@/server/services/notification-service";
 
 const serviceMocks = vi.hoisted(() => ({
   creator: {
@@ -83,6 +89,12 @@ const serviceMocks = vi.hoisted(() => ({
     inviteBrandMember: vi.fn(),
     removeBrandMember: vi.fn(),
     updateBrandMemberRole: vi.fn()
+  },
+  notification: {
+    listNotifications: vi.fn(),
+    getUnreadNotificationCount: vi.fn(),
+    markNotificationRead: vi.fn(),
+    markAllNotificationsRead: vi.fn()
   }
 }));
 
@@ -93,6 +105,7 @@ vi.mock("@/server/services/inbox-service", () => serviceMocks.inbox);
 vi.mock("@/server/services/job-service", () => serviceMocks.job);
 vi.mock("@/server/services/brand-service", () => serviceMocks.brand);
 vi.mock("@/server/services/org-service", () => serviceMocks.org);
+vi.mock("@/server/services/notification-service", () => serviceMocks.notification);
 
 const createCaller = createCallerFactory(appRouter);
 const db = {} as Database;
@@ -103,6 +116,7 @@ const postId = "44444444-4444-4444-8444-444444444444";
 const threadId = "55555555-5555-4555-8555-555555555555";
 const memberUserId = "66666666-6666-4666-8666-666666666666";
 const jobId = "99999999-9999-4999-8999-999999999999";
+const notificationId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const now = new Date("2026-01-01T00:00:00.000Z");
 
 const user: User = {
@@ -440,6 +454,30 @@ describe("appRouter Phase 4.2 routers", () => {
     );
   });
 
+  it("notification router lists and marks alerts read", async () => {
+    const notification = {
+      id: notificationId,
+      userId,
+      type: "job_application.status_updated",
+      actorId: memberUserId,
+      entityType: "job_application",
+      entityId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      readAt: null,
+      createdAt: now
+    };
+    const row = { notification, actor: null };
+
+    vi.mocked(listNotifications).mockResolvedValueOnce([row]);
+    vi.mocked(getUnreadNotificationCount).mockResolvedValueOnce(1);
+    vi.mocked(markNotificationRead).mockResolvedValueOnce({ ...notification, readAt: now });
+    vi.mocked(markAllNotificationsRead).mockResolvedValueOnce({ updatedCount: 3 });
+
+    await expect(caller().notification.list({ limit: 10 })).resolves.toEqual([row]);
+    await expect(caller().notification.unreadCount()).resolves.toBe(1);
+    await expect(caller().notification.markRead({ notificationId })).resolves.toMatchObject({ readAt: now });
+    await expect(caller().notification.markAllRead()).resolves.toEqual({ updatedCount: 3 });
+  });
+
   it.each([
     ["creator.update", () => caller({ user: null }).creator.update({ headline: "New headline" })],
     ["post.create", () => caller({ user: null }).post.create({ body: "Launch day" })],
@@ -497,7 +535,11 @@ describe("appRouter Phase 4.2 routers", () => {
     ["brand.myMemberships", () => caller({ user: null }).brand.myMemberships()],
     ["org.invite", () => caller({ user: null }).org.invite({ brandId, userId: memberUserId, role: "viewer" })],
     ["org.removeMember", () => caller({ user: null }).org.removeMember({ brandId, userId: memberUserId })],
-    ["org.updateRole", () => caller({ user: null }).org.updateRole({ brandId, userId: memberUserId, role: "admin" })]
+    ["org.updateRole", () => caller({ user: null }).org.updateRole({ brandId, userId: memberUserId, role: "admin" })],
+    ["notification.list", () => caller({ user: null }).notification.list({ limit: 10 })],
+    ["notification.unreadCount", () => caller({ user: null }).notification.unreadCount()],
+    ["notification.markRead", () => caller({ user: null }).notification.markRead({ notificationId })],
+    ["notification.markAllRead", () => caller({ user: null }).notification.markAllRead()]
   ])("%s rejects unauthenticated callers", async (_name, run) => {
     await expectUnauthorized(run);
   });
