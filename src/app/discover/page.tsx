@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function DiscoverPage() {
-  redirect("/feed#discovery");
+  redirect("/search");
 }
