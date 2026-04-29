@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { clerkAppearance } from "@/components/auth/clerk-appearance";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { TRPCProvider } from "@/lib/trpc/client";
 import "./globals.css";
@@ -17,7 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={clerkAppearance}
+          signInUrl="/login"
+          signUpUrl="/signup"
+          signInFallbackRedirectUrl="/onboarding"
+          signUpFallbackRedirectUrl="/onboarding"
+        >
           <TRPCProvider>
             <PostHogProvider>{children}</PostHogProvider>
           </TRPCProvider>
