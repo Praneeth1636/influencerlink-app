@@ -3,9 +3,10 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import superjson from "superjson";
 import { z } from "zod";
-import { requireBrandMember, requireCreator, requireUser } from "@/lib/auth/rbac";
+import { requireBrandMember, requireUser } from "@/lib/auth/rbac";
 import { db as defaultDb } from "@/lib/db/client";
 import { brandMembers, creators, users, type BrandMember, type Creator, type User } from "@/lib/db/schema";
+import { enforceRateLimit, type RateLimitKind } from "@/lib/rate-limit";
 
 export type Database = typeof defaultDb;
 
@@ -57,9 +58,32 @@ const brandProcedureInput = z.object({
 
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
-export const publicProcedure = t.procedure;
 
-export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+function rateLimitProcedure(kind: RateLimitKind) {
+  return t.middleware(async ({ ctx, path, next }) => {
+    const result = await enforceRateLimit({
+      kind,
+      userId: ctx.user?.id,
+      headers: ctx.headers,
+      path
+    });
+
+    if (!result.success) {
+      throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: `Rate limit exceeded. Try again after ${new Date(result.reset).toISOString()}.`
+      });
+    }
+
+    return next();
+  });
+}
+
+const readRateLimit = rateLimitProcedure("read");
+const writeRateLimit = rateLimitProcedure("write");
+const aiRateLimit = rateLimitProcedure("ai");
+
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
   let user = ctx.user;
 
   if (typeof user === "undefined") {
@@ -85,13 +109,19 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   });
 });
 
-export const creatorProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+const creatorMiddleware = t.middleware(async ({ ctx, next }) => {
+  const user = ctx.user;
   let creator = ctx.creator;
 
-  if (!creator && ctx.user) {
-    [creator] = await ctx.db.select().from(creators).where(eq(creators.userId, ctx.user.id)).limit(1);
-  } else if (!creator) {
-    ({ creator } = await requireCreator());
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required"
+    });
+  }
+
+  if (!creator) {
+    [creator] = await ctx.db.select().from(creators).where(eq(creators.userId, user.id)).limit(1);
   }
 
   if (!creator) {
@@ -104,14 +134,22 @@ export const creatorProcedure = protectedProcedure.use(async ({ ctx, next }) => 
   return next({
     ctx: {
       ...ctx,
+      user,
       creator
     }
   });
 });
 
-export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(async ({ ctx, input, next }) => {
+const brandMiddleware = t.middleware(async ({ ctx, input, next }) => {
   const { brandId } = brandProcedureInput.parse(input);
-  const user = ctx.user ?? (await requireUser());
+  const user = ctx.user;
+
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required"
+    });
+  }
 
   let member = ctx.brandMember?.brandId === brandId && ctx.brandMember.userId === user.id ? ctx.brandMember : undefined;
 
@@ -136,3 +174,12 @@ export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(
     }
   });
 });
+
+export const publicProcedure = t.procedure.use(readRateLimit);
+export const protectedProcedure = publicProcedure.use(authMiddleware);
+export const protectedWriteProcedure = t.procedure.use(writeRateLimit).use(authMiddleware);
+export const creatorProcedure = protectedProcedure.use(creatorMiddleware);
+export const creatorWriteProcedure = protectedWriteProcedure.use(creatorMiddleware);
+export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(brandMiddleware);
+export const brandWriteProcedure = protectedWriteProcedure.input(brandProcedureInput).use(brandMiddleware);
+export const aiProcedure = t.procedure.use(aiRateLimit).use(authMiddleware);

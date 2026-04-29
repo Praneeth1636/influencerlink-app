@@ -30,6 +30,8 @@ export const env = createEnv({
     INNGEST_EVENT_KEY: requiredString,
     INNGEST_SIGNING_KEY: requiredString,
     RESEND_API_KEY: requiredString,
+    UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
     SENTRY_DSN: requiredUrl,
     ENCRYPTION_KEY: z
       .string()

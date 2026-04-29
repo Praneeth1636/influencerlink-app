@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { brandProcedure, createTRPCRouter, publicProcedure } from "@/server/trpc";
+import { brandWriteProcedure, createTRPCRouter, publicProcedure } from "@/server/trpc";
 import { getBrandById, getBrandBySlug, updateBrand } from "@/server/services/brand-service";
 
 const brandUpdateInput = z.object({
@@ -25,7 +25,7 @@ export const brandRouter = createTRPCRouter({
     .input(z.object({ slug: z.string().min(2).max(80).toLowerCase() }))
     .query(({ ctx, input }) => getBrandBySlug(ctx.db, input.slug)),
 
-  update: brandProcedure.input(brandUpdateInput).mutation(({ ctx, input }) => {
+  update: brandWriteProcedure.input(brandUpdateInput).mutation(({ ctx, input }) => {
     const { brandId, ...patch } = input;
     if (ctx.brandId !== brandId) {
       throw new TRPCError({ code: "BAD_REQUEST", message: "Brand context mismatch" });

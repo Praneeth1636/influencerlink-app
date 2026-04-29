@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, protectedWriteProcedure } from "@/server/trpc";
 import { listThreads, markThreadRead } from "@/server/services/inbox-service";
 
 export const inboxRouter = createTRPCRouter({
@@ -11,7 +11,7 @@ export const inboxRouter = createTRPCRouter({
     )
     .query(({ ctx, input }) => listThreads(ctx.db, ctx.user, input)),
 
-  markRead: protectedProcedure
+  markRead: protectedWriteProcedure
     .input(z.object({ threadId: z.string().uuid() }))
     .mutation(({ ctx, input }) => markThreadRead(ctx.db, ctx.user, input.threadId))
 });

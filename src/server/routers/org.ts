@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { brandProcedure, createTRPCRouter } from "@/server/trpc";
+import { brandWriteProcedure, createTRPCRouter } from "@/server/trpc";
 import { inviteBrandMember, removeBrandMember, updateBrandMemberRole } from "@/server/services/org-service";
 
 const brandRoleInput = z.enum(["owner", "admin", "recruiter", "viewer"]);
 
 export const orgRouter = createTRPCRouter({
-  invite: brandProcedure
+  invite: brandWriteProcedure
     .input(
       z.object({
         brandId: z.string().uuid(),
@@ -15,7 +15,7 @@ export const orgRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => inviteBrandMember(ctx.db, ctx.user, ctx.brandMember, input)),
 
-  removeMember: brandProcedure
+  removeMember: brandWriteProcedure
     .input(
       z.object({
         brandId: z.string().uuid(),
@@ -24,7 +24,7 @@ export const orgRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => removeBrandMember(ctx.db, ctx.user, ctx.brandMember, input)),
 
-  updateRole: brandProcedure
+  updateRole: brandWriteProcedure
     .input(
       z.object({
         brandId: z.string().uuid(),

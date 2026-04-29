@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedWriteProcedure, publicProcedure } from "@/server/trpc";
 import { commentOnPost, createPost, likePost, listPosts, sharePost, unlikePost } from "@/server/services/post-service";
 
 const mediaItemInput = z.record(z.string(), z.unknown());
@@ -7,7 +7,7 @@ const postTypeInput = z.enum(["update", "milestone", "content_drop", "open_to_wo
 const visibilityInput = z.enum(["public", "connections"]);
 
 export const postRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: protectedWriteProcedure
     .input(
       z.object({
         authorType: z.enum(["creator", "brand"]).default("creator"),
@@ -31,15 +31,15 @@ export const postRouter = createTRPCRouter({
     )
     .query(({ ctx, input }) => listPosts(ctx.db, input)),
 
-  like: protectedProcedure
+  like: protectedWriteProcedure
     .input(z.object({ postId: z.string().uuid() }))
     .mutation(({ ctx, input }) => likePost(ctx.db, ctx.user, input.postId)),
 
-  unlike: protectedProcedure
+  unlike: protectedWriteProcedure
     .input(z.object({ postId: z.string().uuid() }))
     .mutation(({ ctx, input }) => unlikePost(ctx.db, ctx.user, input.postId)),
 
-  comment: protectedProcedure
+  comment: protectedWriteProcedure
     .input(
       z.object({
         postId: z.string().uuid(),
@@ -49,7 +49,7 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(({ ctx, input }) => commentOnPost(ctx.db, ctx.user, input)),
 
-  share: protectedProcedure
+  share: protectedWriteProcedure
     .input(
       z.object({
         postId: z.string().uuid(),

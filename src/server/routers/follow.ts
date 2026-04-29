@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/trpc";
+import { createTRPCRouter, protectedProcedure, protectedWriteProcedure, publicProcedure } from "@/server/trpc";
 import { followTarget, listFollowers, listFollowing, unfollowTarget } from "@/server/services/follow-service";
 
 const followTargetInput = z.object({
@@ -8,11 +8,11 @@ const followTargetInput = z.object({
 });
 
 export const followRouter = createTRPCRouter({
-  follow: protectedProcedure
+  follow: protectedWriteProcedure
     .input(followTargetInput)
     .mutation(({ ctx, input }) => followTarget(ctx.db, ctx.user, input)),
 
-  unfollow: protectedProcedure
+  unfollow: protectedWriteProcedure
     .input(followTargetInput)
     .mutation(({ ctx, input }) => unfollowTarget(ctx.db, ctx.user, input)),
 
