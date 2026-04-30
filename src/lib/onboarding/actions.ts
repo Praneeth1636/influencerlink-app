@@ -72,7 +72,9 @@ export async function completeCreatorOnboarding(input: CreatorOnboardingInput): 
     headline: parsed.data.headline || null,
     bio: parsed.data.bio || null,
     location: parsed.data.location || null,
-    niches: parsed.data.niches
+    niches: parsed.data.niches,
+    avatarUrl: parsed.data.avatarUrl || null,
+    coverUrl: parsed.data.coverUrl || null
   });
 
   await db.update(users).set({ type: "creator" }).where(eq(users.id, user.id));

@@ -16,7 +16,9 @@ export const creatorOnboardingSchema = z.object({
     .array(z.string().refine(isNiche, "Invalid niche"))
     .min(1, "Pick at least one niche")
     .max(5, "Pick at most five niches"),
-  location: z.string().max(80).optional().or(z.literal(""))
+  location: z.string().max(80).optional().or(z.literal("")),
+  avatarUrl: z.string().url().max(500).optional().or(z.literal("")),
+  coverUrl: z.string().url().max(500).optional().or(z.literal(""))
 });
 
 export type CreatorOnboardingInput = z.infer<typeof creatorOnboardingSchema>;

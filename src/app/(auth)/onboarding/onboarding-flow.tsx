@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { ImageUpload } from "@/components/upload/image-upload";
 import { NICHES, type Niche } from "@/lib/constants/niches";
 import { checkHandleAvailability, completeBrandOnboarding, completeCreatorOnboarding } from "@/lib/onboarding/actions";
 import { slugifyBrandName } from "@/lib/onboarding/schemas";
@@ -73,6 +74,8 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
   const [niches, setNiches] = useState<Niche[]>([]);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [handleStatus, setHandleStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [pending, startTransition] = useTransition();
@@ -103,7 +106,9 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
         headline,
         bio,
         location,
-        niches
+        niches,
+        avatarUrl: avatarUrl ?? "",
+        coverUrl: coverUrl ?? ""
       });
       if (result && !result.ok) {
         setErrors(result.fieldErrors ?? {});
@@ -200,9 +205,24 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
         Instagram, TikTok, and YouTube OAuth lights up in Phase 10. For now, your media kit shows the empty state.
       </PlaceholderBlock>
 
-      <PlaceholderBlock title="Avatar &amp; cover">
-        Image uploads (R2 + signed URLs) ship in Phase 9. We will use a placeholder gradient until then.
-      </PlaceholderBlock>
+      <div className="grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+        <ImageUpload
+          aspect="square"
+          hint="JPG, PNG, WebP, or GIF. Max 5 MB."
+          kind="avatar"
+          label="Profile photo"
+          onChange={setAvatarUrl}
+          value={avatarUrl}
+        />
+        <ImageUpload
+          aspect="wide"
+          hint="Cover image. Max 8 MB."
+          kind="cover"
+          label="Cover"
+          onChange={setCoverUrl}
+          value={coverUrl}
+        />
+      </div>
 
       <div className="flex items-center justify-end gap-3">
         <Button disabled={pending} type="submit">

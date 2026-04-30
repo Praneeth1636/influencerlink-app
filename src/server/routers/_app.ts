@@ -8,6 +8,7 @@ import { jobRouter } from "./job";
 import { notificationRouter } from "./notification";
 import { orgRouter } from "./org";
 import { postRouter } from "./post";
+import { storageRouter } from "./storage";
 
 export const appRouter = createTRPCRouter({
   health: publicProcedure.query(() => ({
@@ -22,7 +23,8 @@ export const appRouter = createTRPCRouter({
   notification: notificationRouter,
   brand: brandRouter,
   org: orgRouter,
-  billing: billingRouter
+  billing: billingRouter,
+  storage: storageRouter
 });
 
 export type AppRouter = typeof appRouter;
