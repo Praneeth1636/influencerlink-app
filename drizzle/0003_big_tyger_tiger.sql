@@ -1,0 +1,1 @@
+ALTER TYPE "public"."embedding_entity" ADD VALUE 'job';

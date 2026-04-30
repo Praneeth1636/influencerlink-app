@@ -12,6 +12,7 @@ import {
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 import { assertQuotaAvailable, recordSearchRun } from "./billing-service";
+import { generateCreatorEmbedding } from "./embedding-service";
 
 export type CreatorListInput = {
   limit: number;
@@ -193,6 +194,14 @@ export async function updateCreatorProfile(db: Database, user: User, creator: Cr
     entityId: creator.id,
     metadata: { fields: Object.keys(input) }
   });
+
+  // Re-embed only when fields that contribute to the embedding text changed.
+  // Avatar/cover/rate edits don't affect semantic match so we skip them.
+  const SEMANTIC_FIELDS = ["displayName", "headline", "bio", "niches", "location"] as const;
+  const shouldReembed = SEMANTIC_FIELDS.some((field) => field in input);
+  if (shouldReembed) {
+    await generateCreatorEmbedding(db, creator.id);
+  }
 
   return updated;
 }

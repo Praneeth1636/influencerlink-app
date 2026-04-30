@@ -16,6 +16,7 @@ import {
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 import { assertQuotaAvailable } from "./billing-service";
+import { generateJobEmbedding } from "./embedding-service";
 import { createNotification } from "./notification-service";
 
 export type JobListInput = {
@@ -146,6 +147,9 @@ export async function createJob(db: Database, user: User, member: BrandMember, i
     entityId: created.id,
     metadata: { brandId: input.brandId, status: input.status }
   });
+
+  // Inline embed; small text, fast embedder. Move to Inngest when scale demands.
+  await generateJobEmbedding(db, created.id);
 
   return created;
 }

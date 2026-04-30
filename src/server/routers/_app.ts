@@ -6,6 +6,7 @@ import { followRouter } from "./follow";
 import { inboxRouter } from "./inbox";
 import { jobRouter } from "./job";
 import { notificationRouter } from "./notification";
+import { matchRouter } from "./match";
 import { orgRouter } from "./org";
 import { postRouter } from "./post";
 import { storageRouter } from "./storage";
@@ -24,7 +25,8 @@ export const appRouter = createTRPCRouter({
   brand: brandRouter,
   org: orgRouter,
   billing: billingRouter,
-  storage: storageRouter
+  storage: storageRouter,
+  match: matchRouter
 });
 
 export type AppRouter = typeof appRouter;

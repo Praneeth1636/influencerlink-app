@@ -12,6 +12,7 @@ import {
   type BrandOnboardingInput,
   type CreatorOnboardingInput
 } from "@/lib/onboarding/schemas";
+import { generateCreatorEmbedding } from "@/server/services/embedding-service";
 
 const log = logger.child({ module: "onboarding/actions" });
 
@@ -65,19 +66,26 @@ export async function completeCreatorOnboarding(input: CreatorOnboardingInput): 
     return { ok: false, error: "Handle is taken", fieldErrors: { handle: ["Handle is taken"] } };
   }
 
-  await db.insert(creators).values({
-    userId: user.id,
-    handle,
-    displayName: parsed.data.displayName,
-    headline: parsed.data.headline || null,
-    bio: parsed.data.bio || null,
-    location: parsed.data.location || null,
-    niches: parsed.data.niches,
-    avatarUrl: parsed.data.avatarUrl || null,
-    coverUrl: parsed.data.coverUrl || null
-  });
+  const [created] = await db
+    .insert(creators)
+    .values({
+      userId: user.id,
+      handle,
+      displayName: parsed.data.displayName,
+      headline: parsed.data.headline || null,
+      bio: parsed.data.bio || null,
+      location: parsed.data.location || null,
+      niches: parsed.data.niches,
+      avatarUrl: parsed.data.avatarUrl || null,
+      coverUrl: parsed.data.coverUrl || null
+    })
+    .returning({ id: creators.id });
 
   await db.update(users).set({ type: "creator" }).where(eq(users.id, user.id));
+
+  if (created) {
+    await generateCreatorEmbedding(db, created.id);
+  }
 
   await markOnboarded(clerkId, user.id);
   log.info({ clerkId, handle }, "creator onboarded");

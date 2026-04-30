@@ -458,7 +458,7 @@ export const reports = pgTable("reports", {
   ...updatedTimestamp
 });
 
-export const embeddingEntityEnum = pgEnum("embedding_entity", ["creator", "campaign"]);
+export const embeddingEntityEnum = pgEnum("embedding_entity", ["creator", "campaign", "job"]);
 
 export const embeddings = pgTable(
   "embeddings",
