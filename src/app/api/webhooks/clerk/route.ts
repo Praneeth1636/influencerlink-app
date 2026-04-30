@@ -3,7 +3,9 @@ import { Webhook } from "svix";
 import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import { db } from "@/lib/db/client";
+import { welcomeEmail } from "@/lib/email/templates";
 import { users } from "@/lib/db/schema";
+import { sendEmail } from "@/server/services/email-service";
 
 const log = logger.child({ route: "POST /api/webhooks/clerk" });
 
@@ -99,6 +101,15 @@ export async function POST(req: Request): Promise<Response> {
           type: "creator"
         });
         log.info({ clerkId: event.data.id, email }, "user.created: users row inserted");
+
+        if (email) {
+          // Soft-fails when RESEND_API_KEY is missing so webhook doesn't 500.
+          await sendEmail(db, {
+            envelope: welcomeEmail({ to: email }),
+            category: "welcome",
+            metadata: { clerkId: event.data.id }
+          });
+        }
         break;
       }
 

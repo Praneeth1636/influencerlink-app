@@ -50,6 +50,7 @@
     "posthog-js": "^1.372.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.12.2",
     "stripe": "^22.1.0",
     "superjson": "^2.2.6",
     "svix": "^1.92.2",
