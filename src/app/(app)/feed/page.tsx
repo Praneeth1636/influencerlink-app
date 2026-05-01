@@ -990,13 +990,11 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
             >
               Send campaign request
             </Button>
-            <SheetClose
-              render={
-                <Button className="h-12 rounded-xl border-white/15 text-white hover:bg-white/10" variant="outline">
-                  Close
-                </Button>
-              }
-            />
+            <SheetClose asChild>
+              <Button className="h-12 rounded-xl border-white/15 text-white hover:bg-white/10" variant="outline">
+                Close
+              </Button>
+            </SheetClose>
           </div>
         </SheetFooter>
       </div>

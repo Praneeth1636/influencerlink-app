@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
+
 import { cn } from "@/lib/utils";
 
 const Avatar = React.forwardRef<
@@ -18,7 +21,7 @@ const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
 >(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full object-cover", className)} {...props} />
+  <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} />
 ));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
@@ -28,41 +31,28 @@ const AvatarFallback = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
-    className={cn(
-      "bg-muted flex h-full w-full items-center justify-center rounded-full text-sm font-semibold",
-      className
-    )}
+    className={cn("bg-muted flex h-full w-full items-center justify-center rounded-full", className)}
     {...props}
   />
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-function AvatarBadge({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-  return (
+/**
+ * Status / presence indicator pinned to an Avatar's bottom-right corner.
+ * Kept on the local avatar.tsx for backwards compat with feed/profile/search/creator pages.
+ */
+const AvatarBadge = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
     <span
+      ref={ref}
       className={cn(
-        "border-background absolute right-0 bottom-0 h-3 w-3 rounded-full border-2 bg-green-600",
+        "border-background absolute right-0 bottom-0 block h-3 w-3 rounded-full border-2 bg-emerald-400",
         className
       )}
       {...props}
     />
-  );
-}
+  )
+);
+AvatarBadge.displayName = "AvatarBadge";
 
-function AvatarGroup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex -space-x-3", className)} {...props} />;
-}
-
-function AvatarGroupCount({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn(
-        "bg-muted border-background text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-export { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount };
+export { Avatar, AvatarImage, AvatarFallback, AvatarBadge };
