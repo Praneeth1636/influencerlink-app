@@ -1,4 +1,7 @@
+import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
+
+config({ path: ".env.local" });
 
 export default defineConfig({
   schema: "./src/lib/db/schema.ts",
@@ -6,9 +9,6 @@ export default defineConfig({
   dialect: "postgresql",
   casing: "snake_case",
   dbCredentials: {
-    url:
-      process.env.DIRECT_URL ??
-      process.env.DATABASE_URL ??
-      "postgresql://creatorlink:creatorlink@localhost:5432/creatorlink"
+    url: process.env.DIRECT_URL!
   }
 });
