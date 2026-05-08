@@ -404,6 +404,42 @@ export const subscriptions = pgTable("subscriptions", {
   ...updatedTimestamp
 });
 
+// Stripe Connect — creator payouts.
+//
+// Each creator gets at most one Connect account. We mirror the Stripe state
+// here (rather than read-through to Stripe) so the UI can render fast and
+// the platform can decide whether a brief is payable without an API call.
+//
+// `status` is our coarse rollup, derived from Stripe's `details_submitted` +
+// `charges_enabled` + `payouts_enabled` booleans on `account.updated` events:
+//   pending          → account created, KYC not started
+//   onboarding       → details submitted but Stripe is reviewing
+//   active           → charges + payouts both enabled (the green-light state)
+//   restricted       → Stripe disabled charges/payouts (e.g. info requested)
+export const creatorPayoutStatusEnum = pgEnum("creator_payout_status", [
+  "pending",
+  "onboarding",
+  "active",
+  "restricted"
+]);
+
+export const creatorPayoutAccounts = pgTable("creator_payout_accounts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  creatorId: uuid("creator_id")
+    .notNull()
+    .unique()
+    .references(() => creators.id, { onDelete: "cascade" }),
+  stripeAccountId: text("stripe_account_id").notNull().unique(),
+  country: text("country").notNull(), // ISO-3166 alpha-2, defaults to "US" at creation
+  status: creatorPayoutStatusEnum("status").notNull().default("pending"),
+  detailsSubmitted: boolean("details_submitted").notNull().default(false),
+  chargesEnabled: boolean("charges_enabled").notNull().default(false),
+  payoutsEnabled: boolean("payouts_enabled").notNull().default(false),
+  defaultCurrency: text("default_currency").notNull().default("usd"),
+  ...timestamps,
+  ...updatedTimestamp
+});
+
 export const usageQuotas = pgTable("usage_quotas", {
   id: uuid("id").primaryKey().defaultRandom(),
   subscriptionId: uuid("subscription_id")
@@ -524,3 +560,5 @@ export type Notification = InferSelectModel<typeof notifications>;
 export type NewNotification = InferInsertModel<typeof notifications>;
 export type Embedding = InferSelectModel<typeof embeddings>;
 export type NewEmbedding = InferInsertModel<typeof embeddings>;
+export type CreatorPayoutAccount = InferSelectModel<typeof creatorPayoutAccounts>;
+export type NewCreatorPayoutAccount = InferInsertModel<typeof creatorPayoutAccounts>;

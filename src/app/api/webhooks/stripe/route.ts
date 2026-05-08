@@ -7,6 +7,7 @@ import {
   syncCheckoutSession,
   syncStripeSubscription
 } from "@/server/services/billing-service";
+import { applyAccountUpdate } from "@/server/services/payout-service";
 
 export const runtime = "nodejs";
 
@@ -53,6 +54,12 @@ export async function POST(req: Request) {
         if (subscriptionId) {
           await markStripeSubscriptionPastDue(db, subscriptionId);
         }
+        break;
+      }
+
+      case "account.updated": {
+        // Connect: creator's KYC / capabilities changed. Mirror state into our DB.
+        await applyAccountUpdate(db, event.data.object);
         break;
       }
 
