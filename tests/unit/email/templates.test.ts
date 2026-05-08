@@ -4,7 +4,7 @@ import { welcomeEmail } from "@/lib/email/templates";
 describe("welcomeEmail", () => {
   it("uses the recipient name in the greeting when provided", () => {
     const envelope = welcomeEmail({ to: "creator@example.com", displayName: "Sara" });
-    expect(envelope.subject).toBe("Welcome to InfluencerLink");
+    expect(envelope.subject).toBe("Welcome to Terrace");
     expect(envelope.html).toContain("Hi Sara,");
     expect(envelope.text).toContain("Hi Sara,");
   });
