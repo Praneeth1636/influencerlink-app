@@ -2,13 +2,29 @@ import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { notifications, users, type NewNotification, type User } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
+import { sendEmail } from "./email-service";
+import { logger } from "@/lib/logger";
+
+const log = logger.child({ module: "notification-service" });
 
 export type NotificationListInput = {
   limit: number;
   unreadOnly?: boolean;
 };
 
-export type NotificationCreateInput = Pick<NewNotification, "userId" | "type" | "actorId" | "entityType" | "entityId">;
+export type NotificationCreateInput = Pick<
+  NewNotification,
+  "userId" | "type" | "actorId" | "entityType" | "entityId"
+> & {
+  /** Optional email fan-out. When provided, send a transactional email in
+   *  addition to writing the in-app row. Soft-fails so a missing RESEND_API_KEY
+   *  never breaks the originating action. */
+  email?: {
+    subject: string;
+    text: string;
+    html?: string;
+  };
+};
 
 export async function createNotification(db: Database, input: NotificationCreateInput) {
   const [created] = await db
@@ -21,6 +37,34 @@ export async function createNotification(db: Database, input: NotificationCreate
       entityId: input.entityId
     })
     .returning();
+
+  if (input.email) {
+    const [recipient] = await db
+      .select({ id: users.id, email: users.email })
+      .from(users)
+      .where(eq(users.id, input.userId))
+      .limit(1);
+
+    if (recipient?.email) {
+      // Resend requires html. If caller didn't supply one, render the text as
+      // a minimal <p> wrapper so we still get a valid HTML body.
+      const html = input.email.html ?? `<p>${input.email.text.replace(/\n/g, "<br/>")}</p>`;
+      const result = await sendEmail(db, {
+        envelope: {
+          to: recipient.email,
+          subject: input.email.subject,
+          text: input.email.text,
+          html
+        },
+        category: input.type,
+        user: { id: recipient.id },
+        metadata: { entityType: input.entityType, entityId: input.entityId }
+      });
+      if (!result.ok) {
+        log.warn({ type: input.type, reason: result.reason }, "notification email skipped");
+      }
+    }
+  }
 
   return created ?? null;
 }

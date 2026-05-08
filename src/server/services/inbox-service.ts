@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, gt } from "drizzle-orm";
+import { and, desc, eq, gt, ne } from "drizzle-orm";
 import { messages, messageThreads, threadParticipants, type User } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 import { assertQuotaAvailable } from "./billing-service";
+import { createNotification } from "./notification-service";
 
 export async function listThreads(db: Database, user: User, input: { limit: number }) {
   const rows = await db
@@ -144,6 +145,33 @@ export async function sendMessage(
     entityId: input.threadId,
     metadata: { messageId: message.id }
   });
+
+  // Notify everyone else in the thread (in-app + email). Best-effort — a
+  // notification failure must not break the send.
+  const recipients = await db
+    .select({ userId: threadParticipants.userId })
+    .from(threadParticipants)
+    .where(and(eq(threadParticipants.threadId, input.threadId), ne(threadParticipants.userId, user.id)));
+
+  // Truncate the preview so we never paste a 4kb message into a notification.
+  const preview = input.body.length > 140 ? `${input.body.slice(0, 140)}…` : input.body;
+
+  await Promise.all(
+    recipients.map((r) =>
+      createNotification(db, {
+        userId: r.userId,
+        type: "message.received",
+        actorId: user.id,
+        entityType: "message_thread",
+        entityId: input.threadId,
+        email: {
+          subject: "New message on Terrace",
+          text: `You have a new message:\n\n${preview}\n\nReply at /messages/${input.threadId}`,
+          html: `<p>You have a new message:</p><blockquote>${preview}</blockquote><p><a href="/messages/${input.threadId}">Open the thread</a></p>`
+        }
+      })
+    )
+  );
 
   return message;
 }
