@@ -251,7 +251,7 @@ export function buildSeedData() {
     slug: brand.slug,
     name: brand.name,
     tagline: brand.tagline,
-    about: `${brand.name} uses CreatorLink to discover creators, post briefs, and build measurable creator partnerships.`,
+    about: `${brand.name} uses Terrace to discover creators, post briefs, and build measurable creator partnerships.`,
     websiteUrl: `https://example.com/${brand.slug}`,
     industry: brand.industry,
     sizeRange: "51-200",

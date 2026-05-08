@@ -23,34 +23,31 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(216,90,48,0.18),transparent_30%),radial-gradient(circle_at_86%_8%,rgba(168,85,247,0.12),transparent_26%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] bg-[size:56px_56px] opacity-35" />
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
+    <main className="bg-background text-foreground min-h-screen">
+      <header className="border-border bg-background/88 sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-5 py-4">
           <Link
-            className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
+            className="logoMark miniLogo ring-border shrink-0 bg-white/5 ring-1"
             href="/feed"
-            aria-label="CreatorLink feed"
+            aria-label="Terrace feed"
           >
             <span />
             <span />
             <span />
           </Link>
           <div>
-            <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">CreatorLink</p>
-            <p className="hidden text-sm text-white/60 sm:block">Brand company page</p>
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.24em] uppercase">Terrace</p>
+            <p className="text-muted-foreground hidden text-sm sm:block">Brand company page</p>
           </div>
           <nav className="ml-auto flex items-center gap-2">
             <Link
-              className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 transition hover:bg-white/[0.06] hover:text-white"
+              className="text-muted-foreground hover:bg-muted/30 hover:text-foreground rounded-xl px-3 py-2 text-sm font-bold transition"
               href="/search"
             >
               Search
             </Link>
             <Link
-              className="rounded-xl bg-[#D85A30] px-4 py-2 text-sm font-black text-white transition hover:bg-[#c54f29]"
+              className="bg-primary text-foreground hover:bg-primary/90 rounded-xl px-4 py-2 text-sm font-black transition"
               href="/messages"
             >
               Contact
@@ -61,26 +58,23 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
 
       <section className="relative z-10 mx-auto grid max-w-[1180px] gap-6 px-5 py-7 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section className="grid gap-6">
-          <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/10">
+          <article className="border-border bg-card overflow-hidden rounded-xl border shadow-sm">
             <div className="h-56 bg-[linear-gradient(135deg,rgba(216,90,48,0.44),rgba(168,85,247,0.22)),url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
             <div className="p-6 pt-0">
               <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
                 <div className="flex items-end gap-5">
-                  <BrandAvatar
-                    name={profile.brand.name}
-                    className="-mt-12 h-28 w-28 border-4 border-[#101013] text-3xl"
-                  />
+                  <BrandAvatar name={profile.brand.name} className="border-border -mt-12 h-28 w-28 border-4 text-3xl" />
                   <div className="pb-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <h1 className="text-4xl font-black tracking-[-0.05em]">{profile.brand.name}</h1>
-                      {profile.brand.verified && <BadgeCheck className="h-6 w-6 text-[#ffb49c]" />}
+                      {profile.brand.verified && <BadgeCheck className="text-primary h-6 w-6" />}
                     </div>
-                    <p className="mt-2 text-sm text-white/50">/{profile.brand.slug}</p>
+                    <p className="text-foreground/50 mt-2 text-sm">/{profile.brand.slug}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {profile.brand.verified && (
-                    <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
                       Verified brand
                     </Badge>
                   )}
@@ -91,10 +85,10 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                 </div>
               </div>
 
-              <p className="mt-5 max-w-3xl text-lg leading-8 font-bold text-white/82">
+              <p className="text-foreground/82 mt-5 max-w-3xl text-lg leading-8 font-bold">
                 {profile.brand.tagline ?? "Building measurable creator partnerships"}
               </p>
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-white/48">
+              <div className="text-foreground/48 mt-3 flex flex-wrap items-center gap-3 text-sm">
                 {profile.brand.industry && (
                   <span className="inline-flex items-center gap-1.5">
                     <Building2 className="h-4 w-4" />
@@ -115,7 +109,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                 )}
               </div>
               {profile.brand.about && (
-                <p className="mt-6 max-w-4xl text-sm leading-7 text-white/58">{profile.brand.about}</p>
+                <p className="text-muted-foreground mt-6 max-w-4xl text-sm leading-7">{profile.brand.about}</p>
               )}
 
               <div className="mt-6 grid gap-3 md:grid-cols-4">
@@ -140,21 +134,21 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
               )}
               {profile.jobs.map((job) => (
                 <article
-                  className="grid gap-4 rounded-2xl border border-white/10 bg-white/[0.045] p-5 md:grid-cols-[minmax(0,1fr)_auto]"
+                  className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-[minmax(0,1fr)_auto]"
                   key={job.id}
                 >
                   <div>
-                    <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full">
                       {job.remote ? "Remote" : "Location-based"}
                     </Badge>
                     <h2 className="mt-4 text-xl font-black tracking-[-0.04em]">{job.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-white/55">{job.description}</p>
+                    <p className="text-foreground/55 mt-2 text-sm leading-6">{job.description}</p>
                   </div>
                   <div className="grid gap-2 md:min-w-48">
-                    <span className="rounded-xl border border-[#D85A30]/20 bg-[#D85A30]/10 px-3 py-2 text-sm font-black text-[#ffb49c]">
+                    <span className="border-primary/20 bg-primary/10 text-primary rounded-xl border px-3 py-2 text-sm font-black">
                       {formatBudget(job.budgetMinCents, job.budgetMaxCents)}
                     </span>
-                    <span className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/52">
+                    <span className="border-border bg-muted/30 text-muted-foreground rounded-xl border px-3 py-2 text-sm">
                       {job.applicationCount} applicants
                     </span>
                   </div>
@@ -170,14 +164,14 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                 <EmptyPanel title="No posts yet" body="Brand updates and creator shoutouts will appear here." />
               )}
               {profile.posts.map((post) => (
-                <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5" key={post.id}>
+                <article className="border-border bg-card rounded-xl border p-5" key={post.id}>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full">
                       {post.type.replace("_", " ")}
                     </Badge>
-                    <span className="text-xs font-bold text-white/35">{formatDate(post.createdAt)}</span>
+                    <span className="text-muted-foreground text-xs font-bold">{formatDate(post.createdAt)}</span>
                   </div>
-                  <p className="mt-3 text-sm leading-7 text-white/64">{post.body}</p>
+                  <p className="text-foreground/64 mt-3 text-sm leading-7">{post.body}</p>
                 </article>
               ))}
             </div>
@@ -185,35 +179,31 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
         </section>
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+          <article className="border-border bg-card rounded-xl border p-5">
             <SectionHeader eyebrow="Team" title="Public members" />
             <div className="mt-5 grid gap-3">
               {profile.team.map(({ member, user }) => (
-                <div
-                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3"
-                  key={user.id}
-                >
+                <div className="border-border bg-muted/30 flex items-center gap-3 rounded-xl border p-3" key={user.id}>
                   <BrandAvatar name={user.email} className="h-10 w-10 text-sm" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-black">{user.email}</p>
-                    <p className="text-xs text-white/38 capitalize">{member.role}</p>
+                    <p className="text-muted-foreground text-xs capitalize">{member.role}</p>
                   </div>
                 </div>
               ))}
             </div>
           </article>
 
-          <article className="rounded-2xl border border-[#D85A30]/18 bg-[#D85A30]/8 p-5">
+          <article className="border-primary/18 bg-primary/8 rounded-2xl border p-5">
             <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-[#ffb49c]" />
+              <MessageCircle className="text-primary h-5 w-5" />
               <SectionHeader eyebrow="Brand action" title="Pitch this team" />
             </div>
-            <p className="mt-4 text-sm leading-6 text-white/58">
-              CreatorLink company pages collect brand credibility, hiring intent, public briefs, and creator-facing
-              updates.
+            <p className="text-muted-foreground mt-4 text-sm leading-6">
+              Terrace company pages collect brand credibility, hiring intent, public briefs, and creator-facing updates.
             </p>
             <Link
-              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#D85A30] text-sm font-black text-white transition hover:bg-[#c54f29]"
+              className="bg-primary text-foreground hover:bg-primary/90 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl text-sm font-black transition"
               href="/messages"
             >
               Start conversation
@@ -327,11 +317,11 @@ function CompanyMetric({
 }) {
   return (
     <div
-      className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-white/[0.04]"}`}
+      className={`rounded-2xl border p-4 ${highlighted ? "border-primary/45 bg-primary/10" : "border-border bg-muted/30"}`}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">{label}</span>
-        <Icon className={`h-4 w-4 ${highlighted ? "text-[#ffb49c]" : "text-white/34"}`} />
+        <span className="text-muted-foreground text-[11px] font-black tracking-[0.16em] uppercase">{label}</span>
+        <Icon className={`h-4 w-4 ${highlighted ? "text-primary" : "text-muted-foreground"}`} />
       </div>
       <p className="mt-3 text-2xl font-black tracking-[-0.05em]">{value}</p>
     </div>
@@ -340,9 +330,9 @@ function CompanyMetric({
 
 function EmptyPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+    <div className="border-border bg-card rounded-xl border p-5">
       <p className="text-sm font-black">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-white/48">{body}</p>
+      <p className="text-foreground/48 mt-1 text-xs leading-5">{body}</p>
     </div>
   );
 }
@@ -350,8 +340,8 @@ function EmptyPanel({ title, body }: { title: string; body: string }) {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">{eyebrow}</p>
-      <h2 className="mt-2 text-[22px] leading-tight font-black tracking-[-0.04em] text-white">{title}</h2>
+      <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">{eyebrow}</p>
+      <h2 className="text-foreground mt-2 text-[22px] leading-tight font-black tracking-[-0.04em]">{title}</h2>
     </div>
   );
 }

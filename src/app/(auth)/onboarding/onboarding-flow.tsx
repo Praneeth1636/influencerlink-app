@@ -1,34 +1,159 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CreateOrganization, OrganizationList, useOrganization } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { ArrowLeft, BadgeCheck, BriefcaseBusiness, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { NoiseBackground } from "@/components/ui/noise-background";
 import { ImageUpload } from "@/components/upload/image-upload";
 import { NICHES, type Niche } from "@/lib/constants/niches";
-import { checkHandleAvailability, completeBrandOnboarding, completeCreatorOnboarding } from "@/lib/onboarding/actions";
-import { slugifyBrandName } from "@/lib/onboarding/schemas";
+import { checkHandleAvailability, completeCreatorOnboarding } from "@/lib/onboarding/actions";
+
+// Lazy-loaded so the Clerk org components don't get evaluated at module load.
+// If anything in the brand subtree blows up, AccountTypeStep + CreatorPath
+// continue to render — we don't take the whole page to a blank screen.
+const BrandPath = dynamic(() => import("./brand-path").then((m) => m.BrandPath), {
+  ssr: false,
+  loading: () => <p className="text-sm font-medium text-[#687386]">Loading brand setup…</p>
+});
 
 type Path = "creator" | "brand";
+
+const inputClassName =
+  "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
 
 export function OnboardingFlow() {
   const [path, setPath] = useState<Path | null>(null);
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <header className="mb-10">
-          <p className="text-xs font-black tracking-[0.24em] text-white/40 uppercase">Welcome to InfluencerLink</p>
-          <h1 className="mt-2 text-4xl font-light tracking-tight">Set up your account</h1>
+    <main className="creatorlink-auth-light relative min-h-screen overflow-hidden bg-[#fbfaf8] px-4 py-8 font-sans text-[#111318] sm:px-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[520px] max-w-6xl bg-[radial-gradient(circle_at_20%_18%,rgba(140,201,232,0.34),transparent_34%),radial-gradient(circle_at_82%_12%,rgba(246,176,132,0.32),transparent_30%)] blur-3xl"
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[620px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] opacity-45">
+        <BackgroundRippleEffect />
+      </div>
+
+      <div className="relative z-10 mx-auto grid max-w-5xl gap-8">
+        <header className="flex items-center justify-between gap-4">
+          <Link className="flex items-center gap-3" href="/" aria-label="Terrace">
+            <span className="logoMark miniLogo bg-[#111318]" aria-hidden>
+              <span />
+              <span />
+              <span />
+            </span>
+            <span className="text-2xl font-semibold tracking-[-0.04em]">Terrace</span>
+          </Link>
+          <Link className="text-sm font-semibold text-[#687386] transition hover:text-[#111318]" href="/login">
+            Sign out
+          </Link>
         </header>
 
-        {path === null && <AccountTypeStep onPick={setPath} />}
-        {path === "creator" && <CreatorPath onBack={() => setPath(null)} />}
-        {path === "brand" && <BrandPath onBack={() => setPath(null)} />}
+        <section className="creatorlink-animate-in rounded-[32px] border border-[#e8ebef] bg-white/78 p-5 shadow-[0_28px_72px_rgba(17,24,39,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,1fr)]">
+            <div className="max-w-2xl text-left">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#e8ebef] bg-white/80 px-4 py-2 text-sm font-bold text-[#657082] shadow-sm">
+                <Sparkles className="h-4 w-4 text-[#D86B3D]" />
+                First, shape your Terrace
+              </div>
+              <h1 className="text-[clamp(42px,7vw,74px)] leading-[0.94] font-semibold tracking-[-0.075em]">
+                Pick your side. See the network come alive.
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-8 text-[#687386]">
+                Creators build verified proof. Brands build a hiring surface. Both meet in the same Terrace flow.
+              </p>
+            </div>
+            <OnboardingProductPreview />
+          </div>
+
+          <div className="mx-auto mt-10 max-w-4xl">
+            {path === null && <AccountTypeStep onPick={setPath} />}
+            {path === "creator" && <CreatorPath onBack={() => setPath(null)} />}
+            {path === "brand" && <BrandPath onBack={() => setPath(null)} />}
+          </div>
+        </section>
       </div>
     </main>
+  );
+}
+
+function OnboardingProductPreview() {
+  return (
+    <div className="creatorlink-float-slow relative hidden min-h-[410px] overflow-hidden rounded-[30px] border border-[#151922]/10 bg-[#0d1016] p-5 text-white shadow-[0_28px_76px_rgba(17,24,39,0.18)] lg:block">
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(140,201,232,0.26),transparent_32%),radial-gradient(circle_at_88%_85%,rgba(216,107,61,0.24),transparent_34%)]"
+      />
+      <div className="absolute top-5 right-5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white/62">
+        live setup
+      </div>
+
+      <div className="relative z-10 grid gap-4">
+        <div className="w-[78%] rounded-3xl border border-white/10 bg-white/[0.07] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.22)]">
+          <div className="flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f5b38e] text-sm font-black text-[#111318]">
+              SR
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Sara Rivera</p>
+              <p className="text-xs text-white/48">Beauty creator · LA</p>
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {[
+              ["2.4M", "Reach"],
+              ["5.8%", "Eng"],
+              ["$3.2K", "Avg"]
+            ].map(([value, label]) => (
+              <div className="rounded-2xl bg-white/[0.07] p-3" key={label}>
+                <p className="text-lg font-semibold tracking-[-0.04em]">{value}</p>
+                <p className="text-[11px] text-white/42">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="creatorlink-float-card ml-auto w-[78%] rounded-3xl border border-white/10 bg-white/[0.08] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.2)]">
+          <p className="text-xs font-semibold tracking-[0.16em] text-[#f5b38e] uppercase">Brand search</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {["Women 18-30", "Skincare", "$1K-$4K", "TikTok"].map((item) => (
+              <span
+                className="rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs text-white/66"
+                key={item}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+          <div className="mt-4 rounded-2xl bg-white p-3 text-[#111318]">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold">94% match</p>
+              <span className="rounded-full bg-[#fff0e8] px-2.5 py-1 text-[11px] font-bold text-[#D86B3D]">
+                top fit
+              </span>
+            </div>
+            <p className="mt-1 text-xs leading-5 text-[#687386]">
+              High beauty audience fit and reliable response time.
+            </p>
+          </div>
+        </div>
+
+        <div className="w-[62%] rounded-3xl border border-white/10 bg-white/[0.07] p-4">
+          <p className="text-sm font-semibold">Campaign brief</p>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+            <div className="creatorlink-progress h-full w-[82%] rounded-full bg-[#8CC9E8]" />
+          </div>
+          <p className="mt-2 text-xs text-white/46">Building shortlist...</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -38,27 +163,47 @@ export function OnboardingFlow() {
 
 function AccountTypeStep({ onPick }: { onPick: (path: Path) => void }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <button
-        className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-left transition hover:border-white/30 hover:bg-white/[0.06]"
-        onClick={() => onPick("creator")}
-        type="button"
-      >
-        <p className="text-xs font-black tracking-[0.18em] text-white/40 uppercase">For creators</p>
-        <p className="mt-2 text-2xl font-semibold">Build your media kit</p>
-        <p className="mt-3 text-sm text-white/60">
-          Connect your platforms, set rates, and surface to brands looking for your niche.
-        </p>
-      </button>
-      <button
-        className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-left transition hover:border-white/30 hover:bg-white/[0.06]"
-        onClick={() => onPick("brand")}
-        type="button"
-      >
-        <p className="text-xs font-black tracking-[0.18em] text-white/40 uppercase">For companies</p>
-        <p className="mt-2 text-2xl font-semibold">Run a campaign</p>
-        <p className="mt-3 text-sm text-white/60">Spin up a team, search creators, and brief campaigns end to end.</p>
-      </button>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <BackgroundGradient containerClassName="transition duration-300 hover:-translate-y-1">
+        <button
+          className="group relative h-full w-full overflow-hidden rounded-[28px] bg-[#0b0d12] p-6 text-left text-white transition duration-300 sm:p-7"
+          onClick={() => onPick("creator")}
+          type="button"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(140,201,232,0.22),transparent_34%),radial-gradient(circle_at_90%_90%,rgba(216,107,61,0.22),transparent_30%)]" />
+          <div className="pointer-events-none absolute -right-10 bottom-6 h-32 w-48 rotate-[-12deg] rounded-[32px] border border-white/10 bg-white/[0.04] transition duration-500 group-hover:rotate-[-7deg]" />
+          <div className="relative z-10">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 text-[#f5b38e]">
+              <Users className="h-5 w-5" />
+            </span>
+            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-white/52 uppercase">For creators</p>
+            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em]">Build your media kit</p>
+            <p className="mt-4 text-sm leading-6 text-white/58">
+              Connect your platforms, set rates, and surface to brands looking for your niche.
+            </p>
+          </div>
+        </button>
+      </BackgroundGradient>
+      <BackgroundGradient containerClassName="transition duration-300 hover:-translate-y-1">
+        <button
+          className="group relative h-full w-full overflow-hidden rounded-[28px] bg-white p-6 text-left transition duration-300 sm:p-7"
+          onClick={() => onPick("brand")}
+          type="button"
+        >
+          <div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-full bg-[#fff0e8]" />
+          <div className="pointer-events-none absolute -right-8 bottom-7 h-28 w-44 rotate-[-12deg] rounded-[32px] border border-[#e9d8cf] bg-[#fff8f3] transition duration-500 group-hover:rotate-[-7deg]" />
+          <div className="relative z-10">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0e8] text-[#D86B3D]">
+              <BriefcaseBusiness className="h-5 w-5" />
+            </span>
+            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">For brands</p>
+            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em]">Run a campaign</p>
+            <p className="mt-4 text-sm leading-6 text-[#687386]">
+              Spin up a team, search creators, and brief campaigns end to end.
+            </p>
+          </div>
+        </button>
+      </BackgroundGradient>
     </div>
   );
 }
@@ -118,13 +263,18 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
   return (
     <form
-      className="grid gap-6"
+      className="grid gap-5 rounded-[28px] border border-[#e8ebef] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7"
       onSubmit={(event) => {
         event.preventDefault();
         submit();
       }}
     >
       <BackLink onClick={onBack} />
+
+      <div>
+        <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Creator setup</p>
+        <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Build your public proof.</h2>
+      </div>
 
       <Field label="Handle" hint="Lowercase letters, numbers, underscores. 3–30 characters." error={errors.handle?.[0]}>
         <Input
@@ -133,10 +283,11 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
           onBlur={(event) => checkHandle(event.target.value)}
           onChange={(event) => setHandle(event.target.value)}
           placeholder="sara_creates"
+          className={inputClassName}
           value={handle}
         />
         <p className="mt-1.5 h-4 text-xs" id="handle-status">
-          {handleStatus === "checking" && <span className="text-white/50">Checking…</span>}
+          {handleStatus === "checking" && <span className="text-muted-foreground">Checking…</span>}
           {handleStatus === "available" && <span className="text-emerald-400">Available</span>}
           {handleStatus === "taken" && <span className="text-rose-400">Already taken</span>}
           {handleStatus === "invalid" && <span className="text-rose-400">Invalid format</span>}
@@ -145,6 +296,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
       <Field label="Display name" error={errors.displayName?.[0]}>
         <Input
+          className={inputClassName}
           maxLength={80}
           onChange={(event) => setDisplayName(event.target.value)}
           placeholder="Sara Rivera"
@@ -154,6 +306,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
       <Field label="Headline" hint="One line that sums up what you cover." error={errors.headline?.[0]}>
         <Input
+          className={inputClassName}
           maxLength={120}
           onChange={(event) => setHeadline(event.target.value)}
           placeholder="Skincare routines for sensitive skin"
@@ -163,7 +316,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
       <Field label="Bio" error={errors.bio?.[0]}>
         <textarea
-          className="min-h-[120px] w-full rounded-xl border border-[#303030] bg-[#1f1f1f] px-4 py-3 text-base text-white placeholder:text-[#929292]"
+          className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           maxLength={500}
           onChange={(event) => setBio(event.target.value)}
           placeholder="Tell brands what you make and who watches it."
@@ -173,6 +326,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
       <Field label="Location" error={errors.location?.[0]}>
         <Input
+          className={inputClassName}
           maxLength={80}
           onChange={(event) => setLocation(event.target.value)}
           placeholder="Brooklyn, NY"
@@ -187,7 +341,11 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
             return (
               <button
                 aria-pressed={active}
-                className={`rounded-full px-3 py-1.5 text-sm transition ${active ? "bg-white text-black" : "border border-white/15 text-white/70 hover:border-white/40"}`}
+                className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                  active
+                    ? "bg-[#111318] text-white"
+                    : "border border-[#d8dee8] bg-white text-[#566174] hover:border-[#bfc8d4]"
+                }`}
                 key={n}
                 onClick={() => toggleNiche(n)}
                 type="button"
@@ -199,13 +357,13 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
         </div>
       </Field>
 
-      <Separator className="bg-white/10" />
+      <Separator className="bg-muted/30" />
 
-      <PlaceholderBlock title="Connect platforms">
+      <PlaceholderBlock icon={<BadgeCheck className="h-4 w-4" />} title="Connect platforms">
         Instagram, TikTok, and YouTube OAuth lights up in Phase 10. For now, your media kit shows the empty state.
       </PlaceholderBlock>
 
-      <div className="grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+      <div className="grid gap-4 rounded-[24px] border border-[#e8ebef] bg-[#fbfcfd] p-4 sm:grid-cols-[160px_minmax(0,1fr)]">
         <ImageUpload
           aspect="square"
           hint="JPG, PNG, WebP, or GIF. Max 5 MB."
@@ -225,169 +383,24 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
       </div>
 
       <div className="flex items-center justify-end gap-3">
-        <Button disabled={pending} type="submit">
-          {pending ? "Saving…" : "Finish creator setup"}
-        </Button>
+        <NoiseBackground containerClassName="rounded-2xl">
+          <Button
+            className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
+            disabled={pending}
+            type="submit"
+          >
+            {pending ? "Saving…" : "Finish creator setup"}
+          </Button>
+        </NoiseBackground>
       </div>
     </form>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Brand path
+// Brand path lives in ./brand-path so we can next/dynamic it. Anything below
+// is shared form helpers used by the creator path.
 // ---------------------------------------------------------------------------
-
-function BrandPath({ onBack }: { onBack: () => void }) {
-  const { organization, isLoaded } = useOrganization();
-  const [step, setStep] = useState<"org" | "profile">("org");
-
-  if (step === "org" && organization) {
-    return <BrandProfileStep onBack={() => setStep("org")} orgId={organization.id} orgName={organization.name} />;
-  }
-
-  return (
-    <div className="grid gap-6">
-      <BackLink onClick={onBack} />
-      <p className="text-sm text-white/60">
-        Brand teams are Clerk Organizations. Create a new one or join an existing team if you were invited.
-      </p>
-
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-        <h3 className="mb-3 text-sm font-bold tracking-wide text-white/80">Existing teams</h3>
-        <OrganizationList
-          afterCreateOrganizationUrl="/onboarding"
-          afterSelectOrganizationUrl="/onboarding"
-          hidePersonal
-        />
-      </div>
-
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-        <h3 className="mb-3 text-sm font-bold tracking-wide text-white/80">Create a new brand team</h3>
-        <CreateOrganization afterCreateOrganizationUrl="/onboarding" skipInvitationScreen={false} />
-      </div>
-
-      {!isLoaded && <p className="text-xs text-white/40">Loading Clerk org state…</p>}
-      {isLoaded && organization && (
-        <Button onClick={() => setStep("profile")} type="button">
-          Continue with {organization.name}
-        </Button>
-      )}
-    </div>
-  );
-}
-
-function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgId: string; orgName: string }) {
-  const [name, setName] = useState(orgName);
-  const [slug, setSlug] = useState(slugifyBrandName(orgName));
-  const [industry, setIndustry] = useState("");
-  const [sizeRange, setSizeRange] = useState("");
-  const [about, setAbout] = useState("");
-  const [plan, setPlan] = useState<"free" | "growth" | "scale">("free");
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const [pending, startTransition] = useTransition();
-
-  function submit() {
-    setErrors({});
-    startTransition(async () => {
-      const result = await completeBrandOnboarding({ orgId, name, slug, industry, sizeRange, about, plan });
-      if (result && !result.ok) {
-        setErrors(result.fieldErrors ?? {});
-      }
-    });
-  }
-
-  return (
-    <form
-      className="grid gap-6"
-      onSubmit={(event) => {
-        event.preventDefault();
-        submit();
-      }}
-    >
-      <BackLink onClick={onBack} />
-
-      <Field label="Brand name" error={errors.name?.[0]}>
-        <Input
-          onChange={(event) => {
-            setName(event.target.value);
-            setSlug(slugifyBrandName(event.target.value));
-          }}
-          value={name}
-        />
-      </Field>
-
-      <Field label="URL slug" hint="Used in your public brand page URL." error={errors.slug?.[0]}>
-        <Input onChange={(event) => setSlug(event.target.value)} value={slug} />
-      </Field>
-
-      <Field label="Industry" error={errors.industry?.[0]}>
-        <Input
-          onChange={(event) => setIndustry(event.target.value)}
-          placeholder="Beauty, DTC, SaaS…"
-          value={industry}
-        />
-      </Field>
-
-      <Field label="Team size" error={errors.sizeRange?.[0]}>
-        <select
-          className="h-[48px] w-full rounded-xl border border-[#303030] bg-[#1f1f1f] px-4 text-base text-white"
-          onChange={(event) => setSizeRange(event.target.value)}
-          value={sizeRange}
-        >
-          <option value="">Select…</option>
-          <option value="1-10">1–10</option>
-          <option value="11-50">11–50</option>
-          <option value="51-200">51–200</option>
-          <option value="201-1000">201–1000</option>
-          <option value="1000+">1000+</option>
-        </select>
-      </Field>
-
-      <Field label="About" error={errors.about?.[0]}>
-        <textarea
-          className="min-h-[120px] w-full rounded-xl border border-[#303030] bg-[#1f1f1f] px-4 py-3 text-base text-white placeholder:text-[#929292]"
-          maxLength={1000}
-          onChange={(event) => setAbout(event.target.value)}
-          placeholder="What does your brand stand for?"
-          value={about}
-        />
-      </Field>
-
-      <Separator className="bg-white/10" />
-
-      <Field label="Plan" hint="Stripe checkout connects in Phase 8. We stash your pick on Clerk metadata for now.">
-        <div className="grid gap-3 sm:grid-cols-3">
-          {(["free", "growth", "scale"] as const).map((tier) => (
-            <button
-              aria-pressed={plan === tier}
-              className={`rounded-xl border px-4 py-3 text-left ${plan === tier ? "border-white bg-white/10" : "border-white/15 hover:border-white/40"}`}
-              key={tier}
-              onClick={() => setPlan(tier)}
-              type="button"
-            >
-              <p className="text-base font-semibold capitalize">{tier}</p>
-              <p className="mt-1 text-xs text-white/50">
-                {tier === "free" && "Browse, save creators."}
-                {tier === "growth" && "DMs, briefs, 3 active campaigns."}
-                {tier === "scale" && "Unlimited campaigns, recruiter seats."}
-              </p>
-            </button>
-          ))}
-        </div>
-      </Field>
-
-      <PlaceholderBlock title="Invite teammates">
-        Use Clerk&apos;s organization invites once your team is set up — admins can invite from the org dashboard.
-      </PlaceholderBlock>
-
-      <div className="flex items-center justify-end gap-3">
-        <Button disabled={pending} type="submit">
-          {pending ? "Saving…" : "Finish brand setup"}
-        </Button>
-      </div>
-    </form>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Shared bits
@@ -406,9 +419,9 @@ function Field({
 }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-sm font-semibold text-white/80">{label}</Label>
+      <Label className="text-sm font-semibold text-[#263142]">{label}</Label>
       {children}
-      {hint && !error && <p className="text-xs text-white/40">{hint}</p>}
+      {hint && !error && <p className="text-xs leading-5 text-[#7b8494]">{hint}</p>}
       {error && <p className="text-xs text-rose-400">{error}</p>}
     </div>
   );
@@ -417,20 +430,32 @@ function Field({
 function BackLink({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="self-start text-xs font-semibold tracking-wide text-white/50 uppercase hover:text-white"
+      className="self-start text-xs font-semibold tracking-wide text-[#687386] uppercase transition hover:text-[#111318]"
       onClick={onClick}
       type="button"
     >
-      ← Change account type
+      <ArrowLeft className="mr-2 inline h-3.5 w-3.5" />
+      Change account type
     </button>
   );
 }
 
-function PlaceholderBlock({ children, title }: { children: React.ReactNode; title: string }) {
+function PlaceholderBlock({
+  children,
+  icon,
+  title
+}: {
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+  title: string;
+}) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-4">
-      <p className="text-xs font-black tracking-[0.2em] text-white/40 uppercase">Placeholder · {title}</p>
-      <p className="mt-2 text-sm text-white/60">{children}</p>
+    <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfcfd] p-4">
+      <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">
+        {icon}
+        Placeholder · {title}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-[#687386]">{children}</p>
     </div>
   );
 }

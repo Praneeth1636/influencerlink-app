@@ -44,53 +44,37 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
   const topCreator = creators[0];
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_10%_0%,rgba(216,90,48,0.18),transparent_30%),radial-gradient(circle_at_86%_8%,rgba(168,85,247,0.12),transparent_26%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] bg-[size:56px_56px] opacity-35" />
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
+    <main className="bg-background text-foreground min-h-screen">
+      <header className="border-border bg-background/88 sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-5 py-4">
-          <Link
-            className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
-            href="/feed"
-            aria-label="CreatorLink feed"
-          >
-            <span />
-            <span />
-            <span />
-          </Link>
           <div>
-            <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">Creator Discovery</p>
-            <p className="hidden text-sm text-white/60 sm:block">Find creators by proof, niche, and fit</p>
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.24em] uppercase">
+              Creator Discovery
+            </p>
+            <p className="text-muted-foreground hidden text-sm sm:block">Find creators by proof, niche, and fit</p>
           </div>
-          <Link
-            className="ml-auto rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
-            href="/feed"
-          >
-            Back to feed
-          </Link>
         </div>
       </header>
 
       <section className="relative z-10 mx-auto grid max-w-[1280px] gap-6 px-5 py-7 lg:grid-cols-[310px_minmax(0,1fr)]">
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <form action="/search" className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+          <form action="/search" className="border-border bg-card rounded-xl border p-5">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#D85A30]/12 text-[#ffb49c] ring-1 ring-[#D85A30]/20">
+              <div className="bg-primary/12 text-primary ring-primary/20 grid h-10 w-10 place-items-center rounded-xl ring-1">
                 <SlidersHorizontal className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Filters</p>
-                <h1 className="text-2xl font-black tracking-[-0.04em]">Creator search</h1>
+                <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Filters</p>
+                <h1 className="text-2xl font-black tracking-[-0.04em]">Discovery filters</h1>
               </div>
             </div>
 
             <label className="mt-5 block">
-              <span className="text-xs font-black tracking-[0.14em] text-white/35 uppercase">Keyword</span>
+              <span className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">Keyword</span>
               <span className="relative mt-2 block">
-                <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-white/38" />
+                <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2" />
                 <input
-                  className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.06] pr-4 pl-11 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#D85A30]/60"
+                  className="border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:border-primary/60 h-11 w-full rounded-xl border pr-4 pl-11 text-sm outline-none"
                   defaultValue={filters.query}
                   name="q"
                   placeholder="beauty, skincare, SaaS..."
@@ -99,9 +83,9 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-black tracking-[0.14em] text-white/35 uppercase">Niche</span>
+              <span className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">Niche</span>
               <select
-                className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-[#151518] px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+                className="border-border bg-input text-foreground focus:border-primary/60 mt-2 h-11 w-full rounded-xl border px-3 text-sm outline-none"
                 defaultValue={filters.niche ?? ""}
                 name="niche"
               >
@@ -115,9 +99,9 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-black tracking-[0.14em] text-white/35 uppercase">Reach</span>
+              <span className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">Reach</span>
               <select
-                className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-[#151518] px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+                className="border-border bg-input text-foreground focus:border-primary/60 mt-2 h-11 w-full rounded-xl border px-3 text-sm outline-none"
                 defaultValue={filters.minReach ? String(filters.minReach) : ""}
                 name="minReach"
               >
@@ -129,25 +113,25 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
               </select>
             </label>
 
-            <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+            <label className="border-border bg-muted/30 mt-4 flex items-center gap-3 rounded-xl border p-3">
               <input
-                className="h-4 w-4 accent-[#D85A30]"
+                className="accent-primary h-4 w-4"
                 defaultChecked={filters.openToCollabs}
                 name="open"
                 type="checkbox"
                 value="1"
               />
-              <span className="text-sm font-bold text-white/68">Open to collabs only</span>
+              <span className="text-foreground/68 text-sm font-bold">Open to collabs only</span>
             </label>
 
-            <button className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#D85A30] text-sm font-black text-white transition hover:bg-[#c54f29]">
+            <button className="bg-primary text-foreground hover:bg-primary/90 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl text-sm font-black transition">
               <Filter className="mr-2 h-4 w-4" />
               Search creators
             </button>
           </form>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
-            <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Result quality</p>
+          <article className="border-border bg-card rounded-xl border p-5">
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Result quality</p>
             <div className="mt-4 grid gap-3">
               <MiniStat label="Matches" value={String(creators.length)} />
               <MiniStat label="Top score" value={topCreator ? `${topCreator.matchScore}%` : "0%"} />
@@ -157,24 +141,51 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
         </aside>
 
         <section className="grid min-w-0 content-start gap-5">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/10">
-            <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+          <article className="border-border bg-card/90 rounded-lg border p-6 shadow-sm">
+            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
               <Radio className="mr-2 h-3.5 w-3.5" />
-              Live discovery
+              Studio Slate
             </Badge>
-            <h2 className="mt-5 text-[clamp(32px,5vw,58px)] leading-[0.98] font-black tracking-[-0.055em]">
-              Search creators by the numbers that brands actually buy.
+            <h2 className="mt-5 max-w-3xl text-[clamp(30px,4vw,50px)] leading-[1.02] font-black tracking-[-0.045em]">
+              Browse creators like a premium talent catalog.
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/55">
-              Filter by niche, reach, availability, and keyword. This is the brand-side discovery surface that will
-              later plug into Algolia and AI brief matching.
+            <p className="text-muted-foreground mt-4 max-w-2xl text-sm leading-7">
+              Cinematic discovery, compact filters, and proof-first cards for creators and brand teams in the same
+              workspace.
             </p>
           </article>
 
+          {topCreator && (
+            <article className="border-primary/25 bg-card/90 overflow-hidden rounded-lg border shadow-sm">
+              <div className="grid lg:grid-cols-[minmax(0,1fr)_300px]">
+                <div className="p-6">
+                  <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+                    Best match · {topCreator.matchScore}%
+                  </Badge>
+                  <h3 className="mt-5 text-3xl font-black tracking-[-0.045em]">{topCreator.displayName}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    @{topCreator.handle} · {topCreator.location}
+                  </p>
+                  <p className="text-foreground/70 mt-4 max-w-2xl text-sm leading-7">{topCreator.headline}</p>
+                  <div className="mt-5 grid gap-2 sm:grid-cols-3">
+                    <MiniStat label="Reach" value={formatNumber(topCreator.totalReach)} icon={Users} />
+                    <MiniStat label="Eng" value={`${topCreator.weightedEngagement.toFixed(1)}%`} icon={TrendingUp} />
+                    <MiniStat
+                      label="Rate"
+                      value={topCreator.baseRateCents ? `$${formatNumber(topCreator.baseRateCents / 100)}` : "Private"}
+                      icon={DollarSign}
+                    />
+                  </div>
+                </div>
+                <div className="min-h-64 bg-[linear-gradient(135deg,rgba(216,90,48,0.22),rgba(31,28,26,0.76)),url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80')] bg-cover bg-center" />
+              </div>
+            </article>
+          )}
+
           {creators.length === 0 && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-6">
+            <div className="border-border bg-card rounded-xl border p-6">
               <p className="text-lg font-black">No creators found</p>
-              <p className="mt-2 text-sm leading-6 text-white/52">
+              <p className="text-muted-foreground mt-2 text-sm leading-6">
                 Try a broader niche, lower reach threshold, or remove the keyword filter.
               </p>
             </div>
@@ -213,36 +224,36 @@ async function getSearchResults(filters: CreatorSearchFilters) {
 
 function CreatorResultCard({ creator }: { creator: CreatorSearchResult }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 transition hover:-translate-y-0.5 hover:border-[#D85A30]/35 hover:bg-white/[0.06]">
+    <article className="border-border bg-card/90 hover:border-primary/35 hover:bg-muted/25 rounded-lg border p-5 transition hover:-translate-y-0.5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
-          <Avatar className="h-14 w-14 bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ring-4 ring-white/8">
-            <AvatarFallback className="bg-transparent text-black">{initials(creator.displayName)}</AvatarFallback>
+          <Avatar className="ring-border h-14 w-14 bg-[linear-gradient(135deg,#D85A30,#B9856B)] font-black text-[#171514] ring-4">
+            <AvatarFallback className="bg-transparent text-[#171514]">{initials(creator.displayName)}</AvatarFallback>
             {creator.openToCollabs && <AvatarBadge className="bg-emerald-400" />}
           </Avatar>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="truncate text-xl font-black tracking-[-0.035em]">{creator.displayName}</h3>
               {creator.verified && (
-                <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full">
                   <BadgeCheck className="mr-1.5 h-3.5 w-3.5" />
                   Verified
                 </Badge>
               )}
             </div>
-            <p className="mt-1 text-[13px] text-white/45">
+            <p className="text-foreground/45 mt-1 text-[13px]">
               @{creator.handle} · {creator.location}
             </p>
           </div>
         </div>
-        <div className="grid h-14 w-16 shrink-0 place-items-center rounded-xl border border-[#D85A30]/35 bg-[#D85A30]/14 text-center text-[#ffb49c]">
+        <div className="border-primary/35 bg-primary/14 text-primary grid h-14 w-16 shrink-0 place-items-center rounded-xl border text-center">
           <strong className="text-lg font-black tracking-[-0.04em]">{creator.matchScore}%</strong>
           <span className="-mt-2 text-[10px] font-black tracking-[0.12em] uppercase opacity-70">match</span>
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-6 font-bold text-white/72">{creator.headline}</p>
-      <p className="mt-2 line-clamp-2 text-[13px] leading-5 text-white/50">{creator.bio}</p>
+      <p className="text-foreground/80 mt-4 text-sm leading-6 font-bold">{creator.headline}</p>
+      <p className="text-foreground/50 mt-2 line-clamp-2 text-[13px] leading-5">{creator.bio}</p>
 
       <div className="mt-5 grid grid-cols-3 gap-2">
         <MiniStat label="Reach" value={formatNumber(creator.totalReach)} icon={Users} />
@@ -256,19 +267,22 @@ function CreatorResultCard({ creator }: { creator: CreatorSearchResult }) {
 
       <div className="mt-5 flex flex-wrap gap-2">
         {creator.niches.map((niche) => (
-          <span className="rounded-full bg-white/8 px-3 py-1.5 text-[11px] font-black text-white/58" key={niche}>
+          <span
+            className="bg-muted/40 text-muted-foreground rounded-full px-3 py-1.5 text-[11px] font-black"
+            key={niche}
+          >
             {niche}
           </span>
         ))}
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-white/38">
+      <div className="border-border mt-5 flex items-center justify-between gap-3 border-t pt-4">
+        <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs font-bold">
           <MapPin className="h-3.5 w-3.5" />
           {creator.location}
         </span>
         <Link
-          className="inline-flex h-10 items-center justify-center rounded-xl bg-[#D85A30] px-4 text-sm font-black text-white transition hover:bg-[#c54f29]"
+          className="bg-primary text-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-black transition"
           href={`/profile/${creator.handle}`}
         >
           Open profile
@@ -280,12 +294,12 @@ function CreatorResultCard({ creator }: { creator: CreatorSearchResult }) {
 
 function MiniStat({ label, value, icon: Icon }: { label: string; value: string; icon?: typeof Users }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+    <div className="border-border bg-muted/30 rounded-xl border p-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="block text-[10px] font-black tracking-[0.14em] text-white/34 uppercase">{label}</span>
-        {Icon && <Icon className="h-3.5 w-3.5 text-white/28" />}
+        <span className="text-muted-foreground block text-[10px] font-black tracking-[0.14em] uppercase">{label}</span>
+        {Icon && <Icon className="text-foreground/28 h-3.5 w-3.5" />}
       </div>
-      <strong className="mt-1 block text-lg font-black tracking-[-0.04em] text-white">{value}</strong>
+      <strong className="text-foreground mt-1 block text-lg font-black tracking-[-0.04em]">{value}</strong>
     </div>
   );
 }

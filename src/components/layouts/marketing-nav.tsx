@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import { Moon, Sparkles, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -10,14 +11,21 @@ import { clerkAppearance } from "@/components/auth/clerk-appearance";
 export function MarketingNav() {
   const { theme, setTheme } = useTheme();
   const { isSignedIn, user } = useUser();
-  const dashboardHref = user?.publicMetadata?.brandId ? "/feed" : "/creator";
+  const dashboardHref = user?.publicMetadata?.brandId ? "/dashboard" : "/creator";
+
+  // next-themes resolves the active theme from localStorage on the client.
+  // During SSR `theme` is undefined → if we render Sun/Moon based on it,
+  // the server HTML disagrees with the first client render and hydration
+  // fails. Defer the icon to the post-mount render.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         <Link href="/" className="flex items-center gap-2">
           <Sparkles className="text-primary h-6 w-6" />
-          <span className="font-serif text-xl font-bold tracking-tight">InfluencerLink</span>
+          <span className="font-serif text-xl font-bold tracking-tight">Terrace</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -46,7 +54,15 @@ export function MarketingNav() {
             className="rounded-full"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {mounted ? (
+              theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )
+            ) : (
+              <Sun className="h-5 w-5 opacity-0" aria-hidden />
+            )}
           </Button>
 
           {isSignedIn ? (

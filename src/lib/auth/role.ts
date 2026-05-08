@@ -13,6 +13,8 @@ import { users } from "@/lib/db/schema";
 export type AppRole = "creator" | "brand";
 
 export async function resolveAppRole(): Promise<AppRole> {
+  if (process.env.E2E_BYPASS_AUTH === "true") return "creator";
+
   const { userId } = await auth();
   if (!userId) return "creator";
 

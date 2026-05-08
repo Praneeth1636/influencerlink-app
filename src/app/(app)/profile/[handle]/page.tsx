@@ -36,34 +36,16 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
   const baseRate = profile.creator.baseRateCents ? profile.creator.baseRateCents / 100 : null;
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_10%_0%,rgba(216,90,48,0.18),transparent_30%),radial-gradient(circle_at_85%_8%,rgba(168,85,247,0.13),transparent_26%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] bg-[size:56px_56px] opacity-35" />
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
+    <main className="bg-background text-foreground min-h-screen">
+      <header className="border-border bg-background/88 sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-5 py-4">
-          <Link
-            className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
-            href="/feed"
-            aria-label="CreatorLink feed"
-          >
-            <span />
-            <span />
-            <span />
-          </Link>
           <div>
-            <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">CreatorLink</p>
-            <p className="hidden text-sm text-white/60 sm:block">Verified creator profile</p>
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.24em] uppercase">Creator profile</p>
+            <p className="text-muted-foreground hidden text-sm sm:block">Portfolio, proof, and collaboration context</p>
           </div>
           <nav className="ml-auto flex items-center gap-2">
             <Link
-              className="rounded-xl px-3 py-2 text-sm font-bold text-white/58 transition hover:bg-white/[0.06] hover:text-white"
-              href="/feed"
-            >
-              Feed
-            </Link>
-            <Link
-              className="rounded-xl bg-[#D85A30] px-4 py-2 text-sm font-black text-white transition hover:bg-[#c54f29]"
+              className="bg-primary text-foreground hover:bg-primary/90 rounded-xl px-4 py-2 text-sm font-black transition"
               href="/messages"
             >
               Message
@@ -74,22 +56,22 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
 
       <section className="relative z-10 mx-auto grid max-w-[1180px] gap-6 px-5 py-7 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section className="grid gap-6">
-          <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/10">
-            <div className="h-56 bg-[linear-gradient(135deg,rgba(216,90,48,0.44),rgba(168,85,247,0.22)),url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
+          <article className="border-border bg-card/90 overflow-hidden rounded-lg border shadow-sm">
+            <div className="h-56 bg-[linear-gradient(135deg,rgba(216,90,48,0.22),rgba(31,28,26,0.68)),url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
             <div className="p-6 pt-0">
               <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
                 <div className="flex items-end gap-5">
                   <CreatorAvatar
                     name={profile.creator.displayName}
                     openToCollabs={profile.creator.openToCollabs}
-                    className="-mt-12 h-28 w-28 border-4 border-[#101013] text-3xl"
+                    className="border-background -mt-12 h-28 w-28 border-4 text-3xl"
                   />
                   <div className="pb-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <h1 className="text-4xl font-black tracking-[-0.05em]">{profile.creator.displayName}</h1>
-                      {profile.creator.verified && <BadgeCheck className="h-6 w-6 text-[#ffb49c]" />}
+                      {profile.creator.verified && <BadgeCheck className="text-primary h-6 w-6" />}
                     </div>
-                    <p className="mt-2 text-sm text-white/50">@{profile.creator.handle}</p>
+                    <p className="text-foreground/50 mt-2 text-sm">@{profile.creator.handle}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -100,17 +82,17 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
                     </Badge>
                   )}
                   {profile.creator.verified && (
-                    <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
                       Verified metrics
                     </Badge>
                   )}
                 </div>
               </div>
 
-              <p className="mt-5 max-w-3xl text-lg leading-8 font-bold text-white/82">
+              <p className="text-foreground/82 mt-5 max-w-3xl text-lg leading-8 font-bold">
                 {profile.creator.headline ?? "Creator building measurable brand partnerships"}
               </p>
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-white/48">
+              <div className="text-foreground/48 mt-3 flex flex-wrap items-center gap-3 text-sm">
                 {profile.creator.location && (
                   <span className="inline-flex items-center gap-1.5">
                     <MapPin className="h-4 w-4" />
@@ -118,13 +100,13 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
                   </span>
                 )}
                 {profile.creator.niches.map((niche) => (
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1" key={niche}>
+                  <span className="border-border bg-muted/30 rounded-full border px-3 py-1" key={niche}>
                     {niche}
                   </span>
                 ))}
               </div>
               {profile.creator.bio && (
-                <p className="mt-6 max-w-4xl text-sm leading-7 text-white/58">{profile.creator.bio}</p>
+                <p className="text-muted-foreground mt-6 max-w-4xl text-sm leading-7">{profile.creator.bio}</p>
               )}
 
               <div className="mt-6 grid gap-3 md:grid-cols-4">
@@ -146,20 +128,20 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
           </article>
 
           <section className="grid gap-4">
-            <SectionHeader eyebrow="Creator Posts" title="Recent proof and creator updates." />
+            <SectionHeader eyebrow="Creator feed" title="Proof posts, wins, and content drops." />
             <div className="grid gap-3">
               {profile.posts.length === 0 && (
                 <EmptyPanel title="No posts yet" body="This creator has not published public proof posts yet." />
               )}
               {profile.posts.map((post) => (
-                <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5" key={post.id}>
+                <article className="border-border bg-card/90 rounded-lg border p-5" key={post.id}>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="rounded-full bg-[#D85A30]/12 text-[#ffb49c] hover:bg-[#D85A30]/12">
+                    <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full">
                       {post.type.replace("_", " ")}
                     </Badge>
-                    <span className="text-xs font-bold text-white/35">{formatDate(post.createdAt)}</span>
+                    <span className="text-muted-foreground text-xs font-bold">{formatDate(post.createdAt)}</span>
                   </div>
-                  <p className="mt-3 text-sm leading-7 text-white/64">{post.body}</p>
+                  <p className="text-foreground/64 mt-3 text-sm leading-7">{post.body}</p>
                 </article>
               ))}
             </div>
@@ -167,7 +149,7 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
         </section>
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+          <article className="border-border bg-card/90 rounded-lg border p-5">
             <SectionHeader eyebrow="Platforms" title="Connected accounts" />
             <div className="mt-5 grid gap-3">
               {profile.platforms.length === 0 && (
@@ -177,14 +159,14 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
                 />
               )}
               {profile.platforms.map(({ platform, latestMetrics }) => (
-                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4" key={platform.id}>
+                <div className="border-border bg-muted/30 rounded-lg border p-4" key={platform.id}>
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-sm font-black capitalize">{platform.platform}</span>
-                    <span className="text-xs text-white/38">
+                    <span className="text-muted-foreground text-xs">
                       {platform.lastSyncedAt ? formatDate(platform.lastSyncedAt) : "Pending"}
                     </span>
                   </div>
-                  <p className="mt-2 text-xs text-white/42">@{platform.externalHandle}</p>
+                  <p className="text-muted-foreground mt-2 text-xs">@{platform.externalHandle}</p>
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     <MiniMetric label="Followers" value={formatNumber(latestMetrics?.followers ?? 0)} />
                     <MiniMetric label="Eng" value={`${Number(latestMetrics?.engagementRate ?? 0).toFixed(1)}%`} />
@@ -194,16 +176,16 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
             </div>
           </article>
 
-          <article className="rounded-2xl border border-[#D85A30]/18 bg-[#D85A30]/8 p-5">
+          <article className="border-primary/18 bg-primary/8 rounded-lg border p-5">
             <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-[#ffb49c]" />
+              <MessageCircle className="text-primary h-5 w-5" />
               <SectionHeader eyebrow="Brand action" title="Start outreach" />
             </div>
-            <p className="mt-4 text-sm leading-6 text-white/58">
+            <p className="text-muted-foreground mt-4 text-sm leading-6">
               Use this profile as the source of truth for reach, niche fit, rate expectations, and public proof posts.
             </p>
             <Link
-              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#D85A30] text-sm font-black text-white transition hover:bg-[#c54f29]"
+              className="bg-primary text-foreground hover:bg-primary/90 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl text-sm font-black transition"
               href="/messages"
             >
               Draft message
@@ -324,10 +306,8 @@ function CreatorAvatar({
   className?: string;
 }) {
   return (
-    <Avatar
-      className={`bg-gradient-to-br from-[#D85A30] via-[#f1a06d] to-purple-300 font-black text-black ${className ?? ""}`}
-    >
-      <AvatarFallback className="bg-transparent text-black">{initials(name)}</AvatarFallback>
+    <Avatar className={`bg-[linear-gradient(135deg,#D85A30,#B9856B)] font-black text-[#171514] ${className ?? ""}`}>
+      <AvatarFallback className="bg-transparent text-[#171514]">{initials(name)}</AvatarFallback>
       {openToCollabs && <AvatarBadge className="bg-emerald-400" />}
     </Avatar>
   );
@@ -346,11 +326,11 @@ function ProfileMetric({
 }) {
   return (
     <div
-      className={`rounded-2xl border p-4 ${highlighted ? "border-[#D85A30]/45 bg-[#D85A30]/10" : "border-white/10 bg-white/[0.04]"}`}
+      className={`rounded-2xl border p-4 ${highlighted ? "border-primary/45 bg-primary/10" : "border-border bg-muted/30"}`}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-black tracking-[0.16em] text-white/35 uppercase">{label}</span>
-        <Icon className={`h-4 w-4 ${highlighted ? "text-[#ffb49c]" : "text-white/34"}`} />
+        <span className="text-muted-foreground text-[11px] font-black tracking-[0.16em] uppercase">{label}</span>
+        <Icon className={`h-4 w-4 ${highlighted ? "text-primary" : "text-muted-foreground"}`} />
       </div>
       <p className="mt-3 text-2xl font-black tracking-[-0.05em]">{value}</p>
     </div>
@@ -359,18 +339,18 @@ function ProfileMetric({
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-white/[0.045] p-3">
-      <span className="block text-[10px] font-black tracking-[0.14em] text-white/34 uppercase">{label}</span>
-      <strong className="mt-1 block text-sm font-black text-white">{value}</strong>
+    <div className="bg-muted/30 rounded-lg p-3">
+      <span className="text-muted-foreground block text-[10px] font-black tracking-[0.14em] uppercase">{label}</span>
+      <strong className="text-foreground mt-1 block text-sm font-black">{value}</strong>
     </div>
   );
 }
 
 function EmptyPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+    <div className="border-border bg-card rounded-xl border p-5">
       <p className="text-sm font-black">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-white/48">{body}</p>
+      <p className="text-foreground/48 mt-1 text-xs leading-5">{body}</p>
     </div>
   );
 }
@@ -378,8 +358,8 @@ function EmptyPanel({ title, body }: { title: string; body: string }) {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">{eyebrow}</p>
-      <h2 className="mt-2 text-[22px] leading-tight font-black tracking-[-0.04em] text-white">{title}</h2>
+      <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">{eyebrow}</p>
+      <h2 className="text-foreground mt-2 text-[22px] leading-tight font-black tracking-[-0.04em]">{title}</h2>
     </div>
   );
 }

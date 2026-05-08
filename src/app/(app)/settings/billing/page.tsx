@@ -13,24 +13,24 @@ export default async function BillingSettingsPage() {
 
   return (
     <main className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8">
-      <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/20">
+      <section className="border-border bg-muted/30 rounded-3xl border p-6 shadow-2xl shadow-black/20">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
           <div>
-            <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
               <BadgeDollarSign className="mr-2 h-3.5 w-3.5" />
               Billing MVP
             </Badge>
             <h1 className="mt-5 max-w-3xl text-[clamp(34px,6vw,64px)] leading-[0.96] font-black tracking-[-0.06em]">
-              Turn CreatorLink into a paid marketplace.
+              Turn Terrace into a paid marketplace.
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/55">
+            <p className="text-foreground/55 mt-4 max-w-2xl text-sm leading-7">
               Free plans now have real server-side limits for creator applications, brand briefs, DMs, and creator
               searches. Stripe checkout comes next; this phase makes the product enforce value before payment wiring.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#D85A30]/25 bg-[#D85A30]/10 p-5">
-            <p className="text-[11px] font-black tracking-[0.2em] text-[#ffb49c] uppercase">Paywall levers</p>
+          <div className="border-primary/25 bg-primary/10 rounded-2xl border p-5">
+            <p className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">Paywall levers</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Creator apps" value="5 free" />
               <Metric label="Brand DMs" value="5 free" />
@@ -47,9 +47,9 @@ export default async function BillingSettingsPage() {
             <AccountUsageCard account={account} key={`${account.audience}-${account.ownerLabel}`} />
           ))
         ) : (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-6">
+          <div className="border-border bg-card rounded-xl border p-6">
             <p className="text-lg font-black">No billing profile yet</p>
-            <p className="mt-2 text-sm leading-6 text-white/52">
+            <p className="text-muted-foreground mt-2 text-sm leading-6">
               Finish creator or brand onboarding to activate plan tracking.
             </p>
           </div>
@@ -59,11 +59,11 @@ export default async function BillingSettingsPage() {
       <section className="grid gap-4">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-[11px] font-black tracking-[0.22em] text-white/35 uppercase">Plan catalog</p>
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.22em] uppercase">Plan catalog</p>
             <h2 className="mt-2 text-2xl font-black tracking-[-0.045em]">Upgrade paths</h2>
           </div>
           <Link
-            className="hidden rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c] sm:inline-flex"
+            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary hidden rounded-xl border px-4 py-2 text-sm font-bold transition sm:inline-flex"
             href="/contact"
           >
             Talk to sales
@@ -74,23 +74,25 @@ export default async function BillingSettingsPage() {
         <div className="grid gap-4 xl:grid-cols-3">
           {BILLING_PLANS.map((plan) => (
             <article
-              className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 transition hover:border-[#D85A30]/35"
+              className="border-border bg-card hover:border-primary/35 rounded-xl border p-5 transition"
               key={plan.id}
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-black tracking-[0.18em] text-white/35 uppercase">{plan.audience}</p>
+                  <p className="text-muted-foreground text-xs font-black tracking-[0.18em] uppercase">
+                    {plan.audience}
+                  </p>
                   <h3 className="mt-2 text-xl font-black tracking-[-0.035em]">{plan.name}</h3>
                 </div>
-                <p className="rounded-full bg-white/8 px-3 py-1 text-xs font-black text-white/68">
+                <p className="bg-muted/40 text-foreground/68 rounded-full px-3 py-1 text-xs font-black">
                   {formatPlanPrice(plan)}
                 </p>
               </div>
-              <p className="mt-3 min-h-12 text-sm leading-6 text-white/52">{plan.description}</p>
-              <ul className="mt-4 grid gap-2 border-t border-white/10 pt-4">
+              <p className="text-muted-foreground mt-3 min-h-12 text-sm leading-6">{plan.description}</p>
+              <ul className="border-border mt-4 grid gap-2 border-t pt-4">
                 {plan.features.slice(0, 4).map((feature) => (
-                  <li className="flex items-center gap-2 text-sm text-white/58" key={feature}>
-                    <Sparkles className="h-3.5 w-3.5 text-[#ffb49c]" />
+                  <li className="text-muted-foreground flex items-center gap-2 text-sm" key={feature}>
+                    <Sparkles className="text-primary h-3.5 w-3.5" />
                     {feature}
                   </li>
                 ))}
@@ -160,15 +162,17 @@ function buildFallbackAccount(audience: "creator" | "brand", ownerLabel: string)
 
 function AccountUsageCard({ account }: { account: BillingAccountSummary }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-6">
+    <article className="border-border bg-card rounded-xl border p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">{account.audience} billing</p>
+          <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">
+            {account.audience} billing
+          </p>
           <h2 className="mt-2 text-2xl font-black tracking-[-0.045em]">{account.ownerLabel}</h2>
         </div>
-        <div className="rounded-2xl border border-[#D85A30]/25 bg-[#D85A30]/10 px-4 py-3 text-right">
-          <p className="text-sm font-black text-[#ffb49c]">{account.plan.name}</p>
-          <p className="mt-1 text-xs font-bold text-white/45">{account.priceLabel}</p>
+        <div className="border-primary/25 bg-primary/10 rounded-2xl border px-4 py-3 text-right">
+          <p className="text-primary text-sm font-black">{account.plan.name}</p>
+          <p className="text-foreground/45 mt-1 text-xs font-bold">{account.priceLabel}</p>
         </div>
       </div>
 
@@ -192,18 +196,18 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Gauge className="h-4 w-4 text-[#ffb49c]" />
-          <p className="text-sm font-black text-white/78">{label}</p>
+          <Gauge className="text-primary h-4 w-4" />
+          <p className="text-foreground/78 text-sm font-black">{label}</p>
         </div>
-        <p className="text-xs font-bold text-white/42">
+        <p className="text-muted-foreground text-xs font-bold">
           {limit === null ? `${used} / unlimited` : `${used} / ${limit}`}
         </p>
       </div>
-      <div className="h-2 rounded-full bg-white/8">
-        <div className="h-full rounded-full bg-[#D85A30]" style={{ width: `${percent}%` }} />
+      <div className="bg-muted/40 h-2 rounded-full">
+        <div className="bg-primary h-full rounded-full" style={{ width: `${percent}%` }} />
       </div>
       {limit !== null && used >= limit ? (
-        <p className="flex items-center gap-2 text-xs font-bold text-[#ffb49c]">
+        <p className="text-primary flex items-center gap-2 text-xs font-bold">
           <LockKeyhole className="h-3.5 w-3.5" />
           Limit reached. Upgrade to continue.
         </p>
@@ -214,9 +218,9 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+    <div className="border-border bg-muted/30 rounded-xl border p-3">
       <p className="text-lg font-black tracking-[-0.04em]">{value}</p>
-      <p className="mt-1 text-[11px] font-bold text-white/42">{label}</p>
+      <p className="text-muted-foreground mt-1 text-[11px] font-bold">{label}</p>
     </div>
   );
 }

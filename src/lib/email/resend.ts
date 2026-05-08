@@ -27,7 +27,7 @@ export type EmailEnvelope = {
 export type EmailSendResult = { id: string };
 
 export function getDefaultFromAddress(): string {
-  return process.env.EMAIL_FROM ?? "InfluencerLink <notifications@influencerlink.app>";
+  return process.env.EMAIL_FROM ?? "Terrace <notifications@influencerlink.app>";
 }
 
 export function getDefaultReplyTo(): string | undefined {

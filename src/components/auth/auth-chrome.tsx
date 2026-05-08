@@ -31,7 +31,7 @@ export function AuthChrome({
               <span />
             </div>
             <h1 className="text-[72px] font-light tracking-[-0.04em] text-white drop-shadow-[0_10px_28px_rgba(255,255,255,0.1)]">
-              InfluencerLink
+              Terrace
             </h1>
           </div>
           <LogoSparkles />
@@ -42,7 +42,7 @@ export function AuthChrome({
         <div className="grid w-full max-w-[520px] gap-8">
           <div className="grid justify-items-center gap-3 text-center">
             <div className="grid justify-items-center lg:hidden">
-              <Link className="logoMark authLogo" href="/login" aria-label="InfluencerLink">
+              <Link className="logoMark authLogo" href="/login" aria-label="Terrace">
                 <span />
                 <span />
                 <span />
@@ -63,7 +63,7 @@ export function AuthChrome({
           </p>
 
           <p className="text-center text-sm text-[#666]">
-            © InfluencerLink ·{" "}
+            © Terrace ·{" "}
             <Link className="hover:text-white" href="/about">
               About
             </Link>{" "}

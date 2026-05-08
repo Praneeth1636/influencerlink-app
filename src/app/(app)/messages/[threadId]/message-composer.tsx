@@ -40,16 +40,16 @@ export function MessageComposer({ threadId }: { threadId: string }) {
   }
 
   return (
-    <form className="border-t border-white/10 p-4" onSubmit={submitMessage}>
+    <form className="border-border border-t p-4" onSubmit={submitMessage}>
       <div className="flex gap-3">
         <input
-          className="h-11 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#D85A30]/55"
+          className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/55 h-11 min-w-0 flex-1 rounded-xl border px-4 text-sm outline-none"
           onChange={(event) => setBody(event.target.value)}
           placeholder="Write a message..."
           value={body}
         />
         <Button
-          className="h-11 rounded-xl bg-[#D85A30] px-4 text-sm font-black text-white hover:bg-[#c54f29]"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl px-4 text-sm font-black"
           disabled={mutation.isPending}
           type="submit"
         >
@@ -57,7 +57,7 @@ export function MessageComposer({ threadId }: { threadId: string }) {
           <Send className="ml-2 h-4 w-4" />
         </Button>
       </div>
-      {status && <p className="mt-3 text-xs font-bold text-white/42">{status}</p>}
+      {status && <p className="text-muted-foreground mt-3 text-xs font-bold">{status}</p>}
     </form>
   );
 }

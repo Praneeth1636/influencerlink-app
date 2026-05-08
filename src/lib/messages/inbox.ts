@@ -33,7 +33,7 @@ export function mapThreadPreviews(rows: ThreadPreviewRow[]): InboxThreadPreview[
     id: row.thread.id,
     type: row.thread.type,
     title: row.thread.type === "job" ? "Job conversation" : "Direct conversation",
-    subtitle: row.thread.jobId ? `Brief ${row.thread.jobId.slice(-6)}` : "CreatorLink DM",
+    subtitle: row.thread.jobId ? `Brief ${row.thread.jobId.slice(-6)}` : "Terrace DM",
     lastMessage: row.lastMessage?.body ?? "No messages yet.",
     unreadCount: row.unreadCount,
     lastMessageAt: row.thread.lastMessageAt
@@ -45,7 +45,7 @@ export function mapThreadDetail(row: ThreadDetailRow): InboxThreadDetail {
     id: row.thread.id,
     type: row.thread.type,
     title: row.thread.type === "job" ? "Job conversation" : "Direct conversation",
-    subtitle: row.thread.jobId ? `Brief ${row.thread.jobId.slice(-6)}` : "CreatorLink DM",
+    subtitle: row.thread.jobId ? `Brief ${row.thread.jobId.slice(-6)}` : "Terrace DM",
     lastMessage: row.messages.at(-1)?.body ?? "No messages yet.",
     unreadCount: 0,
     lastMessageAt: row.thread.lastMessageAt,
@@ -120,7 +120,7 @@ function toSeedPreview(seed: SeedData, threadId: string, viewerUserId: string): 
   return {
     id: thread.id!,
     type: thread.type ?? "direct",
-    title: counterpart ? resolveUserLabel(seed, counterpart.userId) : "CreatorLink thread",
+    title: counterpart ? resolveUserLabel(seed, counterpart.userId) : "Terrace thread",
     subtitle: thread.type === "job" ? "Job brief conversation" : "Direct message",
     lastMessage: lastMessage?.body ?? "No messages yet.",
     unreadCount,

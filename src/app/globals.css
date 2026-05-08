@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -8,9 +7,9 @@
  * Design tokens
  *
  * HSL var system imported from the Replit prototype, retuned to the
- * InfluencerLink palette:
- *   primary  = orange  #D85A30  (creator energy, brand equity carried over)
- *   accent2  = violet  #7C5CFF  (brand-side surfaces, complementary to orange)
+ * Terrace palette:
+ *   primary = muted coral #D85A30
+ *   accent  = quiet mauve for tiny secondary cues
  *
  * Default theme is dark to match every existing inline Tailwind page;
  * .light flips the surface and content colors. next-themes can wire the
@@ -73,132 +72,494 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* DARK (default) ─ #080809 surface + orange primary */
+/* DARK (default) ─ warm graphite surface + muted coral primary. */
 :root {
   color-scheme: dark;
 
-  --button-outline: rgba(255, 255, 255, 0.1);
-  --badge-outline: rgba(255, 255, 255, 0.05);
+  --button-outline: rgba(244, 239, 234, 0.08);
+  --badge-outline: rgba(244, 239, 234, 0.05);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(255, 255, 255, 0.04);
-  --elevate-2: rgba(255, 255, 255, 0.09);
+  --elevate-1: rgba(244, 239, 234, 0.035);
+  --elevate-2: rgba(244, 239, 234, 0.07);
 
-  --background: 240 13% 4%; /* #080809 */
-  --foreground: 0 0% 98%;
+  --background: 24 8% 8%; /* #171514-ish warm graphite */
+  --foreground: 34 18% 94%; /* warm off-white */
 
-  --card: 240 10% 7%;
-  --card-foreground: 0 0% 98%;
+  --card: 24 7% 11%;
+  --card-foreground: 34 18% 94%;
 
-  --popover: 240 10% 7%;
-  --popover-foreground: 0 0% 98%;
+  --popover: 24 7% 11%;
+  --popover-foreground: 34 18% 94%;
 
-  --primary: 15 70% 52%; /* #D85A30 orange */
-  --primary-foreground: 0 0% 100%;
+  --primary: 15 68% 52%; /* #D85A30 coral */
+  --primary-foreground: 34 25% 98%;
 
-  --secondary: 240 6% 14%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary: 24 6% 15%;
+  --secondary-foreground: 34 18% 94%;
 
-  --muted: 240 6% 14%;
-  --muted-foreground: 240 5% 65%;
+  --muted: 24 6% 14%;
+  --muted-foreground: 28 7% 62%;
 
-  --accent: 252 100% 68%; /* #7C5CFF violet — brand-side surfaces */
-  --accent-foreground: 0 0% 100%;
+  --accent: 338 18% 54%; /* soft mauve, not neon */
+  --accent-foreground: 34 25% 98%;
 
   --destructive: 0 70% 55%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive-foreground: 34 25% 98%;
 
   --success: 158 64% 52%;
   --warning: 38 92% 50%;
 
-  --border: 240 6% 14%;
-  --input: 240 6% 14%;
+  --border: 24 8% 19%;
+  --input: 24 6% 16%;
   --ring: 15 70% 52%;
 
-  --sidebar: 240 10% 6%;
-  --sidebar-foreground: 240 5% 78%;
-  --sidebar-border: 240 6% 14%;
+  --sidebar: 24 8% 9%;
+  --sidebar-foreground: 30 10% 78%;
+  --sidebar-border: 24 8% 18%;
   --sidebar-primary: 15 70% 52%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 6% 14%;
-  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-primary-foreground: 34 25% 98%;
+  --sidebar-accent: 24 6% 15%;
+  --sidebar-accent-foreground: 34 18% 94%;
   --sidebar-ring: 15 70% 52%;
 
-  --chart-1: 15 70% 52%; /* orange */
-  --chart-2: 252 100% 68%; /* violet */
+  --chart-1: 15 68% 52%; /* coral */
+  --chart-2: 338 18% 54%; /* mauve */
   --chart-3: 158 64% 52%; /* emerald */
-  --chart-4: 199 89% 53%; /* sky */
-  --chart-5: 316 73% 55%; /* magenta */
+  --chart-4: 31 18% 62%; /* clay */
+  --chart-5: 24 11% 48%; /* smoke */
 
-  --app-font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --app-font-serif: "Outfit", "Inter", system-ui, sans-serif;
-  --app-font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
-  --radius: 0.75rem;
+  --app-font-sans: var(--font-sans-app), system-ui, -apple-system, sans-serif;
+  --app-font-serif: var(--font-sans-app), system-ui, -apple-system, sans-serif;
+  --app-font-mono: var(--font-mono-app), ui-monospace, "Cascadia Code", monospace;
+  --radius: 0.5rem;
 }
 
-/* LIGHT ─ togglable via .light or next-themes */
+/* LIGHT ─ warm cream surface, same warm-hue family as dark. */
 .light {
   color-scheme: light;
 
-  --button-outline: rgba(0, 0, 0, 0.1);
-  --badge-outline: rgba(0, 0, 0, 0.05);
+  --button-outline: rgba(40, 24, 12, 0.12);
+  --badge-outline: rgba(40, 24, 12, 0.06);
   --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0, 0, 0, 0.03);
-  --elevate-2: rgba(0, 0, 0, 0.08);
+  --elevate-1: rgba(40, 24, 12, 0.035);
+  --elevate-2: rgba(40, 24, 12, 0.08);
 
-  --background: 0 0% 100%;
-  --foreground: 240 10% 4%;
+  --background: 36 36% 98%; /* warm cream */
+  --foreground: 24 18% 10%;
 
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 4%;
+  --card-foreground: 24 18% 10%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 4%;
+  --popover-foreground: 24 18% 10%;
 
   --primary: 15 70% 48%;
-  --primary-foreground: 0 0% 100%;
+  --primary-foreground: 36 25% 98%;
 
-  --secondary: 240 5% 96%;
-  --secondary-foreground: 240 10% 10%;
+  --secondary: 30 18% 95%;
+  --secondary-foreground: 24 18% 14%;
 
-  --muted: 240 5% 96%;
-  --muted-foreground: 240 4% 46%;
+  --muted: 30 18% 95%;
+  --muted-foreground: 28 8% 42%;
 
-  --accent: 252 95% 60%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 252 78% 58%;
+  --accent-foreground: 36 25% 98%;
 
-  --destructive: 0 80% 55%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 0 80% 50%;
+  --destructive-foreground: 36 25% 98%;
 
-  --success: 158 64% 40%;
+  --success: 158 64% 38%;
   --warning: 38 92% 45%;
 
-  --border: 240 6% 90%;
-  --input: 240 6% 90%;
+  --border: 30 14% 88%;
+  --input: 30 14% 90%;
   --ring: 15 70% 48%;
 
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 240 5% 26%;
-  --sidebar-border: 240 6% 90%;
+  --sidebar: 36 30% 96%;
+  --sidebar-foreground: 24 14% 28%;
+  --sidebar-border: 30 14% 88%;
   --sidebar-primary: 15 70% 48%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 5% 96%;
-  --sidebar-accent-foreground: 240 10% 10%;
+  --sidebar-primary-foreground: 36 25% 98%;
+  --sidebar-accent: 30 18% 93%;
+  --sidebar-accent-foreground: 24 18% 14%;
   --sidebar-ring: 15 70% 48%;
 }
 
 @layer base {
+  html {
+    background: hsl(var(--background));
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
+    background:
+      radial-gradient(circle at 16% -8%, hsl(var(--primary) / 0.08), transparent 34rem),
+      linear-gradient(180deg, hsl(24 8% 9%) 0%, hsl(var(--background)) 38rem);
     font-family: var(--app-font-sans);
+    font-feature-settings:
+      "ss01" 1,
+      "cv11" 1; /* Inter: nicer single-storey a + flat-top digits */
   }
   h1,
   h2,
   h3,
   h4,
   h5,
-  h6,
+  h6 {
+    font-family: var(--app-font-sans);
+    letter-spacing: -0.035em;
+  }
+
   .font-serif {
-    font-family: var(--app-font-serif);
+    font-family: var(--app-font-sans);
+    letter-spacing: -0.035em;
+  }
+}
+
+@layer components {
+  .cl-surface {
+    @apply border-border bg-card/85 shadow-sm;
+  }
+
+  .cl-soft-surface {
+    @apply border-border bg-muted/35;
+  }
+
+  .cl-coral-pill {
+    @apply border-primary/25 bg-primary/10 text-primary;
+  }
+
+  .creatorlink-auth-light,
+  .creatorlink-auth-light h1,
+  .creatorlink-auth-light h2,
+  .creatorlink-auth-light h3,
+  .creatorlink-auth-light h4,
+  .creatorlink-auth-light h5,
+  .creatorlink-auth-light h6,
+  .creatorlink-auth-light button,
+  .creatorlink-auth-light input {
+    font-family: var(--app-font-sans) !important;
+  }
+
+  .creatorlink-auth-light h1,
+  .creatorlink-auth-light h2,
+  .creatorlink-auth-light h3,
+  .creatorlink-auth-light h4,
+  .creatorlink-auth-light h5,
+  .creatorlink-auth-light h6 {
+    letter-spacing: -0.045em;
+  }
+
+  .creatorlink-signup-form .cl-rootBox {
+    width: 100% !important;
+  }
+
+  .creatorlink-signup-form .cl-card,
+  .creatorlink-signup-form .cl-cardBox {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .creatorlink-signup-form .cl-main,
+  .creatorlink-signup-form .cl-form,
+  .creatorlink-signup-form .cl-socialButtons,
+  .creatorlink-signup-form .cl-socialButtonsBlockButton,
+  .creatorlink-signup-form .cl-formField,
+  .creatorlink-signup-form .cl-formFieldRow {
+    gap: 14px !important;
+  }
+
+  .creatorlink-signup-form .cl-socialButtonsBlockButton {
+    background: #fff !important;
+    border: 1px solid #e7ebf0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 24px rgba(17, 24, 39, 0.06) !important;
+    color: #111318 !important;
+    min-height: 48px !important;
+  }
+
+  .creatorlink-signup-form .cl-socialButtonsBlockButtonText {
+    color: #111318 !important;
+    font-weight: 600 !important;
+  }
+
+  .creatorlink-signup-form input,
+  .creatorlink-signup-form .cl-input,
+  .creatorlink-signup-form .cl-formFieldInput {
+    background: #f8fafc !important;
+    border: 1.5px solid #d8dee8 !important;
+    border-radius: 16px !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 8px 24px rgba(17, 24, 39, 0.04) !important;
+    caret-color: #111318 !important;
+    color: #111318 !important;
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+    min-height: 54px !important;
+    padding: 15px 20px !important;
+    -webkit-text-fill-color: #111318 !important;
+  }
+
+  .creatorlink-signup-form input::placeholder,
+  .creatorlink-signup-form .cl-formFieldInput::placeholder {
+    color: #667085 !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #667085 !important;
+  }
+
+  .creatorlink-signup-form input:focus,
+  .creatorlink-signup-form .cl-formFieldInput:focus {
+    background: #fff !important;
+    border-color: #7bbfe2 !important;
+    box-shadow:
+      0 0 0 4px rgba(140, 201, 232, 0.25),
+      0 12px 30px rgba(17, 24, 39, 0.06) !important;
+    outline: none !important;
+  }
+
+  .creatorlink-signup-form .cl-formFieldLabel {
+    color: #263142 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+
+  .creatorlink-signup-form .cl-formFieldInputShowPasswordButton,
+  .creatorlink-signup-form .cl-formFieldInputShowPasswordIcon {
+    color: #657082 !important;
+  }
+
+  .creatorlink-signup-form .cl-formButtonPrimary {
+    background: #111318 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 14px 30px rgba(17, 19, 24, 0.14) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    min-height: 54px !important;
+  }
+
+  .creatorlink-signup-form .cl-formButtonPrimary:hover {
+    background: #242833 !important;
+  }
+
+  .creatorlink-signup-form .cl-footer,
+  .creatorlink-signup-form .cl-internal-b3fm6y {
+    display: none !important;
+  }
+
+  .creatorlink-signup-form .cl-dividerText,
+  .creatorlink-signup-form .cl-formFieldHintText,
+  .creatorlink-signup-form .cl-identityPreviewText {
+    color: #7b8494 !important;
+  }
+
+  .creatorlink-animate-in {
+    animation: creatorlink-fade-up 0.72s cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+
+  .creatorlink-delay-1 {
+    animation-delay: 120ms;
+  }
+
+  .creatorlink-delay-2 {
+    animation-delay: 220ms;
+  }
+
+  .creatorlink-delay-3 {
+    animation-delay: 320ms;
+  }
+
+  .creatorlink-float {
+    animation: creatorlink-float 7s ease-in-out infinite;
+  }
+
+  .creatorlink-float-slow {
+    animation: creatorlink-float 9s ease-in-out infinite reverse;
+  }
+
+  .creatorlink-float-card {
+    animation: creatorlink-card-float 6.5s ease-in-out infinite;
+  }
+
+  .creatorlink-progress {
+    transform-origin: left center;
+    animation: creatorlink-progress 2.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+
+  .creatorlink-marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  .creatorlink-marquee {
+    animation: creatorlink-marquee 34s linear infinite;
+  }
+
+  .creatorlink-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  .creatorlink-flip-char {
+    animation: creatorlink-flip-char 0.72s cubic-bezier(0.19, 1, 0.22, 1) both;
+    animation-delay: var(--flip-delay);
+    transform-origin: center bottom;
+  }
+
+  .creatorlink-noise-button {
+    isolation: isolate;
+  }
+
+  .creatorlink-gradient-border {
+    background:
+      radial-gradient(
+        circle at var(--gradient-x, 20%) var(--gradient-y, 16%),
+        rgba(140, 201, 232, 0.58),
+        transparent 24%
+      ),
+      radial-gradient(
+        circle at calc(100% - var(--gradient-x, 20%)) calc(100% - var(--gradient-y, 16%)),
+        rgba(216, 107, 61, 0.45),
+        transparent 28%
+      ),
+      linear-gradient(135deg, rgba(140, 201, 232, 0.38), rgba(255, 255, 255, 0.12), rgba(216, 107, 61, 0.32));
+    box-shadow:
+      0 24px 66px rgba(17, 24, 39, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .creatorlink-gradient-border::before {
+    animation: creatorlink-gradient-orbit 7s ease-in-out infinite alternate;
+    background: conic-gradient(
+      from 140deg,
+      rgba(140, 201, 232, 0.14),
+      rgba(255, 255, 255, 0.52),
+      rgba(246, 176, 132, 0.22),
+      rgba(140, 201, 232, 0.14)
+    );
+    content: "";
+    inset: -45%;
+    opacity: 0.58;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .creatorlink-noise-button::before {
+    animation: creatorlink-noise-shift 5.5s linear infinite;
+    background:
+      radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.8), transparent 18%),
+      radial-gradient(circle at 82% 68%, rgba(255, 255, 255, 0.55), transparent 20%);
+    content: "";
+    inset: -60%;
+    opacity: 0.42;
+    position: absolute;
+  }
+}
+
+@keyframes creatorlink-gradient-orbit {
+  from {
+    transform: rotate(0deg) translate3d(-2%, -1%, 0);
+  }
+
+  to {
+    transform: rotate(22deg) translate3d(3%, 2%, 0);
+  }
+}
+
+@keyframes creatorlink-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creatorlink-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes creatorlink-card-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes creatorlink-progress {
+  from {
+    transform: scaleX(0.28);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes creatorlink-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes creatorlink-flip-char {
+  0% {
+    opacity: 0;
+    transform: rotateX(-88deg) translateY(8px);
+  }
+
+  58% {
+    opacity: 1;
+    transform: rotateX(12deg) translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg) translateY(0);
+  }
+}
+
+@keyframes creatorlink-noise-shift {
+  from {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: rotate(360deg) translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .creatorlink-animate-in,
+  .creatorlink-float,
+  .creatorlink-float-slow,
+  .creatorlink-float-card,
+  .creatorlink-progress,
+  .creatorlink-marquee,
+  .creatorlink-flip-char,
+  .creatorlink-noise-button::before {
+    animation: none !important;
   }
 }
 

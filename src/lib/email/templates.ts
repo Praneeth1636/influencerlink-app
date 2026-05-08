@@ -18,7 +18,7 @@ export function welcomeEmail(input: WelcomeInput): EmailEnvelope {
 
   const html = `
     <div style="font-family: -apple-system, system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: #111;">
-      <h1 style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Welcome to InfluencerLink.</h1>
+      <h1 style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Welcome to Terrace.</h1>
       <p style="font-size: 15px; line-height: 1.6;">${greeting}</p>
       <p style="font-size: 15px; line-height: 1.6;">
         You're in. The next step is finishing your account setup so brands and creators can find you.
@@ -33,12 +33,12 @@ export function welcomeEmail(input: WelcomeInput): EmailEnvelope {
         Reply to this email if you hit anything weird — we read every reply.
       </p>
       <hr style="border: none; border-top: 1px solid #eee; margin: 28px 0;" />
-      <p style="font-size: 12px; color: #999;">InfluencerLink · ${SUPPORT_EMAIL}</p>
+      <p style="font-size: 12px; color: #999;">Terrace · ${SUPPORT_EMAIL}</p>
     </div>
   `;
 
   const text = [
-    `Welcome to InfluencerLink.`,
+    `Welcome to Terrace.`,
     ``,
     greeting,
     ``,
@@ -48,12 +48,12 @@ export function welcomeEmail(input: WelcomeInput): EmailEnvelope {
     ``,
     `Reply to this email if you hit anything weird.`,
     ``,
-    `— InfluencerLink (${SUPPORT_EMAIL})`
+    `— Terrace (${SUPPORT_EMAIL})`
   ].join("\n");
 
   return {
     to: input.to,
-    subject: "Welcome to InfluencerLink",
+    subject: "Welcome to Terrace",
     html,
     text,
     tags: [{ name: "category", value: "welcome" }]

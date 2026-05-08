@@ -29,7 +29,7 @@ export default function ContactPage() {
       <section className="min-h-[calc(100vh-16px)] rounded-2xl bg-[#060606] px-6 py-12 md:px-16 lg:px-28">
         <div className="mx-auto grid min-h-[calc(100vh-112px)] max-w-[1580px] items-center gap-16 lg:grid-cols-[0.95fr_1.05fr]">
           <section className="grid gap-10">
-            <Link className="logoMark authLogo" href="/login" aria-label="InfluencerLink">
+            <Link className="logoMark authLogo" href="/login" aria-label="Terrace">
               <span />
               <span />
               <span />

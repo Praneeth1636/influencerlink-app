@@ -1,6 +1,6 @@
-# CreatorLink
+# Terrace
 
-CreatorLink is a professional network for creators and the brands that hire them. The product model is LinkedIn-shaped, but creator-native: profiles are built around verified reach and engagement, the feed is for creator wins and content drops, and brand teams search, message, and post briefs from their own portal.
+Terrace is a professional network for creators and the brands that hire them. The product model is LinkedIn-shaped, but creator-native: profiles are built around verified reach and engagement, the feed is for creator wins and content drops, and brand teams search, message, and post briefs from their own portal.
 
 ## Current Status
 

@@ -26,7 +26,7 @@ export function mapNotifications(rows: NotificationRow[]): NotificationItem[] {
       type: notification.type,
       title: copy.title,
       body: copy.body,
-      actorLabel: actor?.email ?? "CreatorLink",
+      actorLabel: actor?.email ?? "Terrace",
       createdAt: notification.createdAt,
       readAt: notification.readAt,
       href: getNotificationHref(notification)
@@ -57,7 +57,7 @@ export function buildSeedNotifications(handle = "sararivera") {
       type: "job_application.status_updated",
       title: `${brand?.name ?? "A brand"} updated your application`,
       body: `${job?.title ?? "Creator brief"} is now ${application.status}.`,
-      actorLabel: brand?.name ?? "CreatorLink",
+      actorLabel: brand?.name ?? "Terrace",
       createdAt: application.updatedAt ?? application.createdAt ?? new Date("2026-04-01T00:00:00.000Z"),
       readAt: isUnread ? null : (application.updatedAt ?? application.createdAt ?? null),
       href: "/jobs/saved"
@@ -86,7 +86,7 @@ function getNotificationCopy(type: string) {
 
   return {
     title: "New notification",
-    body: "Something changed in your CreatorLink workspace."
+    body: "Something changed in your Terrace workspace."
   };
 }
 

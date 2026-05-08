@@ -20,8 +20,7 @@ export default function AboutPage() {
             The professional network for creator-brand deals.
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-neutral-300 md:text-xl">
-            InfluencerLink helps creators prove their value and helps brands discover, contact, and manage the right
-            partners.
+            Terrace helps creators prove their value and helps brands discover, contact, and manage the right partners.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-full bg-white px-6 text-black hover:bg-neutral-200">

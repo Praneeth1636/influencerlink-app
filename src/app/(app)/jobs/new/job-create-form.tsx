@@ -55,7 +55,7 @@ export function JobCreateForm() {
 
   return (
     <form
-      className="grid gap-5 rounded-2xl border border-white/10 bg-white/[0.045] p-6"
+      className="border-border bg-muted/30 grid gap-5 rounded-2xl border p-6"
       onSubmit={async (event) => {
         event.preventDefault();
         setStatus(null);
@@ -70,18 +70,18 @@ export function JobCreateForm() {
       }}
     >
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#D85A30]/12 text-[#ffb49c] ring-1 ring-[#D85A30]/20">
+        <div className="bg-primary/12 text-primary ring-primary/20 grid h-11 w-11 place-items-center rounded-xl ring-1">
           <BriefcaseBusiness className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Brand brief builder</p>
+          <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Brand brief builder</p>
           <h2 className="text-2xl font-black tracking-[-0.04em]">Post a creator campaign</h2>
         </div>
       </div>
 
       <Field label="Brand" name="brandId">
         {memberships.isLoading ? (
-          <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm text-white/48">
+          <div className="border-border bg-muted/30 text-foreground/48 rounded-xl border px-3 py-3 text-sm">
             Loading your brand teams...
           </div>
         ) : memberships.isError ? (
@@ -96,7 +96,7 @@ export function JobCreateForm() {
           />
         ) : (
           <select
-            className="h-11 rounded-xl border border-white/10 bg-black/25 px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+            className="border-border bg-muted/30 text-foreground focus:border-primary/60 h-11 rounded-xl border px-3 text-sm outline-none"
             id="brandId"
             onChange={(event) => updateValue("brandId", event.target.value)}
             required
@@ -117,7 +117,7 @@ export function JobCreateForm() {
 
       <Field label="Campaign title" name="title">
         <Input
-          className="rounded-xl border-white/10 bg-black/25 text-white placeholder:text-white/28 focus-visible:ring-[#D85A30]"
+          className="border-border bg-muted/30 text-foreground placeholder:text-foreground/28 rounded-xl focus-visible:ring-[#D85A30]"
           id="title"
           maxLength={140}
           minLength={8}
@@ -130,7 +130,7 @@ export function JobCreateForm() {
 
       <Field label="Brief" name="description">
         <textarea
-          className="min-h-36 rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm leading-6 text-white transition outline-none placeholder:text-white/28 focus:border-[#D85A30]/60"
+          className="border-border bg-muted/30 text-foreground placeholder:text-foreground/28 focus:border-primary/60 min-h-36 rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none"
           id="description"
           maxLength={6000}
           minLength={30}
@@ -144,7 +144,7 @@ export function JobCreateForm() {
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Deliverables" name="deliverablesText">
           <textarea
-            className="min-h-32 rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm leading-6 text-white transition outline-none placeholder:text-white/28 focus:border-[#D85A30]/60"
+            className="border-border bg-muted/30 text-foreground placeholder:text-foreground/28 focus:border-primary/60 min-h-32 rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none"
             id="deliverablesText"
             onChange={(event) => updateValue("deliverablesText", event.target.value)}
             value={values.deliverablesText}
@@ -153,7 +153,7 @@ export function JobCreateForm() {
 
         <Field label="Niches" name="nichesText">
           <textarea
-            className="min-h-32 rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm leading-6 text-white transition outline-none placeholder:text-white/28 focus:border-[#D85A30]/60"
+            className="border-border bg-muted/30 text-foreground placeholder:text-foreground/28 focus:border-primary/60 min-h-32 rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none"
             id="nichesText"
             onChange={(event) => updateValue("nichesText", event.target.value)}
             value={values.nichesText}
@@ -164,7 +164,7 @@ export function JobCreateForm() {
       <div className="grid gap-4 md:grid-cols-4">
         <Field label="Min followers" name="minFollowers">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground rounded-xl focus-visible:ring-[#D85A30]"
             id="minFollowers"
             min="0"
             onChange={(event) => updateValue("minFollowers", event.target.value)}
@@ -174,7 +174,7 @@ export function JobCreateForm() {
         </Field>
         <Field label="Min engagement" name="minEngagement">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground rounded-xl focus-visible:ring-[#D85A30]"
             id="minEngagement"
             onChange={(event) => updateValue("minEngagement", event.target.value)}
             value={values.minEngagement}
@@ -182,7 +182,7 @@ export function JobCreateForm() {
         </Field>
         <Field label="Min budget" name="budgetMinDollars">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground rounded-xl focus-visible:ring-[#D85A30]"
             id="budgetMinDollars"
             min="0"
             onChange={(event) => updateValue("budgetMinDollars", event.target.value)}
@@ -192,7 +192,7 @@ export function JobCreateForm() {
         </Field>
         <Field label="Max budget" name="budgetMaxDollars">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground rounded-xl focus-visible:ring-[#D85A30]"
             id="budgetMaxDollars"
             min="0"
             onChange={(event) => updateValue("budgetMaxDollars", event.target.value)}
@@ -205,7 +205,7 @@ export function JobCreateForm() {
       <div className="grid gap-4 md:grid-cols-3">
         <Field label="Deadline" name="deadline">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground rounded-xl focus-visible:ring-[#D85A30]"
             id="deadline"
             onChange={(event) => updateValue("deadline", event.target.value)}
             type="date"
@@ -214,7 +214,7 @@ export function JobCreateForm() {
         </Field>
         <Field label="Location" name="location">
           <Input
-            className="rounded-xl border-white/10 bg-black/25 text-white placeholder:text-white/28 focus-visible:ring-[#D85A30]"
+            className="border-border bg-muted/30 text-foreground placeholder:text-foreground/28 rounded-xl focus-visible:ring-[#D85A30]"
             id="location"
             onChange={(event) => updateValue("location", event.target.value)}
             placeholder="Los Angeles, CA"
@@ -223,7 +223,7 @@ export function JobCreateForm() {
         </Field>
         <Field label="Status" name="status">
           <select
-            className="h-10 rounded-xl border border-white/10 bg-black/25 px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+            className="border-border bg-muted/30 text-foreground focus:border-primary/60 h-10 rounded-xl border px-3 text-sm outline-none"
             id="status"
             onChange={(event) => updateValue("status", event.target.value as JobCreateFormValues["status"])}
             value={values.status}
@@ -234,7 +234,7 @@ export function JobCreateForm() {
         </Field>
       </div>
 
-      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-3 text-sm font-bold text-white/68">
+      <label className="border-border bg-muted/30 text-foreground/68 flex items-center gap-3 rounded-xl border p-3 text-sm font-bold">
         <input
           checked={values.remote}
           className="h-4 w-4 accent-[#D85A30]"
@@ -245,26 +245,26 @@ export function JobCreateForm() {
       </label>
 
       <Button
-        className="h-11 rounded-xl bg-[#D85A30] font-black text-white hover:bg-[#c54f29]"
+        className="bg-primary text-foreground hover:bg-primary/90 h-11 rounded-xl font-black"
         disabled={mutation.isPending || memberships.isLoading || !canPostForSelectedBrand}
       >
         {mutation.isPending ? "Publishing..." : "Publish brief"}
       </Button>
 
-      {status && <p className="text-sm leading-6 text-white/58">{status}</p>}
+      {status && <p className="text-muted-foreground text-sm leading-6">{status}</p>}
     </form>
   );
 }
 
 function BrandState({ description, title }: { description: string; title: string }) {
   return (
-    <div className="flex gap-3 rounded-xl border border-white/10 bg-black/25 p-4">
-      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/8 text-white/54">
+    <div className="border-border bg-muted/30 flex gap-3 rounded-xl border p-4">
+      <div className="text-foreground/54 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/8">
         <Building2 className="h-4 w-4" />
       </div>
       <div>
-        <p className="text-sm font-black text-white">{title}</p>
-        <p className="mt-1 text-sm leading-6 text-white/52">{description}</p>
+        <p className="text-foreground text-sm font-black">{title}</p>
+        <p className="text-muted-foreground mt-1 text-sm leading-6">{description}</p>
       </div>
     </div>
   );
@@ -273,7 +273,7 @@ function BrandState({ description, title }: { description: string; title: string
 function Field({ children, label, name }: { children: React.ReactNode; label: string; name: string }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-white/70" htmlFor={name}>
+      <Label className="text-foreground/70" htmlFor={name}>
         {label}
       </Label>
       {children}

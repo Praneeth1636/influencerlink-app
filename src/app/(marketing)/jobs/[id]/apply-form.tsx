@@ -25,7 +25,7 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
   if (isLoaded && !isSignedIn) {
     return (
       <Link
-        className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-white text-sm font-black text-black transition hover:bg-[#ffdfd2]"
+        className="hover:bg-primary/10 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-white text-sm font-black text-black transition"
         href="/login"
       >
         Sign in to apply
@@ -58,11 +58,11 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       }}
     >
       <div className="grid gap-2">
-        <Label className="text-white/70" htmlFor="job-application-pitch">
+        <Label className="text-foreground/70" htmlFor="job-application-pitch">
           Pitch
         </Label>
         <textarea
-          className="min-h-28 rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-sm leading-6 text-white transition outline-none placeholder:text-white/28 focus:border-[#D85A30]/60"
+          className="border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:border-primary/60 min-h-28 rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none"
           id="job-application-pitch"
           maxLength={300}
           minLength={20}
@@ -74,11 +74,11 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-white/70" htmlFor="job-application-rate">
+        <Label className="text-foreground/70" htmlFor="job-application-rate">
           Proposed rate
         </Label>
         <Input
-          className="rounded-xl border-white/10 bg-black/25 text-white placeholder:text-white/28 focus-visible:ring-[#D85A30]"
+          className="border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary rounded-xl"
           id="job-application-rate"
           min="0"
           onChange={(event) => setProposedRateDollars(event.target.value)}
@@ -89,16 +89,16 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       </div>
 
       <Button
-        className="h-11 rounded-xl bg-white font-black text-black hover:bg-[#ffdfd2]"
+        className="hover:bg-primary/10 h-11 rounded-xl bg-white font-black text-black"
         disabled={mutation.isPending}
       >
         <Send className="h-4 w-4" />
         {mutation.isPending ? "Submitting..." : "Apply to brief"}
       </Button>
 
-      {status && <p className="text-sm leading-6 text-white/58">{status}</p>}
+      {status && <p className="text-muted-foreground text-sm leading-6">{status}</p>}
       {threadId && (
-        <Link className="text-sm font-black text-[#ffb49c] hover:text-white" href={`/messages/${threadId}`}>
+        <Link className="text-primary hover:text-foreground text-sm font-black" href={`/messages/${threadId}`}>
           Open job conversation
         </Link>
       )}

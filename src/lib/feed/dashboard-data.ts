@@ -112,7 +112,7 @@ function mapCreators(data?: CreatorListOutput): Influencer[] {
         contentSamples: [],
         collaborations: [
           {
-            brand: "CreatorLink",
+            brand: "Terrace",
             title: index === 0 ? "Live profile import" : "Verified creator profile",
             reach: totalReach,
             engagementRate

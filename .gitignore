@@ -14,3 +14,6 @@ data/*.sqlite-*
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Local Claude tooling state
+.claude-flow/

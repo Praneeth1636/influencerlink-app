@@ -27,33 +27,30 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   const topJob = jobs[0];
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_2%,rgba(216,90,48,0.18),transparent_30%),radial-gradient(circle_at_92%_14%,rgba(14,165,233,0.12),transparent_24%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] bg-[size:56px_56px] opacity-35" />
-
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080809]/88 backdrop-blur-xl">
+    <main className="bg-background text-foreground min-h-screen">
+      <header className="border-border bg-background/88 sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-5 py-4">
           <Link
-            className="logoMark miniLogo shrink-0 bg-white/5 ring-1 ring-white/10"
+            className="logoMark miniLogo ring-border shrink-0 bg-white/5 ring-1"
             href="/feed"
-            aria-label="CreatorLink feed"
+            aria-label="Terrace feed"
           >
             <span />
             <span />
             <span />
           </Link>
           <div>
-            <p className="text-[11px] font-black tracking-[0.24em] text-white/38 uppercase">Creator jobs</p>
-            <p className="hidden text-sm text-white/60 sm:block">Open briefs from verified brand teams</p>
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.24em] uppercase">Creator jobs</p>
+            <p className="text-muted-foreground hidden text-sm sm:block">Open briefs from verified brand teams</p>
           </div>
           <Link
-            className="ml-auto rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary ml-auto rounded-xl border px-4 py-2 text-sm font-bold transition"
             href="/jobs/saved"
           >
             Saved jobs
           </Link>
           <Link
-            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary rounded-xl border px-4 py-2 text-sm font-bold transition"
             href="/jobs/new"
           >
             Post brief
@@ -63,21 +60,21 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 
       <section className="relative z-10 mx-auto grid max-w-[1280px] gap-6 px-5 py-7 lg:grid-cols-[310px_minmax(0,1fr)]">
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <form action="/jobs" className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+          <form action="/jobs" className="border-border bg-card rounded-xl border p-5">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#D85A30]/12 text-[#ffb49c] ring-1 ring-[#D85A30]/20">
+              <div className="bg-primary/12 text-primary ring-primary/20 grid h-10 w-10 place-items-center rounded-xl ring-1">
                 <BriefcaseBusiness className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Filters</p>
+                <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Filters</p>
                 <h1 className="text-2xl font-black tracking-[-0.04em]">Job board</h1>
               </div>
             </div>
 
             <label className="mt-5 block">
-              <span className="text-xs font-black tracking-[0.14em] text-white/35 uppercase">Niche</span>
+              <span className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">Niche</span>
               <select
-                className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-[#151518] px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+                className="border-border bg-input text-foreground focus:border-primary/60 mt-2 h-11 w-full rounded-xl border px-3 text-sm outline-none"
                 defaultValue={filters.niche ?? ""}
                 name="niche"
               >
@@ -91,9 +88,9 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-black tracking-[0.14em] text-white/35 uppercase">Budget</span>
+              <span className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">Budget</span>
               <select
-                className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-[#151518] px-3 text-sm text-white outline-none focus:border-[#D85A30]/60"
+                className="border-border bg-input text-foreground focus:border-primary/60 mt-2 h-11 w-full rounded-xl border px-3 text-sm outline-none"
                 defaultValue={filters.minBudgetCents ? String(filters.minBudgetCents) : ""}
                 name="minBudget"
               >
@@ -105,25 +102,25 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
               </select>
             </label>
 
-            <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+            <label className="border-border bg-muted/30 mt-4 flex items-center gap-3 rounded-xl border p-3">
               <input
-                className="h-4 w-4 accent-[#D85A30]"
+                className="accent-primary h-4 w-4"
                 defaultChecked={filters.remote}
                 name="remote"
                 type="checkbox"
                 value="1"
               />
-              <span className="text-sm font-bold text-white/68">Remote briefs only</span>
+              <span className="text-foreground/68 text-sm font-bold">Remote briefs only</span>
             </label>
 
-            <button className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#D85A30] text-sm font-black text-white transition hover:bg-[#c54f29]">
+            <button className="bg-primary text-foreground hover:bg-primary/90 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl text-sm font-black transition">
               <Filter className="mr-2 h-4 w-4" />
               Search briefs
             </button>
           </form>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5">
-            <p className="text-[11px] font-black tracking-[0.2em] text-white/35 uppercase">Market pulse</p>
+          <article className="border-border bg-card rounded-xl border p-5">
+            <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Market pulse</p>
             <div className="mt-4 grid gap-3">
               <MiniStat label="Open briefs" value={String(jobs.length)} />
               <MiniStat label="Top fit" value={topJob ? `${topJob.fitScore}%` : "0%"} />
@@ -133,24 +130,24 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         </aside>
 
         <section className="grid min-w-0 content-start gap-5">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/10">
-            <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+          <article className="border-border bg-card rounded-xl border p-6 shadow-sm">
+            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
               <Radio className="mr-2 h-3.5 w-3.5" />
               Live briefs
             </Badge>
             <h2 className="mt-5 text-[clamp(32px,5vw,58px)] leading-[0.98] font-black tracking-[-0.055em]">
               Browse brand campaigns built for creator proof, not vanity.
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/55">
+            <p className="text-foreground/55 mt-4 max-w-2xl text-sm leading-7">
               This is the creator-side job marketplace. Each brief carries brand context, deliverables, audience
               requirements, budget, and a fit score to help creators decide fast.
             </p>
           </article>
 
           {jobs.length === 0 && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-6">
+            <div className="border-border bg-card rounded-xl border p-6">
               <p className="text-lg font-black">No briefs found</p>
-              <p className="mt-2 text-sm leading-6 text-white/52">
+              <p className="text-muted-foreground mt-2 text-sm leading-6">
                 Try a broader niche, lower budget threshold, or include local campaigns.
               </p>
             </div>
@@ -185,11 +182,11 @@ async function getJobs(filters: JobBoardFilters) {
 
 function JobCard({ job }: { job: JobBoardItem }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 transition hover:-translate-y-0.5 hover:border-[#D85A30]/35 hover:bg-white/[0.06]">
+    <article className="border-border bg-card hover:border-primary/35 hover:bg-muted/30 rounded-xl border p-5 transition hover:-translate-y-0.5">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-white/8 text-white/58 hover:bg-white/8">{job.industry}</Badge>
+            <Badge className="bg-muted/40 text-muted-foreground hover:bg-muted/40 rounded-full">{job.industry}</Badge>
             {job.remote ? (
               <Badge className="rounded-full bg-emerald-400/12 text-emerald-200 hover:bg-emerald-400/12">Remote</Badge>
             ) : (
@@ -197,18 +194,18 @@ function JobCard({ job }: { job: JobBoardItem }) {
             )}
           </div>
           <h3 className="mt-3 text-2xl font-black tracking-[-0.045em]">{job.title}</h3>
-          <p className="mt-2 text-sm font-bold text-white/55">
+          <p className="text-foreground/55 mt-2 text-sm font-bold">
             {job.brandName} · {job.remote ? "Remote" : (job.location ?? job.hqLocation)}
           </p>
         </div>
 
-        <div className="grid h-16 w-20 shrink-0 place-items-center rounded-xl border border-[#D85A30]/35 bg-[#D85A30]/14 text-center text-[#ffb49c]">
+        <div className="border-primary/35 bg-primary/14 text-primary grid h-16 w-20 shrink-0 place-items-center rounded-xl border text-center">
           <strong className="text-xl font-black tracking-[-0.04em]">{job.fitScore}%</strong>
           <span className="-mt-2 text-[10px] font-black tracking-[0.12em] uppercase opacity-70">fit</span>
         </div>
       </div>
 
-      <p className="mt-4 max-w-3xl text-sm leading-6 text-white/58">{job.description}</p>
+      <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-6">{job.description}</p>
 
       <div className="mt-5 grid gap-2 md:grid-cols-4">
         <MiniStat label="Budget" value={`${formatMoney(job.budgetMinCents)}-${formatMoney(job.budgetMaxCents)}`} />
@@ -219,21 +216,24 @@ function JobCard({ job }: { job: JobBoardItem }) {
 
       <div className="mt-5 flex flex-wrap gap-2">
         {job.niches.map((niche) => (
-          <span className="rounded-full bg-white/8 px-3 py-1.5 text-[11px] font-black text-white/58" key={niche}>
+          <span
+            className="bg-muted/40 text-muted-foreground rounded-full px-3 py-1.5 text-[11px] font-black"
+            key={niche}
+          >
             {niche}
           </span>
         ))}
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+      <div className="border-border mt-5 flex flex-wrap items-center gap-3 border-t pt-5">
         <Link
-          className="inline-flex h-10 items-center justify-center rounded-xl bg-white px-4 text-sm font-black text-black transition hover:bg-[#ffdfd2]"
+          className="hover:bg-primary/10 inline-flex h-10 items-center justify-center rounded-xl bg-white px-4 text-sm font-black text-black transition"
           href={`/jobs/${job.id}`}
         >
           View brief
         </Link>
         <Link
-          className="inline-flex h-10 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+          className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-4 text-sm font-bold transition"
           href={`/company/${job.brandSlug}`}
         >
           View brand
@@ -245,9 +245,9 @@ function JobCard({ job }: { job: JobBoardItem }) {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-      <p className="text-[10px] font-black tracking-[0.14em] text-white/34 uppercase">{label}</p>
-      <p className="mt-1 text-sm font-black text-white">{value}</p>
+    <div className="border-border bg-muted/30 rounded-xl border p-3">
+      <p className="text-muted-foreground text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
+      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
     </div>
   );
 }

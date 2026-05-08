@@ -33,36 +33,33 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#080809] text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_2%,rgba(216,90,48,0.18),transparent_30%),radial-gradient(circle_at_92%_14%,rgba(14,165,233,0.12),transparent_24%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] bg-[size:56px_56px] opacity-35" />
-
+    <main className="bg-background text-foreground min-h-screen">
       <section className="relative z-10 mx-auto grid max-w-[1380px] gap-6 px-5 py-8">
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            className="inline-flex h-10 items-center justify-center rounded-xl border border-white/10 px-3 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
             href={`/jobs/${board.jobId}`}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Brief
           </Link>
           <Link
-            className="inline-flex h-10 items-center justify-center rounded-xl border border-white/10 px-3 text-sm font-bold text-white/62 transition hover:border-[#D85A30]/35 hover:text-[#ffb49c]"
+            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
             href="/jobs"
           >
             Jobs
           </Link>
         </div>
 
-        <article className="rounded-2xl border border-white/10 bg-white/[0.045] p-6">
-          <Badge className="rounded-full bg-[#D85A30]/12 px-3 py-1 text-[#ffb49c] hover:bg-[#D85A30]/12">
+        <article className="border-border bg-card rounded-xl border p-6">
+          <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
             <BriefcaseBusiness className="mr-2 h-3.5 w-3.5" />
             Applicant pipeline
           </Badge>
           <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-black tracking-[-0.06em]">
             Manage applicants for {board.brandName}.
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/58">{board.title}</p>
+          <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-7">{board.title}</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-4">
             {columns.map((column) => (
               <MiniStat
@@ -79,24 +76,23 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
             const applicants = board.applicants.filter((applicant) => applicant.status === column.status);
 
             return (
-              <div
-                className="grid content-start gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3"
-                key={column.status}
-              >
+              <div className="border-border bg-card grid content-start gap-3 rounded-xl border p-3" key={column.status}>
                 <div className="flex items-center justify-between px-1">
-                  <h2 className="text-sm font-black tracking-[0.14em] text-white/52 uppercase">{column.label}</h2>
-                  <span className="rounded-full bg-white/8 px-2 py-1 text-xs font-black text-white/48">
+                  <h2 className="text-muted-foreground text-sm font-black tracking-[0.14em] uppercase">
+                    {column.label}
+                  </h2>
+                  <span className="bg-muted/40 text-foreground/48 rounded-full px-2 py-1 text-xs font-black">
                     {applicants.length}
                   </span>
                 </div>
 
                 {applicants.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-white/10 p-4 text-sm leading-6 text-white/42">
+                  <div className="border-border text-muted-foreground rounded-xl border border-dashed p-4 text-sm leading-6">
                     No creators in this stage yet.
                   </div>
                 ) : (
                   applicants.map((applicant) => (
-                    <article className="rounded-xl border border-white/10 bg-black/25 p-4" key={applicant.id}>
+                    <article className="border-border bg-muted/30 rounded-xl border p-4" key={applicant.id}>
                       <div className="flex items-start gap-3">
                         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-sm font-black text-black">
                           {initials(applicant.displayName)}
@@ -104,18 +100,18 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <Link
-                              className="font-black text-white hover:text-[#ffb49c]"
+                              className="text-foreground hover:text-primary font-black"
                               href={`/profile/${applicant.handle}`}
                             >
                               {applicant.displayName}
                             </Link>
-                            {applicant.verified && <BadgeCheck className="h-4 w-4 text-[#ffb49c]" />}
+                            {applicant.verified && <BadgeCheck className="text-primary h-4 w-4" />}
                           </div>
-                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-white/48">{applicant.headline}</p>
+                          <p className="text-foreground/48 mt-1 line-clamp-2 text-xs leading-5">{applicant.headline}</p>
                         </div>
                       </div>
 
-                      <p className="mt-4 line-clamp-4 text-sm leading-6 text-white/58">{applicant.pitch}</p>
+                      <p className="text-muted-foreground mt-4 line-clamp-4 text-sm leading-6">{applicant.pitch}</p>
 
                       <div className="mt-4 grid grid-cols-2 gap-2">
                         <Metric icon={Users} label="Reach" value={formatNumber(applicant.totalReach)} />
@@ -129,7 +125,7 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
                       <div className="mt-4 flex flex-wrap gap-2">
                         {applicant.niches.slice(0, 3).map((niche) => (
                           <span
-                            className="rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-black text-white/50"
+                            className="bg-muted/40 text-foreground/50 rounded-full px-2.5 py-1 text-[10px] font-black"
                             key={niche}
                           >
                             {niche}
@@ -176,19 +172,19 @@ async function getApplicants(jobId: string): Promise<JobApplicantsBoard | null> 
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-      <p className="text-[10px] font-black tracking-[0.14em] text-white/34 uppercase">{label}</p>
-      <p className="mt-1 text-sm font-black text-white">{value}</p>
+    <div className="border-border bg-muted/30 rounded-xl border p-3">
+      <p className="text-muted-foreground text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
+      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
     </div>
   );
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.035] p-2">
-      <Icon className="h-3.5 w-3.5 text-[#ffb49c]" />
-      <p className="mt-2 text-[9px] font-black tracking-[0.14em] text-white/34 uppercase">{label}</p>
-      <p className="mt-0.5 text-xs font-black text-white">{value}</p>
+    <div className="border-border bg-muted/20 rounded-lg border p-2">
+      <Icon className="text-primary h-3.5 w-3.5" />
+      <p className="text-muted-foreground mt-2 text-[9px] font-black tracking-[0.14em] uppercase">{label}</p>
+      <p className="text-foreground mt-0.5 text-xs font-black">{value}</p>
     </div>
   );
 }
