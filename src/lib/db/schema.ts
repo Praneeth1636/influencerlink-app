@@ -49,6 +49,22 @@ export const subscriptionStatusEnum = pgEnum("subscription_status", [
 ]);
 export const reportStatusEnum = pgEnum("report_status", ["open", "reviewing", "resolved", "dismissed"]);
 
+// Brief payment lifecycle. One row per accepted application.
+//   pending     — row created, no Stripe object yet (transient)
+//   authorized  — payment intent created, awaiting brand's confirmation
+//   captured    — brand paid; funds in platform balance, NOT yet at creator
+//   released    — platform → creator transfer completed
+//   refunded    — funds returned to brand (only valid before release)
+//   failed      — Stripe rejected the charge (terminal)
+export const briefPaymentStatusEnum = pgEnum("brief_payment_status", [
+  "pending",
+  "authorized",
+  "captured",
+  "released",
+  "refunded",
+  "failed"
+]);
+
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkId: text("clerk_id").notNull().unique(),
@@ -440,6 +456,53 @@ export const creatorPayoutAccounts = pgTable("creator_payout_accounts", {
   ...updatedTimestamp
 });
 
+// One brief_payment per accepted application. Money flow:
+//   brand pays platform → status='captured' → (delivery) → status='released'
+// We use separate charges + transfers (not destination charges) because the
+// "release" step is gated on delivery confirmation, which happens minutes
+// to weeks after the brand initially pays.
+//
+// amountCents = gross the brand owes
+// platformFeeCents = our cut (PLATFORM_FEE_BPS, currently 10%)
+// creatorPayoutCents = amount - fee
+export const briefPayments = pgTable(
+  "brief_payments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    applicationId: uuid("application_id")
+      .notNull()
+      .unique()
+      .references(() => jobApplications.id, { onDelete: "cascade" }),
+    jobId: uuid("job_id")
+      .notNull()
+      .references(() => jobs.id, { onDelete: "cascade" }),
+    brandId: uuid("brand_id")
+      .notNull()
+      .references(() => brands.id, { onDelete: "cascade" }),
+    creatorId: uuid("creator_id")
+      .notNull()
+      .references(() => creators.id, { onDelete: "cascade" }),
+    amountCents: integer("amount_cents").notNull(),
+    platformFeeCents: integer("platform_fee_cents").notNull(),
+    creatorPayoutCents: integer("creator_payout_cents").notNull(),
+    currency: text("currency").notNull().default("usd"),
+    status: briefPaymentStatusEnum("status").notNull().default("pending"),
+    stripePaymentIntentId: text("stripe_payment_intent_id").unique(),
+    stripeChargeId: text("stripe_charge_id"),
+    stripeTransferId: text("stripe_transfer_id").unique(),
+    capturedAt: timestamp("captured_at", { withTimezone: true }),
+    releasedAt: timestamp("released_at", { withTimezone: true }),
+    refundedAt: timestamp("refunded_at", { withTimezone: true }),
+    failureReason: text("failure_reason"),
+    ...timestamps,
+    ...updatedTimestamp
+  },
+  (table) => [
+    index("brief_payments_brand_idx").on(table.brandId, table.status),
+    index("brief_payments_creator_idx").on(table.creatorId, table.status)
+  ]
+);
+
 export const usageQuotas = pgTable("usage_quotas", {
   id: uuid("id").primaryKey().defaultRandom(),
   subscriptionId: uuid("subscription_id")
@@ -562,3 +625,5 @@ export type Embedding = InferSelectModel<typeof embeddings>;
 export type NewEmbedding = InferInsertModel<typeof embeddings>;
 export type CreatorPayoutAccount = InferSelectModel<typeof creatorPayoutAccounts>;
 export type NewCreatorPayoutAccount = InferInsertModel<typeof creatorPayoutAccounts>;
+export type BriefPayment = InferSelectModel<typeof briefPayments>;
+export type NewBriefPayment = InferInsertModel<typeof briefPayments>;

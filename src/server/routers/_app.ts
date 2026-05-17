@@ -8,6 +8,7 @@ import { jobRouter } from "./job";
 import { notificationRouter } from "./notification";
 import { matchRouter } from "./match";
 import { orgRouter } from "./org";
+import { paymentRouter } from "./payment";
 import { payoutRouter } from "./payout";
 import { platformRouter } from "./platform";
 import { postRouter } from "./post";
@@ -30,7 +31,8 @@ export const appRouter = createTRPCRouter({
   storage: storageRouter,
   match: matchRouter,
   platform: platformRouter,
-  payout: payoutRouter
+  payout: payoutRouter,
+  payment: paymentRouter
 });
 
 export type AppRouter = typeof appRouter;

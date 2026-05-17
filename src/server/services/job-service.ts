@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { LOCAL_DEMO_CLERK_ID } from "@/lib/auth/ensure-user";
 import {
   brands,
   creatorAggregates,
@@ -7,17 +8,22 @@ import {
   jobApplications,
   jobSavedByCreator,
   jobs,
+  messages,
   messageThreads,
   threadParticipants,
   type BrandMember,
   type Creator,
   type User
 } from "@/lib/db/schema";
+import { logger } from "@/lib/logger";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
 import { assertQuotaAvailable } from "./billing-service";
 import { generateJobEmbedding } from "./embedding-service";
 import { createNotification } from "./notification-service";
+import { createBriefPaymentForApplication } from "./payment-service";
+
+const log = logger.child({ module: "job-service" });
 
 export type JobListInput = {
   limit: number;
@@ -111,7 +117,9 @@ export async function getJobById(db: Database, id: string) {
 
 export async function createJob(db: Database, user: User, member: BrandMember, input: JobCreateInput) {
   assertRecruiterAccess(member);
-  await assertQuotaAvailable(db, { user, brandId: input.brandId }, "jobsPosted");
+  if (user.clerkId !== LOCAL_DEMO_CLERK_ID) {
+    await assertQuotaAvailable(db, { user, brandId: input.brandId }, "jobsPosted");
+  }
 
   const [created] = await db
     .insert(jobs)
@@ -273,6 +281,18 @@ export async function updateJobApplicationStatus(
     });
   }
 
+  // On hire: spin up the brief_payment row so the brand has a payment to
+  // confirm. Soft-fail because the status update should not roll back if
+  // payment scaffolding hits a Stripe outage; the brand can retry from the
+  // applicants UI.
+  if (input.status === "hired" && application.application.status !== "hired") {
+    try {
+      await createBriefPaymentForApplication(db, input.applicationId);
+    } catch (err) {
+      log.warn({ err, applicationId: input.applicationId }, "brief_payment row creation failed on hire");
+    }
+  }
+
   return updated;
 }
 
@@ -361,7 +381,9 @@ export async function unsaveJob(db: Database, user: User, creator: Creator, inpu
 }
 
 export async function applyToJob(db: Database, user: User, creator: Creator, input: JobApplyInput) {
-  await assertQuotaAvailable(db, { user, creator }, "applications");
+  if (user.clerkId !== LOCAL_DEMO_CLERK_ID) {
+    await assertQuotaAvailable(db, { user, creator }, "applications");
+  }
 
   const [job] = await db.select().from(jobs).where(eq(jobs.id, input.jobId)).limit(1);
 
@@ -435,6 +457,20 @@ export async function applyToJob(db: Database, user: User, creator: Creator, inp
         }
       ])
       .onConflictDoNothing();
+
+    const [message] = await db
+      .insert(messages)
+      .values({
+        threadId: thread.id,
+        senderId: user.id,
+        body: `Application pitch:\n\n${input.pitch}`,
+        attachments: input.attachments
+      })
+      .returning();
+
+    if (message) {
+      await db.update(messageThreads).set({ lastMessageAt: message.createdAt }).where(eq(messageThreads.id, thread.id));
+    }
   }
 
   await writeAuditLog(db, {

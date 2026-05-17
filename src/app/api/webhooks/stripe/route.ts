@@ -8,6 +8,7 @@ import {
   syncStripeSubscription
 } from "@/server/services/billing-service";
 import { applyAccountUpdate } from "@/server/services/payout-service";
+import { applyPaymentIntentFailed, applyPaymentIntentSucceeded } from "@/server/services/payment-service";
 
 export const runtime = "nodejs";
 
@@ -60,6 +61,18 @@ export async function POST(req: Request) {
       case "account.updated": {
         // Connect: creator's KYC / capabilities changed. Mirror state into our DB.
         await applyAccountUpdate(db, event.data.object);
+        break;
+      }
+
+      case "payment_intent.succeeded": {
+        // Brief payment: brand's card was charged. Mark captured and notify
+        // the creator that funds are sitting on the platform awaiting delivery.
+        await applyPaymentIntentSucceeded(db, event.data.object);
+        break;
+      }
+
+      case "payment_intent.payment_failed": {
+        await applyPaymentIntentFailed(db, event.data.object);
         break;
       }
 
