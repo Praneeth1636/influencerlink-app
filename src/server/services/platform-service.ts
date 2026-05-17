@@ -190,3 +190,248 @@ async function writeMetricsSnapshot(db: Database, connectionId: string, profile:
     engagementRate: "0"
   });
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// TikTok
+// ─────────────────────────────────────────────────────────────────────────
+
+import {
+  exchangeCodeForToken as tiktokExchangeCode,
+  fetchProfile as tiktokFetchProfile,
+  refreshAccessToken as tiktokRefreshToken,
+  type TikTokProfile
+} from "@/lib/tiktok/client";
+
+export async function connectTikTok(db: Database, user: User, creator: Creator, input: { code: string }) {
+  const token = await tiktokExchangeCode(input.code);
+  const profile = await tiktokFetchProfile(token.access_token);
+
+  const connectionId = await upsertConnection(db, creator.id, "tiktok", {
+    externalId: profile.open_id,
+    externalHandle: profile.username || profile.display_name,
+    accessToken: encrypt(token.access_token),
+    refreshToken: encrypt(token.refresh_token)
+  });
+
+  await db.insert(platformMetrics).values({
+    creatorPlatformId: connectionId,
+    snapshotDate: new Date(),
+    followers: profile.follower_count,
+    avgViews: 0,
+    avgLikes: profile.likes_count,
+    avgComments: 0,
+    engagementRate: "0"
+  });
+
+  await writeAuditLog(db, {
+    user,
+    action: "platform.connect",
+    entityType: "creator_platform",
+    entityId: connectionId,
+    metadata: { platform: "tiktok", username: profile.username, followers: profile.follower_count }
+  });
+  log.info(
+    { creatorId: creator.id, username: profile.username, followers: profile.follower_count },
+    "tiktok connected"
+  );
+
+  return {
+    connectionId,
+    username: profile.username,
+    followers: profile.follower_count
+  };
+}
+
+export async function syncTikTokMetrics(db: Database, connectionId: string) {
+  const [row] = await db.select().from(creatorPlatforms).where(eq(creatorPlatforms.id, connectionId)).limit(1);
+  if (!row || row.platform !== "tiktok") {
+    throw new TRPCError({ code: "NOT_FOUND", message: "TikTok connection not found" });
+  }
+  const accessToken = await ensureTikTokAccessToken(
+    db,
+    row.id,
+    decrypt(row.accessToken),
+    row.refreshToken ? decrypt(row.refreshToken) : null
+  );
+  const profile = await tiktokFetchProfile(accessToken);
+  await writeTikTokMetricsSnapshot(db, connectionId, profile);
+  await db.update(creatorPlatforms).set({ lastSyncedAt: new Date() }).where(eq(creatorPlatforms.id, connectionId));
+  return { followers: profile.follower_count, videoCount: profile.video_count };
+}
+
+async function ensureTikTokAccessToken(
+  db: Database,
+  connectionId: string,
+  accessToken: string,
+  refreshToken: string | null
+): Promise<string> {
+  // TikTok access tokens last 24h; we proactively refresh on every sync.
+  // Cheap, and avoids the failure-mode where access token expired between
+  // syncs. If no refresh token, return as-is and let the caller fail loudly.
+  if (!refreshToken) return accessToken;
+  try {
+    const fresh = await tiktokRefreshToken(refreshToken);
+    await db
+      .update(creatorPlatforms)
+      .set({
+        accessToken: encrypt(fresh.access_token),
+        refreshToken: encrypt(fresh.refresh_token)
+      })
+      .where(eq(creatorPlatforms.id, connectionId));
+    return fresh.access_token;
+  } catch (err) {
+    log.warn({ err, connectionId }, "tiktok refresh failed, retrying with old token");
+    return accessToken;
+  }
+}
+
+async function writeTikTokMetricsSnapshot(db: Database, connectionId: string, profile: TikTokProfile) {
+  await db.insert(platformMetrics).values({
+    creatorPlatformId: connectionId,
+    snapshotDate: new Date(),
+    followers: profile.follower_count,
+    avgViews: 0,
+    avgLikes: profile.likes_count,
+    avgComments: 0,
+    engagementRate: "0"
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// YouTube
+// ─────────────────────────────────────────────────────────────────────────
+
+import {
+  exchangeCodeForToken as ytExchangeCode,
+  fetchPrimaryChannel as ytFetchChannel,
+  refreshAccessToken as ytRefreshToken,
+  type YouTubeChannel
+} from "@/lib/youtube/client";
+
+export async function connectYouTube(db: Database, user: User, creator: Creator, input: { code: string }) {
+  const token = await ytExchangeCode(input.code);
+  const channel = await ytFetchChannel(token.access_token);
+
+  if (!token.refresh_token) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "YouTube did not return a refresh token. Revoke the existing grant in your Google account and retry."
+    });
+  }
+
+  const connectionId = await upsertConnection(db, creator.id, "youtube", {
+    externalId: channel.id,
+    externalHandle: channel.customUrl ?? channel.title,
+    accessToken: encrypt(token.access_token),
+    refreshToken: encrypt(token.refresh_token)
+  });
+
+  await db.insert(platformMetrics).values({
+    creatorPlatformId: connectionId,
+    snapshotDate: new Date(),
+    followers: channel.subscriberCount,
+    avgViews: Math.floor(channel.viewCount / Math.max(channel.videoCount, 1)),
+    avgLikes: 0,
+    avgComments: 0,
+    engagementRate: "0"
+  });
+
+  await writeAuditLog(db, {
+    user,
+    action: "platform.connect",
+    entityType: "creator_platform",
+    entityId: connectionId,
+    metadata: { platform: "youtube", channel: channel.title, subscribers: channel.subscriberCount }
+  });
+  log.info(
+    { creatorId: creator.id, channel: channel.title, subscribers: channel.subscriberCount },
+    "youtube connected"
+  );
+
+  return {
+    connectionId,
+    channel: channel.title,
+    subscribers: channel.subscriberCount
+  };
+}
+
+export async function syncYouTubeMetrics(db: Database, connectionId: string) {
+  const [row] = await db.select().from(creatorPlatforms).where(eq(creatorPlatforms.id, connectionId)).limit(1);
+  if (!row || row.platform !== "youtube") {
+    throw new TRPCError({ code: "NOT_FOUND", message: "YouTube connection not found" });
+  }
+  if (!row.refreshToken) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Missing YouTube refresh token — reconnect" });
+  }
+  const fresh = await ytRefreshToken(decrypt(row.refreshToken));
+  await db
+    .update(creatorPlatforms)
+    .set({ accessToken: encrypt(fresh.access_token) })
+    .where(eq(creatorPlatforms.id, connectionId));
+
+  const channel = await ytFetchChannel(fresh.access_token);
+  await writeYouTubeMetricsSnapshot(db, connectionId, channel);
+  await db.update(creatorPlatforms).set({ lastSyncedAt: new Date() }).where(eq(creatorPlatforms.id, connectionId));
+  return { subscribers: channel.subscriberCount, videoCount: channel.videoCount };
+}
+
+async function writeYouTubeMetricsSnapshot(db: Database, connectionId: string, channel: YouTubeChannel) {
+  await db.insert(platformMetrics).values({
+    creatorPlatformId: connectionId,
+    snapshotDate: new Date(),
+    followers: channel.subscriberCount,
+    avgViews: Math.floor(channel.viewCount / Math.max(channel.videoCount, 1)),
+    avgLikes: 0,
+    avgComments: 0,
+    engagementRate: "0"
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Shared
+// ─────────────────────────────────────────────────────────────────────────
+
+async function upsertConnection(
+  db: Database,
+  creatorId: string,
+  platform: "instagram" | "tiktok" | "youtube" | "linkedin",
+  data: { externalId: string; externalHandle: string; accessToken: string; refreshToken: string | null }
+): Promise<string> {
+  const [existing] = await db
+    .select({ id: creatorPlatforms.id })
+    .from(creatorPlatforms)
+    .where(and(eq(creatorPlatforms.creatorId, creatorId), eq(creatorPlatforms.platform, platform)))
+    .limit(1);
+
+  if (existing) {
+    await db
+      .update(creatorPlatforms)
+      .set({
+        externalId: data.externalId,
+        externalHandle: data.externalHandle,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        connectedAt: new Date(),
+        lastSyncedAt: new Date()
+      })
+      .where(eq(creatorPlatforms.id, existing.id));
+    return existing.id;
+  }
+
+  const [created] = await db
+    .insert(creatorPlatforms)
+    .values({
+      creatorId,
+      platform,
+      externalId: data.externalId,
+      externalHandle: data.externalHandle,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      lastSyncedAt: new Date()
+    })
+    .returning({ id: creatorPlatforms.id });
+  if (!created) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to insert connection" });
+  }
+  return created.id;
+}

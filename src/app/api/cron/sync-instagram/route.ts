@@ -7,12 +7,12 @@
 // header. Vercel Cron sets `Authorization: Bearer <secret>` automatically
 // when CRON_SECRET is set as an env var.
 
-import { eq } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@/lib/db/client";
 import { creatorPlatforms } from "@/lib/db/schema";
 import { logger } from "@/lib/logger";
-import { syncInstagramMetrics } from "@/server/services/platform-service";
+import { syncInstagramMetrics, syncTikTokMetrics, syncYouTubeMetrics } from "@/server/services/platform-service";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // 5 minutes — Vercel hobby plan ceiling
@@ -35,19 +35,32 @@ export async function GET(req: NextRequest) {
   }
 
   const connections = await db
-    .select({ id: creatorPlatforms.id })
+    .select({ id: creatorPlatforms.id, platform: creatorPlatforms.platform })
     .from(creatorPlatforms)
-    .where(eq(creatorPlatforms.platform, "instagram"));
+    .where(inArray(creatorPlatforms.platform, ["instagram", "tiktok", "youtube"]));
 
-  const results = await Promise.allSettled(connections.map((c) => syncInstagramMetrics(db, c.id)));
+  const results = await Promise.allSettled(
+    connections.map((c) => {
+      switch (c.platform) {
+        case "instagram":
+          return syncInstagramMetrics(db, c.id);
+        case "tiktok":
+          return syncTikTokMetrics(db, c.id);
+        case "youtube":
+          return syncYouTubeMetrics(db, c.id);
+        default:
+          return Promise.reject(new Error(`unknown platform ${c.platform}`));
+      }
+    })
+  );
 
   const succeeded = results.filter((r) => r.status === "fulfilled").length;
   const failed = results.length - succeeded;
 
   if (failed) {
-    log.warn({ total: results.length, succeeded, failed }, "instagram sync completed with failures");
+    log.warn({ total: results.length, succeeded, failed }, "platform sync completed with failures");
   } else {
-    log.info({ total: results.length }, "instagram sync completed");
+    log.info({ total: results.length }, "platform sync completed");
   }
 
   return NextResponse.json({ total: connections.length, succeeded, failed });

@@ -58,6 +58,19 @@ export const env = createEnv({
     INSTAGRAM_APP_SECRET: optionalString,
     INSTAGRAM_REDIRECT_URI: optionalUrl,
 
+    // TikTok Login Kit — same shape as Instagram. Optional in dev.
+    TIKTOK_CLIENT_KEY: optionalString,
+    TIKTOK_CLIENT_SECRET: optionalString,
+    TIKTOK_REDIRECT_URI: optionalUrl,
+
+    // YouTube via Google OAuth — readonly scope, refresh_token offline.
+    YOUTUBE_CLIENT_ID: optionalString,
+    YOUTUBE_CLIENT_SECRET: optionalString,
+    YOUTUBE_REDIRECT_URI: optionalUrl,
+
+    // Cron auth — Vercel Cron sends Authorization: Bearer <secret>.
+    CRON_SECRET: optionalString,
+
     // Test-only escape hatch
     E2E_BYPASS_AUTH: z.enum(["true", "false"]).optional()
   },
