@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, BookmarkCheck, BriefcaseBusiness, CalendarDays, DollarSign, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PaymentTile, type PaymentTileData } from "@/components/domain/payment-tile";
 import {
   getSeedCreatorJobsWorkspace,
   mapCreatorJobsWorkspace,
@@ -11,21 +12,22 @@ import {
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 
 const statusTone = {
-  submitted: "bg-muted/40 text-muted-foreground",
-  shortlisted: "bg-primary/14 text-primary",
-  hired: "bg-emerald-400/12 text-emerald-200",
-  rejected: "bg-white/6 text-muted-foreground"
+  submitted: "border-[#ececec] bg-white text-[#687386]",
+  shortlisted: "border-[#f3d5c4] bg-[#fff7f2] text-[#D86B3D]",
+  hired: "border-[#bfe8d0] bg-[#e8f8ef] text-[#147a3b]",
+  rejected: "border-[#ececec] bg-[#fbfcfd] text-[#687386]"
 };
 
 export default async function SavedJobsPage() {
   const workspace = await getWorkspace();
+  const paymentByApplication = await loadCreatorPayments().catch(() => new Map<string, PaymentTileData>());
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
+    <main className="min-h-screen bg-white font-sans text-[#111318]">
       <section className="relative z-10 mx-auto grid max-w-[1280px] gap-6 px-5 py-8">
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#ececec] px-3 text-sm font-semibold text-[#687386] transition hover:border-[#dce3ea] hover:text-[#111318]"
             href="/jobs"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -33,15 +35,15 @@ export default async function SavedJobsPage() {
           </Link>
         </div>
 
-        <article className="border-border bg-card rounded-xl border p-6">
-          <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+        <article className="rounded-[30px] border border-[#ececec] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] px-3 py-1 text-[#D86B3D] hover:bg-[#fff7f2]">
             <BookmarkCheck className="mr-2 h-3.5 w-3.5" />
             Creator jobs workspace
           </Badge>
-          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-black tracking-[-0.06em]">
+          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-semibold tracking-[-0.06em]">
             Track saved briefs and every creator application.
           </h1>
-          <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-7">
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#687386]">
             This is the creator-side command center for opportunities: saved briefs, pitches sent, proposed rates, and
             application outcomes.
           </p>
@@ -66,7 +68,11 @@ export default async function SavedJobsPage() {
               <EmptyState text="No applications yet. Find a brief and send a tight pitch." />
             ) : (
               workspace.applications.map((application) => (
-                <ApplicationCard application={application} key={application.id} />
+                <ApplicationCard
+                  application={application}
+                  payment={paymentByApplication.get(application.id) ?? null}
+                  key={application.id}
+                />
               ))
             )}
           </div>
@@ -94,28 +100,52 @@ async function getWorkspace(): Promise<CreatorJobsWorkspace> {
   }
 }
 
-function ApplicationCard({ application }: { application: CreatorApplicationItem }) {
+async function loadCreatorPayments(): Promise<Map<string, PaymentTileData>> {
+  const caller = await createTRPCServerCaller();
+  const rows = await caller.payment.listForCreator();
+  return new Map(
+    rows.map((row) => [
+      row.applicationId,
+      {
+        id: row.id,
+        status: row.status,
+        amountCents: row.amountCents,
+        platformFeeCents: row.platformFeeCents,
+        creatorPayoutCents: row.creatorPayoutCents,
+        currency: row.currency
+      }
+    ])
+  );
+}
+
+function ApplicationCard({
+  application,
+  payment
+}: {
+  application: CreatorApplicationItem;
+  payment: PaymentTileData | null;
+}) {
   return (
-    <article className="border-border bg-card rounded-xl border p-5">
+    <article className="rounded-[26px] border border-[#ececec] bg-white p-5 shadow-[0_14px_40px_rgba(17,24,39,0.035)]">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
-          <Badge className={`hover:bg-muted/40 rounded-full px-3 py-1 ${statusTone[application.status]}`}>
+          <Badge className={`rounded-full border px-3 py-1 hover:bg-white ${statusTone[application.status]}`}>
             {application.status}
           </Badge>
-          <h2 className="mt-3 text-2xl font-black tracking-[-0.045em]">{application.job.title}</h2>
-          <p className="text-foreground/55 mt-2 text-sm font-bold">
+          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.045em]">{application.job.title}</h2>
+          <p className="mt-2 text-sm font-semibold text-[#687386]">
             {application.job.brandName} · {application.job.remote ? "Remote" : (application.job.location ?? "Local")}
           </p>
         </div>
         <Link
-          className="hover:bg-primary/10 inline-flex h-10 shrink-0 items-center justify-center rounded-xl bg-white px-4 text-sm font-black text-black transition"
+          className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-[#111318] px-4 text-sm font-semibold text-white transition hover:bg-[#1d222b]"
           href={`/jobs/${application.job.id}`}
         >
           View brief
         </Link>
       </div>
 
-      <p className="text-muted-foreground mt-4 text-sm leading-6">{application.pitch}</p>
+      <p className="mt-4 text-sm leading-6 text-[#687386]">{application.pitch}</p>
 
       <div className="mt-5 grid gap-2 md:grid-cols-3">
         <Metric
@@ -126,16 +156,22 @@ function ApplicationCard({ application }: { application: CreatorApplicationItem 
         <Metric icon={CalendarDays} label="Applied" value={formatDate(application.createdAt)} />
         <Metric icon={BriefcaseBusiness} label="Brand" value={application.job.brandName} />
       </div>
+
+      {payment && (
+        <div className="mt-5">
+          <PaymentTile payment={payment} viewer="creator" />
+        </div>
+      )}
     </article>
   );
 }
 
 function SavedJobCard({ saved }: { saved: CreatorSavedJobItem }) {
   return (
-    <article className="border-border bg-card rounded-xl border p-5">
-      <h2 className="text-xl font-black tracking-[-0.04em]">{saved.job.title}</h2>
-      <p className="text-foreground/55 mt-2 text-sm font-bold">{saved.job.brandName}</p>
-      <p className="text-muted-foreground mt-3 line-clamp-3 text-sm leading-6">{saved.job.description}</p>
+    <article className="rounded-[26px] border border-[#ececec] bg-white p-5 shadow-[0_14px_40px_rgba(17,24,39,0.035)]">
+      <h2 className="text-xl font-semibold tracking-[-0.04em]">{saved.job.title}</h2>
+      <p className="mt-2 text-sm font-semibold text-[#687386]">{saved.job.brandName}</p>
+      <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#687386]">{saved.job.description}</p>
       <div className="mt-4 grid gap-2">
         <MiniStat
           label="Budget"
@@ -145,13 +181,16 @@ function SavedJobCard({ saved }: { saved: CreatorSavedJobItem }) {
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         {saved.job.niches.map((niche) => (
-          <span className="bg-muted/40 text-foreground/50 rounded-full px-2.5 py-1 text-[10px] font-black" key={niche}>
+          <span
+            className="rounded-full border border-[#ececec] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#687386]"
+            key={niche}
+          >
             {niche}
           </span>
         ))}
       </div>
       <Link
-        className="border-border text-foreground/68 hover:border-primary/35 hover:text-primary mt-5 inline-flex h-10 w-full items-center justify-center rounded-xl border px-4 text-sm font-black transition"
+        className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-full border border-[#ececec] px-4 text-sm font-semibold text-[#687386] transition hover:border-[#dce3ea] hover:text-[#111318]"
         href={`/jobs/${saved.job.id}`}
       >
         <Send className="mr-2 h-4 w-4" />
@@ -164,35 +203,33 @@ function SavedJobCard({ saved }: { saved: CreatorSavedJobItem }) {
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">{eyebrow}</p>
-      <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">{title}</h2>
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9aa3b2] uppercase">{eyebrow}</p>
+      <h2 className="mt-1 text-2xl font-semibold tracking-[-0.04em]">{title}</h2>
     </div>
   );
 }
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="border-border text-muted-foreground rounded-2xl border border-dashed p-6 text-sm leading-6">
-      {text}
-    </div>
+    <div className="rounded-2xl border border-dashed border-[#d8dee8] p-6 text-sm leading-6 text-[#687386]">{text}</div>
   );
 }
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-3">
-      <p className="text-muted-foreground text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
+    <div className="rounded-2xl border border-[#ececec] bg-[#fbfcfd] p-3">
+      <p className="text-[10px] font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#111318]">{value}</p>
     </div>
   );
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof DollarSign; label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-3">
-      <Icon className="text-primary h-4 w-4" />
-      <p className="text-muted-foreground mt-3 text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
+    <div className="rounded-2xl border border-[#ececec] bg-[#fbfcfd] p-3">
+      <Icon className="h-4 w-4 text-[#D86B3D]" />
+      <p className="mt-3 text-[10px] font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#111318]">{value}</p>
     </div>
   );
 }

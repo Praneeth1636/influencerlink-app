@@ -15,6 +15,7 @@ import {
   type Creator,
   type User
 } from "@/lib/db/schema";
+import { applicationReceivedEmail, applicationStatusEmail } from "@/lib/email/templates";
 import { logger } from "@/lib/logger";
 import type { Database } from "@/server/trpc";
 import { writeAuditLog } from "./audit-service";
@@ -252,32 +253,17 @@ export async function updateJobApplicationStatus(
   });
 
   if (application.application.status !== input.status) {
-    const verb =
-      input.status === "shortlisted"
-        ? "shortlisted"
-        : input.status === "hired"
-          ? "hired"
-          : input.status === "rejected"
-            ? "passed on"
-            : "updated";
     await createNotification(db, {
       userId: application.creator.userId,
       type: "job_application.status_updated",
       actorId: user.id,
       entityType: "job_application",
       entityId: input.applicationId,
-      email: {
-        subject:
-          input.status === "hired"
-            ? `You got it — ${application.job.title}`
-            : input.status === "shortlisted"
-              ? `You're shortlisted — ${application.job.title}`
-              : input.status === "rejected"
-                ? `Update on ${application.job.title}`
-                : `Application update — ${application.job.title}`,
-        text: `Your application to "${application.job.title}" was ${verb}.\n\nView details at /jobs/${application.job.id}`,
-        html: `<p>Your application to <strong>${application.job.title}</strong> was <strong>${verb}</strong>.</p><p><a href="/jobs/${application.job.id}">View brief</a></p>`
-      }
+      email: applicationStatusEmail({
+        jobId: application.job.id,
+        jobTitle: application.job.title,
+        status: input.status
+      })
     });
   }
 
@@ -487,11 +473,12 @@ export async function applyToJob(db: Database, user: User, creator: Creator, inp
     actorId: user.id,
     entityType: "job_application",
     entityId: application.id,
-    email: {
-      subject: `New application: ${job.title}`,
-      text: `${creator.displayName} just applied to your brief "${job.title}".\n\nPitch:\n${input.pitch}\n\nReview at /jobs/${job.id}/applicants`,
-      html: `<p><strong>${creator.displayName}</strong> just applied to your brief <em>${job.title}</em>.</p><p><strong>Pitch:</strong></p><blockquote>${input.pitch}</blockquote><p><a href="/jobs/${job.id}/applicants">Review applicants</a></p>`
-    }
+    email: applicationReceivedEmail({
+      jobId: job.id,
+      jobTitle: job.title,
+      creatorName: creator.displayName,
+      pitch: input.pitch
+    })
   });
 
   return {

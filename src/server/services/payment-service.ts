@@ -22,6 +22,7 @@ import {
   type Creator,
   type User
 } from "@/lib/db/schema";
+import { paymentCapturedEmail, paymentReleasedEmail } from "@/lib/email/templates";
 import { logger } from "@/lib/logger";
 import { stripe } from "@/lib/stripe/client";
 import { StripeNotConfiguredError } from "@/lib/stripe/connect";
@@ -255,10 +256,11 @@ export async function applyBriefCheckoutCompleted(db: Database, session: Stripe.
     actorId: null,
     entityType: "brief_payment",
     entityId: payment.id,
-    email: {
-      subject: "Brief funded — start delivering",
-      text: `The brand paid for your brief. $${(payment.creatorPayoutCents / 100).toFixed(2)} will release to your Stripe account after delivery is confirmed.`
-    }
+    email: paymentCapturedEmail({
+      jobTitle: await resolveJobTitle(db, payment.jobId),
+      payoutCents: payment.creatorPayoutCents,
+      currency: payment.currency
+    })
   });
 
   log.info({ paymentId: payment.id, sessionId: session.id }, "brief_payment captured via checkout");
@@ -365,10 +367,11 @@ export async function applyPaymentIntentSucceeded(db: Database, intent: Stripe.P
     actorId: null,
     entityType: "brief_payment",
     entityId: payment.id,
-    email: {
-      subject: "Brief funded — start delivering",
-      text: `The brand paid for your brief. $${(payment.creatorPayoutCents / 100).toFixed(2)} will release to your Stripe account after delivery is confirmed.`
-    }
+    email: paymentCapturedEmail({
+      jobTitle: await resolveJobTitle(db, payment.jobId),
+      payoutCents: payment.creatorPayoutCents,
+      currency: payment.currency
+    })
   });
 
   log.info({ paymentId: payment.id, intentId: intent.id }, "brief_payment captured");
@@ -459,10 +462,11 @@ export async function releaseBriefPayment(db: Database, user: User, _member: Bra
     actorId: user.id,
     entityType: "brief_payment",
     entityId: payment.id,
-    email: {
-      subject: "Funds released",
-      text: `$${(payment.creatorPayoutCents / 100).toFixed(2)} is on its way to your bank. Stripe typically settles within 2-7 business days.`
-    }
+    email: paymentReleasedEmail({
+      jobTitle: await resolveJobTitle(db, payment.jobId),
+      payoutCents: payment.creatorPayoutCents,
+      currency: payment.currency
+    })
   });
 
   log.info({ paymentId: payment.id, transferId: transfer.id }, "brief_payment released to creator");
@@ -519,6 +523,11 @@ export async function refundBriefPayment(db: Database, user: User, _member: Bran
 export async function getBriefPaymentByApplication(db: Database, _user: User, applicationId: string) {
   const [row] = await db.select().from(briefPayments).where(eq(briefPayments.applicationId, applicationId)).limit(1);
   return row ?? null;
+}
+
+async function resolveJobTitle(db: Database, jobId: string): Promise<string> {
+  const [row] = await db.select({ title: jobs.title }).from(jobs).where(eq(jobs.id, jobId)).limit(1);
+  return row?.title ?? "your brief";
 }
 
 async function resolveCreatorUserId(db: Database, creatorId: string): Promise<string> {

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, gt, ne } from "drizzle-orm";
 import { messages, messageThreads, threadParticipants, type User } from "@/lib/db/schema";
 import type { Database } from "@/server/trpc";
+import { newMessageEmail } from "@/lib/email/templates";
 import { writeAuditLog } from "./audit-service";
 import { assertQuotaAvailable } from "./billing-service";
 import { createNotification } from "./notification-service";
@@ -164,11 +165,7 @@ export async function sendMessage(
         actorId: user.id,
         entityType: "message_thread",
         entityId: input.threadId,
-        email: {
-          subject: "New message on Terrace",
-          text: `You have a new message:\n\n${preview}\n\nReply at /messages/${input.threadId}`,
-          html: `<p>You have a new message:</p><blockquote>${preview}</blockquote><p><a href="/messages/${input.threadId}">Open the thread</a></p>`
-        }
+        email: newMessageEmail({ threadId: input.threadId, preview })
       })
     )
   );

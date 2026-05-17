@@ -6,7 +6,13 @@ import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { brandMembers, briefPayments, creators, jobApplications, jobs } from "@/lib/db/schema";
-import { brandProcedure, brandWriteProcedure, createTRPCRouter, protectedProcedure } from "@/server/trpc";
+import {
+  brandProcedure,
+  brandWriteProcedure,
+  createTRPCRouter,
+  creatorProcedure,
+  protectedProcedure
+} from "@/server/trpc";
 import {
   confirmBriefPayment,
   getBriefPaymentByApplication,
@@ -102,6 +108,19 @@ export const paymentRouter = createTRPCRouter({
       .select()
       .from(briefPayments)
       .where(eq(briefPayments.brandId, ctx.brandId))
+      .orderBy(briefPayments.createdAt);
+  }),
+
+  /**
+   * Creator's payment history — every brief_payment where this creator is
+   * the payee. Used on the creator's jobs workspace to show payment status
+   * next to each hired application.
+   */
+  listForCreator: creatorProcedure.query(async ({ ctx }) => {
+    return ctx.db
+      .select()
+      .from(briefPayments)
+      .where(eq(briefPayments.creatorId, ctx.creator.id))
       .orderBy(briefPayments.createdAt);
   })
 });

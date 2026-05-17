@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { getSeedThreadDetail, mapThreadDetail, type InboxMessage, type InboxThreadDetail } from "@/lib/messages/inbox";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 import { MessageComposer } from "./message-composer";
+import { MessageStream } from "./message-stream";
 
 type MessageThreadPageProps = {
   params: Promise<{
@@ -21,39 +22,39 @@ export default async function MessageThreadPage({ params }: MessageThreadPagePro
   }
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
+    <main className="min-h-screen bg-white font-sans text-[#111318]">
       <section className="relative z-10 mx-auto grid max-w-[980px] gap-6 px-5 py-8">
         <header className="flex flex-wrap items-center gap-3">
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#ececec] px-3 text-sm font-medium text-[#687386] transition hover:border-[#f3d5c4] hover:text-[#D86B3D]"
             href="/messages"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Inbox
           </Link>
-          <div className="border-border bg-muted/30 text-foreground/46 ml-auto flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-bold">
+          <div className="ml-auto flex items-center gap-2 rounded-full border border-[#ececec] bg-[#fbfcfd] px-3 py-2 text-xs font-medium text-[#687386]">
             <Clock className="h-3.5 w-3.5" />
             {formatDate(thread.lastMessageAt)}
           </div>
         </header>
 
-        <article className="border-border bg-card overflow-hidden rounded-xl border shadow-sm">
-          <div className="border-border border-b p-5">
+        <article className="overflow-hidden rounded-[28px] border border-[#ececec] bg-white shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
+          <div className="border-b border-[#ececec] p-5">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full">
+              <Badge className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] text-[#D86B3D] hover:bg-[#fff7f2]">
                 <MessageCircle className="mr-2 h-3.5 w-3.5" />
                 {thread.type}
               </Badge>
               {thread.unreadCount > 0 && (
-                <Badge className="bg-muted/40 text-muted-foreground hover:bg-muted/40 rounded-full">
+                <Badge className="rounded-full border border-[#ececec] bg-[#fbfcfd] text-[#687386] hover:bg-[#fbfcfd]">
                   {thread.unreadCount} unread
                 </Badge>
               )}
             </div>
-            <h1 className="mt-4 text-[clamp(30px,5vw,52px)] leading-[0.98] font-black tracking-[-0.055em]">
+            <h1 className="mt-4 text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
               {thread.title}
             </h1>
-            <p className="text-foreground/44 mt-2 text-sm font-bold">{thread.subtitle}</p>
+            <p className="mt-2 text-sm font-medium text-[#687386]">{thread.subtitle}</p>
           </div>
 
           <div className="grid gap-4 p-5">
@@ -63,6 +64,7 @@ export default async function MessageThreadPage({ params }: MessageThreadPagePro
           </div>
 
           <MessageComposer threadId={thread.id} />
+          <MessageStream />
         </article>
       </section>
     </main>
@@ -84,13 +86,13 @@ function MessageBubble({ message }: { message: InboxMessage }) {
       <div
         className={`max-w-[78%] rounded-2xl border p-4 ${
           message.sentByViewer
-            ? "border-primary/30 bg-primary/14 text-foreground"
-            : "border-border bg-muted/30 text-foreground/70"
+            ? "border-[#f3d5c4] bg-[#fff7f2] text-[#111318]"
+            : "border-[#ececec] bg-[#fbfcfd] text-[#5f6673]"
         }`}
       >
-        <p className="text-muted-foreground text-xs font-black tracking-[0.14em] uppercase">{message.senderLabel}</p>
+        <p className="text-xs font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">{message.senderLabel}</p>
         <p className="mt-2 text-sm leading-6">{message.body}</p>
-        <p className="text-muted-foreground mt-3 text-[11px] font-bold">{formatDate(message.createdAt)}</p>
+        <p className="mt-3 text-[11px] font-medium text-[#9aa3b2]">{formatDate(message.createdAt)}</p>
       </div>
     </div>
   );
