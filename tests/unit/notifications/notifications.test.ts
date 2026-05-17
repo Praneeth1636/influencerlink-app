@@ -22,6 +22,8 @@ describe("notification mapping", () => {
       email: "glossier@brands.creatorlink.dev",
       type: "brand_member",
       onboardedAt: now,
+      suspendedAt: null,
+      suspendedReason: null,
       createdAt: now
     };
 

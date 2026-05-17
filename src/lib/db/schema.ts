@@ -71,6 +71,10 @@ export const users = pgTable("users", {
   email: text("email").notNull(),
   type: accountTypeEnum("type").notNull(),
   onboardedAt: timestamp("onboarded_at", { withTimezone: true }),
+  // Set when an admin suspends the account. Middleware refuses all
+  // protected routes once this is non-null. Clearing it un-suspends.
+  suspendedAt: timestamp("suspended_at", { withTimezone: true }),
+  suspendedReason: text("suspended_reason"),
   ...timestamps
 });
 

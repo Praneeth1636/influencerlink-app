@@ -137,6 +137,8 @@ const user: User = {
   email: "creator@example.com",
   type: "creator",
   onboardedAt: now,
+  suspendedAt: null,
+  suspendedReason: null,
   createdAt: now
 };
 

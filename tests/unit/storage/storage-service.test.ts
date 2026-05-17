@@ -35,6 +35,8 @@ const fakeUser = {
   email: "creator@example.com",
   type: "creator" as const,
   onboardedAt: null,
+  suspendedAt: null,
+  suspendedReason: null,
   createdAt: new Date()
 };
 

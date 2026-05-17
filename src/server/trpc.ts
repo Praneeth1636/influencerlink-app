@@ -4,8 +4,10 @@ import { and, eq } from "drizzle-orm";
 import superjson from "superjson";
 import { z } from "zod";
 import { requireBrandMember, requireUser } from "@/lib/auth/rbac";
+import { ensureLocalDemoUser, ensureUserRow } from "@/lib/auth/ensure-user";
+import { isLocalDemoRequest } from "@/lib/auth/local-demo";
 import { db as defaultDb } from "@/lib/db/client";
-import { brandMembers, creators, users, type BrandMember, type Creator, type User } from "@/lib/db/schema";
+import { brandMembers, creators, type BrandMember, type Creator, type User } from "@/lib/db/schema";
 import { enforceRateLimit, type RateLimitKind } from "@/lib/rate-limit";
 import { formatTRPCError, toTRPCError } from "@/server/trpc-errors";
 
@@ -32,10 +34,21 @@ export async function createTRPCContext(options: CreateTRPCContextOptions): Prom
   let user = options.user;
 
   if (typeof user === "undefined") {
+    const isDemoRequest = isLocalDemoRequest(options.headers);
+
+    if (isDemoRequest) {
+      user = await ensureLocalDemoUser(database);
+      return {
+        headers: options.headers,
+        db: database,
+        user,
+        brandId: options.brandId
+      };
+    }
+
     const { userId } = await auth();
     if (userId) {
-      const [row] = await database.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-      user = row ?? null;
+      user = await ensureUserRow(database, userId);
     } else {
       user = null;
     }
@@ -197,3 +210,17 @@ export const creatorWriteProcedure = protectedWriteProcedure.use(creatorMiddlewa
 export const brandProcedure = protectedProcedure.input(brandProcedureInput).use(brandMiddleware);
 export const brandWriteProcedure = protectedWriteProcedure.input(brandProcedureInput).use(brandMiddleware);
 export const aiProcedure = baseProcedure.use(aiRateLimit).use(authMiddleware);
+
+// Admin gate. Requires users.type === 'admin'. Use sparingly — every
+// procedure under this middleware should be human-reviewed for blast
+// radius before it ships. Re-emits ctx with a non-null user so downstream
+// handlers don't need to defensively narrow.
+const adminMiddleware = t.middleware(async ({ ctx, next }) => {
+  const user = ctx.user;
+  if (!user || user.type !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Admin role required" });
+  }
+  return next({ ctx: { ...ctx, user } });
+});
+export const adminProcedure = protectedProcedure.use(adminMiddleware);
+export const adminWriteProcedure = protectedWriteProcedure.use(adminMiddleware);
