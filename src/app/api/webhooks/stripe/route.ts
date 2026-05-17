@@ -8,7 +8,11 @@ import {
   syncStripeSubscription
 } from "@/server/services/billing-service";
 import { applyAccountUpdate } from "@/server/services/payout-service";
-import { applyPaymentIntentFailed, applyPaymentIntentSucceeded } from "@/server/services/payment-service";
+import {
+  applyBriefCheckoutCompleted,
+  applyPaymentIntentFailed,
+  applyPaymentIntentSucceeded
+} from "@/server/services/payment-service";
 
 export const runtime = "nodejs";
 
@@ -40,7 +44,15 @@ export async function POST(req: Request) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        await syncCheckoutSession(db, event.data.object);
+        // Two flavors of checkout session in this app: subscription (billing)
+        // and brief_payment. The brand-side brief flow tags metadata.kind so
+        // we can fork without parsing line items.
+        const session = event.data.object;
+        if (session.metadata?.kind === "brief_payment") {
+          await applyBriefCheckoutCompleted(db, session);
+        } else {
+          await syncCheckoutSession(db, session);
+        }
         break;
       }
 

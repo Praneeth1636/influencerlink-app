@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BadgeCheck, BriefcaseBusiness, DollarSign, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PaymentTile, type PaymentTileData } from "@/components/domain/payment-tile";
 import {
   getSeedApplicantsBoard,
   mapApplicantsBoard,
@@ -32,34 +33,40 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
     notFound();
   }
 
+  // Look up brief_payments for hired applicants so we can render the PaymentTile
+  // inline. We key by applicationId. Safe to call even before any hires —
+  // listForBrand returns [] for new brands. Soft-fail if Stripe isn't
+  // configured yet (dev without keys).
+  const paymentByApplication = await loadPayments(board.brandId).catch(() => new Map<string, PaymentTileData>());
+
   return (
-    <main className="bg-background text-foreground min-h-screen">
+    <main className="min-h-screen bg-white font-sans text-[#111318]">
       <section className="relative z-10 mx-auto grid max-w-[1380px] gap-6 px-5 py-8">
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#ececec] px-3 text-sm font-semibold text-[#687386] transition hover:border-[#dce3ea] hover:text-[#111318]"
             href={`/jobs/${board.jobId}`}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Brief
           </Link>
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#ececec] px-3 text-sm font-semibold text-[#687386] transition hover:border-[#dce3ea] hover:text-[#111318]"
             href="/jobs"
           >
             Jobs
           </Link>
         </div>
 
-        <article className="border-border bg-card rounded-xl border p-6">
-          <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+        <article className="rounded-[30px] border border-[#ececec] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] px-3 py-1 text-[#D86B3D] hover:bg-[#fff7f2]">
             <BriefcaseBusiness className="mr-2 h-3.5 w-3.5" />
             Applicant pipeline
           </Badge>
-          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-black tracking-[-0.06em]">
+          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-semibold tracking-[-0.06em]">
             Manage applicants for {board.brandName}.
           </h1>
-          <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-7">{board.title}</p>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#687386]">{board.title}</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-4">
             {columns.map((column) => (
               <MiniStat
@@ -76,42 +83,43 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
             const applicants = board.applicants.filter((applicant) => applicant.status === column.status);
 
             return (
-              <div className="border-border bg-card grid content-start gap-3 rounded-xl border p-3" key={column.status}>
+              <div
+                className="grid content-start gap-3 rounded-[26px] border border-[#ececec] bg-white p-3 shadow-[0_14px_40px_rgba(17,24,39,0.035)]"
+                key={column.status}
+              >
                 <div className="flex items-center justify-between px-1">
-                  <h2 className="text-muted-foreground text-sm font-black tracking-[0.14em] uppercase">
-                    {column.label}
-                  </h2>
-                  <span className="bg-muted/40 text-foreground/48 rounded-full px-2 py-1 text-xs font-black">
+                  <h2 className="text-sm font-semibold tracking-[0.14em] text-[#8a94a5] uppercase">{column.label}</h2>
+                  <span className="rounded-full border border-[#ececec] bg-[#fbfcfd] px-2 py-1 text-xs font-semibold text-[#687386]">
                     {applicants.length}
                   </span>
                 </div>
 
                 {applicants.length === 0 ? (
-                  <div className="border-border text-muted-foreground rounded-xl border border-dashed p-4 text-sm leading-6">
+                  <div className="rounded-2xl border border-dashed border-[#d8dee8] p-4 text-sm leading-6 text-[#687386]">
                     No creators in this stage yet.
                   </div>
                 ) : (
                   applicants.map((applicant) => (
-                    <article className="border-border bg-muted/30 rounded-xl border p-4" key={applicant.id}>
+                    <article className="rounded-[22px] border border-[#ececec] bg-[#fbfcfd] p-4" key={applicant.id}>
                       <div className="flex items-start gap-3">
-                        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-sm font-black text-black">
+                        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dff1fb] text-sm font-semibold text-[#111318]">
                           {initials(applicant.displayName)}
                         </div>
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <Link
-                              className="text-foreground hover:text-primary font-black"
+                              className="font-semibold text-[#111318] hover:text-[#D86B3D]"
                               href={`/profile/${applicant.handle}`}
                             >
                               {applicant.displayName}
                             </Link>
-                            {applicant.verified && <BadgeCheck className="text-primary h-4 w-4" />}
+                            {applicant.verified && <BadgeCheck className="h-4 w-4 text-[#D86B3D]" />}
                           </div>
-                          <p className="text-foreground/48 mt-1 line-clamp-2 text-xs leading-5">{applicant.headline}</p>
+                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#687386]">{applicant.headline}</p>
                         </div>
                       </div>
 
-                      <p className="text-muted-foreground mt-4 line-clamp-4 text-sm leading-6">{applicant.pitch}</p>
+                      <p className="mt-4 line-clamp-4 text-sm leading-6 text-[#687386]">{applicant.pitch}</p>
 
                       <div className="mt-4 grid grid-cols-2 gap-2">
                         <Metric icon={Users} label="Reach" value={formatNumber(applicant.totalReach)} />
@@ -125,7 +133,7 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
                       <div className="mt-4 flex flex-wrap gap-2">
                         {applicant.niches.slice(0, 3).map((niche) => (
                           <span
-                            className="bg-muted/40 text-foreground/50 rounded-full px-2.5 py-1 text-[10px] font-black"
+                            className="rounded-full border border-[#ececec] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#687386]"
                             key={niche}
                           >
                             {niche}
@@ -138,6 +146,16 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
                         brandId={board.brandId}
                         currentStatus={applicant.status}
                       />
+
+                      {paymentByApplication.get(applicant.id) && (
+                        <div className="mt-4">
+                          <PaymentTile
+                            payment={paymentByApplication.get(applicant.id)!}
+                            viewer="brand"
+                            brandId={board.brandId}
+                          />
+                        </div>
+                      )}
                     </article>
                   ))
                 )}
@@ -170,21 +188,39 @@ async function getApplicants(jobId: string): Promise<JobApplicantsBoard | null> 
   }
 }
 
+async function loadPayments(brandId: string): Promise<Map<string, PaymentTileData>> {
+  const caller = await createTRPCServerCaller();
+  const rows = await caller.payment.listForBrand({ brandId });
+  return new Map(
+    rows.map((row) => [
+      row.applicationId,
+      {
+        id: row.id,
+        status: row.status,
+        amountCents: row.amountCents,
+        platformFeeCents: row.platformFeeCents,
+        creatorPayoutCents: row.creatorPayoutCents,
+        currency: row.currency
+      }
+    ])
+  );
+}
+
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-3">
-      <p className="text-muted-foreground text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
+    <div className="rounded-2xl border border-[#ececec] bg-[#fbfcfd] p-3">
+      <p className="text-[10px] font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#111318]">{value}</p>
     </div>
   );
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/20 rounded-lg border p-2">
-      <Icon className="text-primary h-3.5 w-3.5" />
-      <p className="text-muted-foreground mt-2 text-[9px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-0.5 text-xs font-black">{value}</p>
+    <div className="rounded-2xl border border-[#ececec] bg-white p-2">
+      <Icon className="h-3.5 w-3.5 text-[#D86B3D]" />
+      <p className="mt-2 text-[9px] font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">{label}</p>
+      <p className="mt-0.5 text-xs font-semibold text-[#111318]">{value}</p>
     </div>
   );
 }

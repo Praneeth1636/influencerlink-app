@@ -134,10 +134,139 @@ function resolveAmountCents(
 }
 
 /**
- * Brand explicitly confirms payment. Creates the Stripe payment intent and
- * returns a client_secret the UI can use to mount Stripe Elements. Idempotent
- * — if an intent already exists for this row, we return its client_secret
- * rather than create a new one.
+ * Brand explicitly confirms payment via Stripe Checkout (hosted page).
+ * Returns the Checkout session URL — caller redirects the brand to it.
+ * Stripe handles card collection, 3DS, and the post-payment redirect back
+ * to /jobs/[id]/applicants?paid=ok.
+ *
+ * Idempotent — if an open session already exists, returns its URL.
+ */
+export async function createBriefCheckoutSession(
+  db: Database,
+  user: User,
+  _member: BrandMember,
+  paymentId: string
+): Promise<{ paymentId: string; checkoutUrl: string }> {
+  assertStripeConfigured();
+
+  const [payment] = await db.select().from(briefPayments).where(eq(briefPayments.id, paymentId)).limit(1);
+  if (!payment) throw new TRPCError({ code: "NOT_FOUND", message: "Payment not found" });
+  if (payment.status === "captured" || payment.status === "released") {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Payment already captured" });
+  }
+  if (payment.status === "refunded" || payment.status === "failed") {
+    throw new TRPCError({ code: "BAD_REQUEST", message: `Payment is ${payment.status}` });
+  }
+
+  const [job] = await db.select().from(jobs).where(eq(jobs.id, payment.jobId)).limit(1);
+  const successPath = `/jobs/${payment.jobId}/applicants?paid=ok&payment=${payment.id}`;
+  const cancelPath = `/jobs/${payment.jobId}/applicants?paid=cancelled`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    payment_intent_data: {
+      metadata: {
+        paymentId: payment.id,
+        applicationId: payment.applicationId,
+        jobId: payment.jobId,
+        brandId: payment.brandId,
+        kind: "brief_payment"
+      }
+    },
+    line_items: [
+      {
+        price_data: {
+          currency: payment.currency,
+          product_data: {
+            name: job?.title ? `Brief: ${job.title}` : "Brief payment",
+            description: "Funds are held on Terrace until you confirm delivery."
+          },
+          unit_amount: payment.amountCents
+        },
+        quantity: 1
+      }
+    ],
+    success_url: `${baseUrl}${successPath}`,
+    cancel_url: `${baseUrl}${cancelPath}`,
+    metadata: {
+      paymentId: payment.id,
+      kind: "brief_payment"
+    }
+  });
+
+  if (!session.url) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Stripe checkout session has no URL" });
+  }
+
+  await db
+    .update(briefPayments)
+    .set({
+      status: "authorized",
+      stripePaymentIntentId:
+        typeof session.payment_intent === "string" ? session.payment_intent : (session.payment_intent?.id ?? null),
+      updatedAt: new Date()
+    })
+    .where(eq(briefPayments.id, payment.id));
+
+  await writeAuditLog(db, {
+    user,
+    action: "brief_payment.checkout_create",
+    entityType: "brief_payment",
+    entityId: payment.id,
+    metadata: { sessionId: session.id, amountCents: payment.amountCents }
+  });
+
+  return { paymentId: payment.id, checkoutUrl: session.url };
+}
+
+/**
+ * Webhook entry — Stripe Checkout completed for a brief_payment session.
+ * Flips status to 'captured'. We piggy-back on the brand-side
+ * `checkout.session.completed` webhook by inspecting metadata.kind.
+ */
+export async function applyBriefCheckoutCompleted(db: Database, session: Stripe.Checkout.Session) {
+  const paymentId = session.metadata?.paymentId;
+  if (!paymentId) return;
+
+  const [payment] = await db.select().from(briefPayments).where(eq(briefPayments.id, paymentId)).limit(1);
+  if (!payment) {
+    log.warn({ paymentId, sessionId: session.id }, "checkout.session.completed for unknown brief_payment");
+    return;
+  }
+  if (payment.status === "captured" || payment.status === "released") return; // idempotent
+
+  const intentId =
+    typeof session.payment_intent === "string" ? session.payment_intent : (session.payment_intent?.id ?? null);
+
+  await db
+    .update(briefPayments)
+    .set({
+      status: "captured",
+      stripePaymentIntentId: intentId ?? payment.stripePaymentIntentId,
+      capturedAt: new Date(),
+      updatedAt: new Date()
+    })
+    .where(eq(briefPayments.id, payment.id));
+
+  await createNotification(db, {
+    userId: await resolveCreatorUserId(db, payment.creatorId),
+    type: "brief_payment.captured",
+    actorId: null,
+    entityType: "brief_payment",
+    entityId: payment.id,
+    email: {
+      subject: "Brief funded — start delivering",
+      text: `The brand paid for your brief. $${(payment.creatorPayoutCents / 100).toFixed(2)} will release to your Stripe account after delivery is confirmed.`
+    }
+  });
+
+  log.info({ paymentId: payment.id, sessionId: session.id }, "brief_payment captured via checkout");
+}
+
+/**
+ * @deprecated Use createBriefCheckoutSession for the hosted-page flow.
+ * Kept for the Stripe Elements path in case we wire it later.
  */
 export async function confirmBriefPayment(db: Database, user: User, _member: BrandMember, paymentId: string) {
   assertStripeConfigured();
