@@ -22,11 +22,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   }
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
-      <header className="border-border bg-background/88 sticky top-0 z-40 border-b backdrop-blur-xl">
+    <main className="min-h-screen bg-white font-sans text-[#37352f]">
+      <header className="sticky top-0 z-40 border-b border-[#e9e9e7] bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1120px] items-center gap-4 px-5 py-4">
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-bold transition"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-3 text-sm font-semibold text-[#787774] transition hover:border-[#dce3ea] hover:text-[#37352f]"
             href="/jobs"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -34,13 +34,13 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           </Link>
           <div className="ml-auto flex items-center gap-3">
             <Link
-              className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary hidden h-10 items-center justify-center rounded-xl border px-4 text-sm font-bold transition sm:inline-flex"
+              className="hidden h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-4 text-sm font-semibold text-[#787774] transition hover:border-[#dce3ea] hover:text-[#37352f] sm:inline-flex"
               href={`/jobs/${job.id}/applicants`}
             >
               Review applicants
             </Link>
             <Link
-              className="bg-primary text-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-black transition"
+              className="inline-flex h-10 items-center justify-center rounded-full bg-[#37352f] px-4 text-sm font-semibold text-white transition hover:bg-[#1d222b]"
               href="#apply"
             >
               <Send className="mr-2 h-4 w-4" />
@@ -51,22 +51,26 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
       </header>
 
       <section className="relative z-10 mx-auto grid max-w-[1120px] gap-6 px-5 py-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <article className="border-border bg-card rounded-xl border p-6">
+        <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
               <BriefcaseBusiness className="mr-2 h-3.5 w-3.5" />
               Open brief
             </Badge>
-            <Badge className="bg-muted/40 text-muted-foreground hover:bg-muted/40 rounded-full">{job.industry}</Badge>
+            <Badge className="rounded-full border border-[#e9e9e7] bg-white text-[#787774] hover:bg-white">
+              {job.industry}
+            </Badge>
             {job.remote && (
-              <Badge className="rounded-full bg-emerald-400/12 text-emerald-200 hover:bg-emerald-400/12">Remote</Badge>
+              <Badge className="rounded-full border border-[#bfe8d0] bg-[#e8f8ef] text-[#147a3b] hover:bg-[#e8f8ef]">
+                Remote
+              </Badge>
             )}
           </div>
 
-          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-black tracking-[-0.06em]">
+          <h1 className="mt-5 max-w-4xl text-[clamp(34px,6vw,68px)] leading-[0.96] font-semibold tracking-[-0.06em]">
             {job.title}
           </h1>
-          <p className="text-muted-foreground mt-4 text-base font-bold">
+          <p className="mt-4 text-base font-semibold text-[#787774]">
             {job.brandName} · {job.remote ? "Remote" : (job.location ?? job.hqLocation)}
           </p>
 
@@ -81,29 +85,29 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             <Metric icon={CheckCircle2} label="Fit score" value={`${job.fitScore}%`} />
           </div>
 
-          <div className="border-border mt-8 border-t pt-7">
-            <h2 className="text-2xl font-black tracking-[-0.04em]">Brief</h2>
-            <p className="text-muted-foreground mt-3 max-w-3xl text-sm leading-7">{job.description}</p>
+          <div className="mt-8 border-t border-[#e9e9e7] pt-7">
+            <h2 className="text-2xl font-semibold tracking-[-0.04em]">Brief</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#787774]">{job.description}</p>
           </div>
 
-          <div className="border-border mt-8 grid gap-6 border-t pt-7 md:grid-cols-2">
+          <div className="mt-8 grid gap-6 border-t border-[#e9e9e7] pt-7 md:grid-cols-2">
             <section>
-              <h2 className="text-xl font-black tracking-[-0.035em]">Deliverables</h2>
+              <h2 className="text-xl font-semibold tracking-[-0.035em]">Deliverables</h2>
               <div className="mt-4 grid gap-3">
                 {job.deliverables.map((deliverable) => (
                   <div
-                    className="border-border bg-muted/30 flex items-center gap-3 rounded-xl border p-3"
+                    className="flex items-center gap-3 rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-3"
                     key={deliverable}
                   >
-                    <CheckCircle2 className="text-primary h-4 w-4" />
-                    <span className="text-foreground/70 text-sm font-bold">{deliverable}</span>
+                    <CheckCircle2 className="h-4 w-4 text-[#D86B3D]" />
+                    <span className="text-sm font-semibold text-[#4b5563]">{deliverable}</span>
                   </div>
                 ))}
               </div>
             </section>
 
             <section>
-              <h2 className="text-xl font-black tracking-[-0.035em]">Creator requirements</h2>
+              <h2 className="text-xl font-semibold tracking-[-0.035em]">Creator requirements</h2>
               <div className="mt-4 grid gap-3">
                 <Requirement label="Minimum reach" value={job.minFollowers ? formatNumber(job.minFollowers) : "Open"} />
                 <Requirement
@@ -117,22 +121,22 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         </article>
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <article className="border-primary/25 bg-primary/10 rounded-2xl border p-5" id="apply">
-            <p className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">Creator action</p>
-            <h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">Apply with a tight pitch.</h2>
-            <p className="text-muted-foreground mt-3 text-sm leading-6">
+          <article className="rounded-[26px] border border-[#f3d5c4] bg-[#faf0ea] p-5" id="apply">
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Creator action</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">Apply with a tight pitch.</h2>
+            <p className="mt-3 text-sm leading-6 text-[#787774]">
               Submit a short, specific pitch. Terrace creates the application and opens a job conversation with the
               brand recruiter.
             </p>
             <JobApplyForm jobId={job.id} />
           </article>
 
-          <article className="border-border bg-card rounded-xl border p-5">
-            <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Niches</p>
+          <article className="rounded-[26px] border border-[#e9e9e7] bg-white p-5 shadow-[0_14px_40px_rgba(17,24,39,0.035)]">
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Niches</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {job.niches.map((niche) => (
                 <span
-                  className="bg-muted/40 text-muted-foreground rounded-full px-3 py-1.5 text-[11px] font-black"
+                  className="rounded-full border border-[#e9e9e7] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#787774]"
                   key={niche}
                 >
                   {niche}
@@ -141,9 +145,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             </div>
           </article>
 
-          <article className="border-border bg-card rounded-xl border p-5">
-            <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">Creator workspace</p>
-            <p className="text-muted-foreground mt-3 text-sm leading-6">
+          <article className="rounded-[26px] border border-[#e9e9e7] bg-white p-5 shadow-[0_14px_40px_rgba(17,24,39,0.035)]">
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Creator workspace</p>
+            <p className="mt-3 text-sm leading-6 text-[#787774]">
               Save this brief to compare it with other opportunities before pitching.
             </p>
             <div className="mt-5">
@@ -168,19 +172,19 @@ async function getJob(id: string) {
 
 function Metric({ icon: Icon, label, value }: { icon: typeof DollarSign; label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-4">
-      <Icon className="text-primary h-4 w-4" />
-      <p className="text-muted-foreground mt-3 text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
+    <div className="rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-4">
+      <Icon className="h-4 w-4 text-[#D86B3D]" />
+      <p className="mt-3 text-[10px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#37352f]">{value}</p>
     </div>
   );
 }
 
 function Requirement({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-3">
-      <p className="text-muted-foreground text-[10px] font-black tracking-[0.14em] uppercase">{label}</p>
-      <p className="text-foreground mt-1 text-sm font-black">{value}</p>
+    <div className="rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-3">
+      <p className="text-[10px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#37352f]">{value}</p>
     </div>
   );
 }

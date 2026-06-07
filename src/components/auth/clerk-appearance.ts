@@ -1,58 +1,56 @@
-import { dark } from "@clerk/themes";
+// Shared Clerk component theming. Notion-style light surface with the brand
+// orange accent (#D86B3D). Used for the global UserButton (layout/app-shell)
+// and the auth forms (login/signup) via clerkLightAppearance.
 
-// Shared Clerk component theming. Matches the Terrace dark surface and
-// the brand orange accent used across the app (#D85A30).
+const notionVariables = {
+  colorPrimary: "#D86B3D",
+  colorBackground: "#ffffff",
+  colorInputBackground: "#ffffff",
+  colorInputText: "#37352f",
+  colorText: "#37352f",
+  colorTextSecondary: "#787774",
+  borderRadius: "0.5rem",
+  fontFamily: "inherit"
+};
+
 export const clerkAppearance = {
-  baseTheme: dark,
-  variables: {
-    colorPrimary: "#D85A30",
-    colorBackground: "#151515",
-    colorInputBackground: "#1f1f1f",
-    colorInputText: "#ffffff",
-    colorText: "#ffffff",
-    colorTextSecondary: "#9f9f9f",
-    borderRadius: "0.75rem",
-    fontFamily: "inherit"
-  },
+  variables: notionVariables,
   elements: {
     rootBox: "w-full",
     card: "bg-transparent shadow-none",
     headerTitle: "hidden",
     headerSubtitle: "hidden",
-    socialButtonsBlockButton: "border-[#3a3a3a] bg-[#282828] hover:bg-[#303030]",
-    formButtonPrimary: "bg-[#D85A30] hover:bg-[#c54f29] shadow-[0_18px_40px_rgba(216,90,48,0.24)] text-white",
-    footerActionLink: "text-white hover:underline",
-    formFieldInput: "border-[#303030] bg-[#1f1f1f] focus:border-[#D85A30]/60",
-    dividerLine: "bg-[#424242]",
-    dividerText: "text-[#8b8b8b]"
+    socialButtonsBlockButton: "rounded-md border-[#e9e9e7] bg-white text-[#37352f] hover:bg-[#f7f7f5]",
+    formButtonPrimary: "rounded-md bg-[#37352f] text-white hover:bg-[#262420]",
+    footerActionLink: "text-[#D86B3D] hover:text-[#bf5a30] hover:underline",
+    formFieldInput: "rounded-md border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f] focus:border-[#8CC9E8]",
+    dividerLine: "bg-[#e9e9e7]",
+    dividerText: "text-[#787774]"
   }
 };
 
 export const clerkLightAppearance = {
-  variables: {
-    colorPrimary: "#D86B3D",
-    colorBackground: "#ffffff",
-    colorInputBackground: "#ffffff",
-    colorInputText: "#111318",
-    colorText: "#111318",
-    colorTextSecondary: "#6b7280",
-    borderRadius: "1rem",
-    fontFamily: "inherit"
-  },
+  variables: notionVariables,
   elements: {
     rootBox: "w-full",
     card: "w-full border-0 bg-transparent shadow-none",
     headerTitle: "hidden",
     headerSubtitle: "hidden",
-    socialButtonsBlockButton: "h-12 rounded-xl border-[#e6e8ed] bg-white text-[#111318] shadow-sm hover:bg-[#f8fafc]",
-    formButtonPrimary:
-      "h-12 rounded-xl bg-[#111318] text-white shadow-[0_16px_36px_rgba(17,19,24,0.16)] hover:bg-[#242833]",
-    footerActionLink: "text-[#D86B3D] hover:text-[#b9542e] hover:underline",
-    formFieldLabel: "text-[#111318] font-semibold",
+    socialButtonsBlockButton: "h-12 rounded-md border-[#e9e9e7] bg-white text-[#37352f] hover:bg-[#f7f7f5]",
+    formButtonPrimary: "h-12 rounded-md bg-[#37352f] text-white hover:bg-[#262420]",
+    footerActionLink: "text-[#D86B3D] hover:text-[#bf5a30] hover:underline",
+    formFieldLabel: "text-[#37352f] font-semibold",
     formFieldInput:
-      "h-12 rounded-xl border-[#e6e8ed] bg-[#fbfbfb] text-[#111318] focus:border-[#8CC9E8] focus:ring-[#8CC9E8]/25",
-    dividerLine: "bg-[#e8ebef]",
-    dividerText: "text-[#8a93a3]",
+      "h-12 rounded-md border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f] focus:border-[#8CC9E8] focus:ring-[#8CC9E8]/25",
+    otpCodeFieldInputs: "gap-2 justify-center",
+    otpCodeFieldInput:
+      "h-14 w-12 rounded-md border border-[#e9e9e7] bg-white text-center text-xl font-semibold text-[#37352f] focus:border-[#D86B3D] focus:ring-2 focus:ring-[#D86B3D]/25 focus:outline-none",
+    formResendCodeLink: "text-[#D86B3D] hover:text-[#bf5a30] font-semibold",
+    identityPreview: "rounded-md border border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f]",
+    identityPreviewText: "text-[#37352f]",
+    identityPreviewEditButton: "text-[#D86B3D] hover:text-[#bf5a30]",
+    dividerLine: "bg-[#e9e9e7]",
+    dividerText: "text-[#787774]",
     footer: "hidden"
   }
 };

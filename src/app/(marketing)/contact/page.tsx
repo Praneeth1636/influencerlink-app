@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
-import { Scales } from "@/components/ui/scales";
-import { LogoSparkles } from "@/components/ui/sparkles";
 
 export default function ContactPage() {
   const [status, setStatus] = useState("");
@@ -18,116 +15,120 @@ export default function ContactPage() {
     event.preventDefault();
     setStatus("");
     setIsSubmitting(true);
-    // TODO: wire to tRPC contact mutation in Phase 4.2.
     setIsSubmitting(false);
     setStatus("Message saved. Our team will reach out.");
     event.currentTarget.reset();
   }
 
   return (
-    <main className="min-h-screen bg-[#171717] p-2 text-white">
-      <section className="min-h-[calc(100vh-16px)] rounded-2xl bg-[#060606] px-6 py-12 md:px-16 lg:px-28">
-        <div className="mx-auto grid min-h-[calc(100vh-112px)] max-w-[1580px] items-center gap-16 lg:grid-cols-[0.95fr_1.05fr]">
-          <section className="grid gap-10">
-            <Link className="logoMark authLogo" href="/login" aria-label="Terrace">
-              <span />
-              <span />
-              <span />
-            </Link>
-            <LogoSparkles className="-mt-8 h-14" />
+    <main className="min-h-screen bg-white font-sans text-[#37352f]">
+      <section className="mx-auto grid max-w-[1440px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:py-24">
+        <div className="grid content-start gap-8">
+          <Link className="logoMark authLogo bg-[#37352f]" href="/" aria-label="Terrace">
+            <span />
+            <span />
+            <span />
+          </Link>
 
-            <div className="grid gap-7">
-              <div className="flex h-[76px] w-[76px] items-center justify-center rounded-lg bg-[#242424] shadow-[0_0_0_6px_rgba(255,255,255,0.03)]">
-                <Mail className="h-8 w-8 text-[#2d73ff]" />
-              </div>
-              <h1 className="text-[52px] font-bold tracking-[-0.04em] md:text-[68px]">Contact us</h1>
-              <p className="max-w-[690px] text-[22px] leading-[1.45] text-[#a8a8a8] md:text-[25px]">
-                We are always looking for ways to improve our creator marketplace. Contact us and let us know how we can
-                help you.
-              </p>
-            </div>
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Contact</p>
+            <h1 className="mt-4 max-w-xl text-[clamp(44px,8vw,92px)] leading-[0.92] font-semibold tracking-[-0.08em]">
+              Tell us what you are building.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-[#787774]">
+              Questions, partnerships, early brand access, creator feedback, or investor notes. We read everything.
+            </p>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-5 text-lg text-[#a8a8a8] md:text-xl">
-              <span>contact@influencerlink.ai</span>
-              <span>•</span>
-              <span>+1 (800) 123 LINK</span>
-              <span>•</span>
-              <span>support@influencerlink.ai</span>
-            </div>
-
-            <div className="contactMap" aria-hidden="true">
-              <div className="mapPulse" />
-              <div className="mapTag">We are here</div>
-            </div>
-          </section>
-
-          <section className="relative overflow-hidden rounded-[30px] bg-[linear-gradient(110deg,rgba(28,28,28,0.98),rgba(8,8,8,0.98))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.38)] md:p-14">
-            <DottedGlowBackground className="opacity-20" gap={12} radius={1.1} />
-            <Scales orientation="vertical" className="opacity-20" />
-            <div className="contactGrid" aria-hidden="true" />
-            <form className="relative z-[1] grid gap-9" onSubmit={submitContact}>
-              <div className="grid gap-3">
-                <Label className="text-xl font-semibold text-[#e4e4e4]" htmlFor="contact-name">
-                  Full name
-                </Label>
-                <Input
-                  className="h-[56px] rounded-lg border-[#2f2f2f] bg-[#292929] px-5 text-xl text-white placeholder:text-[#7f7f7f]"
-                  id="contact-name"
-                  name="fullName"
-                  placeholder="Sara Rivera"
-                />
-              </div>
-
-              <div className="grid gap-3">
-                <Label className="text-xl font-semibold text-[#e4e4e4]" htmlFor="contact-email">
-                  Email Address
-                </Label>
-                <Input
-                  className="h-[56px] rounded-lg border-[#2f2f2f] bg-[#292929] px-5 text-xl text-white placeholder:text-[#7f7f7f]"
-                  id="contact-email"
-                  name="email"
-                  placeholder="support@brand.com"
-                  type="email"
-                />
-              </div>
-
-              <div className="grid gap-3">
-                <Label className="text-xl font-semibold text-[#e4e4e4]" htmlFor="contact-company">
-                  Company
-                </Label>
-                <Input
-                  className="h-[56px] rounded-lg border-[#2f2f2f] bg-[#292929] px-5 text-xl text-white placeholder:text-[#7f7f7f]"
-                  id="contact-company"
-                  name="company"
-                  placeholder="Acme Beauty LLC"
-                />
-              </div>
-
-              <div className="grid gap-3">
-                <Label className="text-xl font-semibold text-[#e4e4e4]" htmlFor="contact-message">
-                  Message
-                </Label>
-                <textarea
-                  className="min-h-[156px] rounded-lg border border-[#2f2f2f] bg-[#292929] px-5 py-5 text-xl text-white placeholder:text-[#7f7f7f] focus:ring-2 focus:ring-[#2d73ff] focus:outline-none"
-                  id="contact-message"
-                  name="message"
-                  placeholder="Type your message here"
-                />
-              </div>
-
-              {status && <p className="rounded-lg bg-white/5 px-4 py-3 text-base text-[#d6d6d6]">{status}</p>}
-
-              <Button
-                className="h-[50px] w-fit rounded-lg bg-[#2b2b2b] px-6 text-xl font-semibold text-white hover:bg-[#343434]"
-                disabled={isSubmitting}
-                type="submit"
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
-            </form>
-          </section>
+          <div className="grid gap-3">
+            <ContactLine icon={Mail} label="contact@terrace.so" />
+            <ContactLine icon={MessageCircle} label="support@terrace.so" />
+            <ContactLine icon={MapPin} label="Built for global creator teams" />
+          </div>
         </div>
+
+        <section className="rounded-[34px] border border-[#e9e9e7] bg-white p-4 shadow-[0_28px_80px_rgba(17,24,39,0.07)]">
+          <form
+            className="grid gap-5 rounded-[28px] border border-[#e9e9e7] bg-[#fbfbfa] p-5 sm:p-7"
+            onSubmit={submitContact}
+          >
+            <div className="grid gap-2">
+              <Label className="text-sm font-semibold text-[#263142]" htmlFor="contact-name">
+                Full name
+              </Label>
+              <Input
+                className="h-12 rounded-2xl border-[#d8dee8] bg-white px-5 text-base text-[#37352f] placeholder:text-[#8a94a5] focus-visible:ring-[#8CC9E8]/30"
+                id="contact-name"
+                name="fullName"
+                placeholder="Sara Rivera"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-sm font-semibold text-[#263142]" htmlFor="contact-email">
+                Email address
+              </Label>
+              <Input
+                className="h-12 rounded-2xl border-[#d8dee8] bg-white px-5 text-base text-[#37352f] placeholder:text-[#8a94a5] focus-visible:ring-[#8CC9E8]/30"
+                id="contact-email"
+                name="email"
+                placeholder="you@brand.com"
+                type="email"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-sm font-semibold text-[#263142]" htmlFor="contact-company">
+                Company
+              </Label>
+              <Input
+                className="h-12 rounded-2xl border-[#d8dee8] bg-white px-5 text-base text-[#37352f] placeholder:text-[#8a94a5] focus-visible:ring-[#8CC9E8]/30"
+                id="contact-company"
+                name="company"
+                placeholder="Aera Studio"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-sm font-semibold text-[#263142]" htmlFor="contact-message">
+                Message
+              </Label>
+              <textarea
+                className="min-h-[170px] rounded-2xl border border-[#d8dee8] bg-white px-5 py-4 text-base text-[#37352f] placeholder:text-[#8a94a5] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
+                id="contact-message"
+                name="message"
+                placeholder="Tell us how we can help."
+              />
+            </div>
+
+            {status && (
+              <p className="rounded-2xl border border-[#d7eddc] bg-[#effaf3] px-4 py-3 text-sm font-medium text-[#287944]">
+                {status}
+              </p>
+            )}
+
+            <Button
+              className="h-12 w-fit rounded-full bg-[#37352f] px-6 text-sm font-semibold text-white hover:bg-[#1d222b]"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        </section>
       </section>
     </main>
+  );
+}
+
+function ContactLine({ icon: Icon, label }: { icon: typeof Mail; label: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-[22px] border border-[#e9e9e7] bg-white px-4 py-3 shadow-sm">
+      <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#edf8ff] text-[#2f83b7]">
+        <Icon className="h-4 w-4" />
+      </span>
+      <span className="text-sm font-semibold text-[#4b5563]">{label}</span>
+    </div>
   );
 }

@@ -1,100 +1,126 @@
-// Public pricing page with FAQ accordion. Lives at /pricing under the
-// marketing layout. Server component — pure content, no client hooks.
-
-import { PricingCard } from "@/components/domain/pricing-card";
+import Link from "next/link";
+import { Check, Sparkles } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const metadata = {
-  title: "Pricing — Terrace",
-  description: "Simple, transparent pricing for creators and brands."
+  title: "Pricing - Terrace",
+  description: "Simple pricing for creators and brands."
 };
 
-const FAQS = [
+const plans = [
   {
-    question: "Can I switch plans later?",
-    answer:
-      "Yes, you can upgrade or downgrade your plan at any time. Upgrades are prorated for the remainder of the billing cycle; downgrades apply on your next billing cycle."
+    name: "Creator Free",
+    price: "$0",
+    desc: "Profile, posting, replies, and a small monthly application limit.",
+    features: ["Public creator profile", "Post to the feed", "Reply to brand DMs", "5 job applications/month"]
   },
   {
-    question: "Are there any hidden fees?",
-    answer:
-      "No. The price you see is the price you pay. For brands on the Business plan we take a small platform fee on creator payouts to cover payment processing — disclosed up-front."
+    name: "Creator Pro",
+    price: "$19",
+    desc: "For creators who want more visibility, analytics, and deal flow.",
+    features: ["Unlimited applications", "Who viewed your profile", "Advanced analytics", "Featured search boost"],
+    featured: true
   },
   {
-    question: "Do you offer refunds?",
-    answer:
-      "We offer a 14-day money-back guarantee on all paid plans. If you're not satisfied, contact our support team within your first 14 days for a full refund."
-  },
-  {
-    question: "What payment methods do you accept?",
-    answer:
-      "All major credit cards (Visa, Mastercard, Amex, Discover) and PayPal. Annual Business plans can pay by wire transfer on request."
+    name: "Brand Growth",
+    price: "$99",
+    desc: "For teams sourcing creators, posting briefs, and managing outreach.",
+    features: ["Full creator search", "100 DMs/month", "10 active briefs", "Saved searches and alerts"]
   }
+];
+
+const faqs = [
+  [
+    "Can creators and brands use the same app?",
+    "Yes. Terrace is one shared network with role-aware tools, not two separate products."
+  ],
+  [
+    "Is payment escrow included?",
+    "Not in the current plan. Subscriptions are the business model; creator payouts can be added later."
+  ],
+  [
+    "Can we change plans later?",
+    "Yes. Stripe Checkout and customer portal support upgrades, downgrades, and cancellation."
+  ],
+  ["Do free brands get search?", "Yes, with limits so they can feel the product before upgrading."]
 ];
 
 export default function PricingPage() {
   return (
-    <div className="flex min-h-[100dvh] flex-col">
-      <section className="bg-muted/20 py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h1 className="mb-6 font-serif text-4xl font-bold tracking-tight md:text-5xl">
-              Simple, transparent pricing
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Choose the plan that best fits your needs. No hidden fees, ever.
-            </p>
-          </div>
+    <main className="min-h-screen bg-white font-sans text-[#37352f]">
+      <section className="mx-auto max-w-[1440px] px-4 py-20 text-center sm:px-6 lg:py-28">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Pricing</p>
+          <h1 className="mt-4 text-[clamp(44px,7vw,86px)] leading-[0.94] font-semibold tracking-[-0.08em]">
+            Simple plans for both sides of the marketplace.
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#787774]">
+            Creators pay for analytics and visibility. Brands pay for search, outreach, briefs, and team workflows.
+          </p>
+        </div>
 
-          <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
-            <PricingCard
-              title="Free"
-              price="$0"
-              description="Perfect for new creators getting started."
-              features={["Basic profile", "Apply to up to 5 campaigns/mo", "Standard support", "Community access"]}
-              ctaText="Get Started"
-            />
-            <PricingCard
-              title="Pro"
-              price="$49"
-              description="For professional creators and growing brands."
-              features={[
-                "Enhanced profile",
-                "Unlimited campaign applications",
-                "Priority support",
-                "Advanced analytics"
-              ]}
-              ctaText="Upgrade to Pro"
-              popular
-            />
-            <PricingCard
-              title="Business"
-              price="$199"
-              description="For agencies and enterprise brands."
-              features={["Dedicated account manager", "Custom contracts", "API access", "White-label reporting"]}
-              ctaText="Contact Sales"
-            />
-          </div>
+        <div className="mt-14 grid gap-5 text-left lg:grid-cols-3">
+          {plans.map((plan) => (
+            <article
+              className={`relative rounded-[30px] border bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.045)] ${
+                plan.featured ? "border-[#D86B3D]" : "border-[#e9e9e7]"
+              }`}
+              key={plan.name}
+            >
+              {plan.featured && (
+                <span className="absolute top-5 right-5 rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-xs font-semibold text-[#D86B3D]">
+                  Recommended
+                </span>
+              )}
+              <h2 className="text-2xl font-semibold tracking-[-0.05em]">{plan.name}</h2>
+              <p className="mt-3 min-h-14 text-sm leading-6 text-[#787774]">{plan.desc}</p>
+              <div className="mt-8 flex items-end gap-1">
+                <span className="text-5xl font-semibold tracking-[-0.07em]">{plan.price}</span>
+                <span className="pb-1 text-sm font-medium text-[#787774]">/month</span>
+              </div>
+              <Link
+                className={`mt-8 inline-flex h-12 w-full items-center justify-center rounded-full text-sm font-semibold ${
+                  plan.featured
+                    ? "bg-[#37352f] text-white hover:bg-[#1d222b]"
+                    : "border border-[#e9e9e7] bg-white text-[#37352f] hover:border-[#dce3ea]"
+                }`}
+                href="/signup"
+              >
+                Start now
+              </Link>
+              <ul className="mt-7 grid gap-3">
+                {plan.features.map((feature) => (
+                  <li className="flex items-start gap-2 text-sm text-[#4b5563]" key={feature}>
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#D86B3D]" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="container mx-auto max-w-3xl px-4">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 font-serif text-3xl font-bold">Frequently Asked Questions</h2>
-            <p className="text-muted-foreground">Everything you need to know about the product and billing.</p>
+      <section className="mx-auto max-w-4xl px-4 pb-24 sm:px-6">
+        <div className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff4ee] text-[#D86B3D]">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <h2 className="text-2xl font-semibold tracking-[-0.045em]">Questions</h2>
           </div>
-
           <Accordion type="single" collapsible className="w-full">
-            {FAQS.map((faq, i) => (
-              <AccordionItem key={faq.question} value={`item-${i}`}>
-                <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
+            {faqs.map(([question, answer], index) => (
+              <AccordionItem className="border-[#e9e9e7]" key={question} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-base font-semibold text-[#37352f]">
+                  {question}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-7 text-[#787774]">{answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

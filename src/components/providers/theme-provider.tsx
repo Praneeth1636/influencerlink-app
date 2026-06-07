@@ -1,9 +1,10 @@
 "use client";
 
 // Thin wrapper around next-themes' provider so the rest of the app imports
-// from a single project-local module. Defaults to dark to match the existing
-// design tokens; flipping the toggle adds .light to <html> which the css
-// vars in globals.css respond to.
+// from a single project-local module. The product surface is light-only
+// (Notion theme), so we force `light` — this applies the `.light` token block
+// in globals.css everywhere, ensuring token-based components never fall back
+// to the legacy dark `:root` values.
 
 import type { FC, ReactNode } from "react";
 import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from "next-themes";
@@ -15,7 +16,7 @@ const Provider = NextThemesProvider as unknown as FC<ThemeProviderProps & { chil
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps & { children: ReactNode }) {
   return (
-    <Provider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange {...props}>
+    <Provider attribute="class" defaultTheme="light" forcedTheme="light" disableTransitionOnChange {...props}>
       {children}
     </Provider>
   );

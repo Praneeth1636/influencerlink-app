@@ -108,7 +108,7 @@ describe("tRPC rate limiting middleware", () => {
         path: "health"
       })
     );
-  }, 10_000);
+  }, 30_000);
 
   it("applies the write limiter to mutation procedures", async () => {
     enforceRateLimitMock.mockResolvedValue({

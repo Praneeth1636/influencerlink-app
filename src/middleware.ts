@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { neon } from "@neondatabase/serverless";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/creator(.*)",
@@ -53,9 +53,11 @@ async function isSuspendedInDb(clerkId: string): Promise<boolean> {
   return Boolean(rows[0]?.suspended_at);
 }
 
-export default clerkMiddleware(async (auth, req) => {
+// CI/e2e starts the production server without real Clerk credentials. In that
+// mode, bypass Clerk at the edge entirely; app routes under test use local-demo
+// fallbacks before calling `auth()`.
+const terraceClerkMiddleware = clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) return;
-
   if (shouldBypassAuthForLocalDemo(req)) return;
 
   const { userId, sessionClaims, redirectToSignIn } = await auth();
@@ -63,28 +65,30 @@ export default clerkMiddleware(async (auth, req) => {
     return redirectToSignIn();
   }
 
-  // Suspension check fires before everything else — suspended users see a
-  // hard 403, not the onboarding gate or app surface. We don't query the DB
-  // on every request — only when the session is stale enough to matter
-  // (the DB read for onboarded already happens, so suspension piggy-backs
-  // on the same trip cost).
+  // Suspension check fires before the onboarding gate — suspended users
+  // see a hard 403, not a redirect.
   if (await isSuspendedInDb(userId)) {
     return new NextResponse("Account suspended. Contact support.", { status: 403 });
   }
 
-  // Onboarding gate. The fast path is the JWT claim — it requires the Clerk
-  // session token to surface public_metadata via the
-  // {"metadata":"{{user.public_metadata}}"} template (see docs/setup.md).
-  // If the claim is missing (template not configured, or session JWT is stale
-  // after a metadata write), we fall back to a direct DB check so users with
-  // a finished onboarding row don't get bounced into a redirect loop.
+  // Onboarding gate. Fast path = the JWT claim (requires the Clerk
+  // session template to surface public_metadata as `metadata`). Falls
+  // back to a direct DB check so users with a finished onboarding row
+  // don't loop when the template is missing.
   if (sessionClaims?.metadata?.onboarded === true) return;
   if (isOnboardingRoute(req)) return;
-
   if (await isOnboardedInDb(userId)) return;
 
   return NextResponse.redirect(new URL("/onboarding", req.url));
 });
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (process.env.E2E_BYPASS_AUTH === "true") {
+    return NextResponse.next();
+  }
+
+  return terraceClerkMiddleware(req, event);
+}
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"]

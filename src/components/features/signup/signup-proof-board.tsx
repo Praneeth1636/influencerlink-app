@@ -25,13 +25,13 @@ export function SignupProofBoard() {
   }, [nextMessage]);
 
   return (
-    <section className="creatorlink-animate-in creatorlink-delay-2 relative z-10 mx-auto grid w-full max-w-6xl gap-6 rounded-[30px] border border-[#e8ebef] bg-white/82 p-5 shadow-[0_24px_64px_rgba(17,24,39,0.07)] backdrop-blur-xl lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:p-7">
+    <section className="creatorlink-animate-in creatorlink-delay-2 relative z-10 mx-auto grid w-full max-w-6xl gap-6 rounded-[30px] border border-[#e9e9e7] bg-white/82 p-5 shadow-[0_24px_64px_rgba(17,24,39,0.07)] backdrop-blur-xl lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:p-7">
       <div className="px-1 lg:px-2">
         <p className="text-sm font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Live proof board</p>
         <h2 className="mt-3 max-w-xl text-[clamp(34px,5vw,62px)] leading-[0.98] font-semibold tracking-[-0.065em]">
           A profile should move like the creator economy.
         </h2>
-        <p className="mt-5 max-w-lg text-base leading-7 text-[#687386]">
+        <p className="mt-5 max-w-lg text-base leading-7 text-[#787774]">
           This is where creator wins, brand searches, and AI matches can feel alive without turning the page loud.
         </p>
       </div>

@@ -33,8 +33,8 @@ export function ApplicantStatusActions({
           <Button
             className={
               option.value === status
-                ? "bg-primary text-foreground hover:bg-primary/90 h-9 rounded-xl px-3 text-xs font-black"
-                : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/40 hover:text-foreground h-9 rounded-xl px-3 text-xs font-black"
+                ? "h-9 rounded-full bg-[#37352f] px-3 text-xs font-semibold text-white hover:bg-[#1d222b]"
+                : "h-9 rounded-full border border-[#e9e9e7] bg-white px-3 text-xs font-semibold text-[#787774] hover:border-[#dce3ea] hover:text-[#37352f]"
             }
             disabled={mutation.isPending}
             key={option.value}
@@ -62,7 +62,7 @@ export function ApplicantStatusActions({
         ))}
       </div>
 
-      {message && <p className="text-foreground/48 text-xs font-bold">{message}</p>}
+      {message && <p className="text-xs font-semibold text-[#787774]">{message}</p>}
     </div>
   );
 }

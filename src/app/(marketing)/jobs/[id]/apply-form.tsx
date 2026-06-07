@@ -7,6 +7,7 @@ import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { isLocalDemoHost } from "@/lib/auth/local-demo";
 import { toJobApplicationInput } from "@/lib/jobs/forms";
 import { trpc } from "@/lib/trpc/client";
 
@@ -16,16 +17,17 @@ type JobApplyFormProps = {
 
 export function JobApplyForm({ jobId }: JobApplyFormProps) {
   const { isLoaded, isSignedIn } = useUser();
+  const allowLocalDemo = isLocalDemoHost();
   const [pitch, setPitch] = useState("");
   const [proposedRateDollars, setProposedRateDollars] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [threadId, setThreadId] = useState<string | null>(null);
   const mutation = trpc.job.applyToJob.useMutation();
 
-  if (isLoaded && !isSignedIn) {
+  if (isLoaded && !isSignedIn && !allowLocalDemo) {
     return (
       <Link
-        className="hover:bg-primary/10 mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-white text-sm font-black text-black transition"
+        className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-[#37352f] text-sm font-semibold text-white transition hover:bg-[#1d222b]"
         href="/login"
       >
         Sign in to apply
@@ -58,11 +60,11 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       }}
     >
       <div className="grid gap-2">
-        <Label className="text-foreground/70" htmlFor="job-application-pitch">
+        <Label className="text-[#4b5563]" htmlFor="job-application-pitch">
           Pitch
         </Label>
         <textarea
-          className="border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:border-primary/60 min-h-28 rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none"
+          className="min-h-28 rounded-2xl border border-[#d8dee8] bg-white px-3 py-3 text-sm leading-6 text-[#37352f] transition outline-none placeholder:text-[#8a94a5] focus:border-[#8CC9E8]"
           id="job-application-pitch"
           maxLength={300}
           minLength={20}
@@ -74,11 +76,11 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-foreground/70" htmlFor="job-application-rate">
+        <Label className="text-[#4b5563]" htmlFor="job-application-rate">
           Proposed rate
         </Label>
         <Input
-          className="border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus-visible:ring-primary rounded-xl"
+          className="rounded-2xl border-[#d8dee8] bg-white text-[#37352f] placeholder:text-[#8a94a5] focus-visible:ring-[#8CC9E8]/30"
           id="job-application-rate"
           min="0"
           onChange={(event) => setProposedRateDollars(event.target.value)}
@@ -89,16 +91,16 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
       </div>
 
       <Button
-        className="hover:bg-primary/10 h-11 rounded-xl bg-white font-black text-black"
+        className="h-11 rounded-full bg-[#37352f] font-semibold text-white hover:bg-[#1d222b]"
         disabled={mutation.isPending}
       >
         <Send className="h-4 w-4" />
         {mutation.isPending ? "Submitting..." : "Apply to brief"}
       </Button>
 
-      {status && <p className="text-muted-foreground text-sm leading-6">{status}</p>}
+      {status && <p className="text-sm leading-6 text-[#787774]">{status}</p>}
       {threadId && (
-        <Link className="text-primary hover:text-foreground text-sm font-black" href={`/messages/${threadId}`}>
+        <Link className="text-sm font-semibold text-[#D86B3D] hover:text-[#37352f]" href={`/messages/${threadId}`}>
           Open job conversation
         </Link>
       )}

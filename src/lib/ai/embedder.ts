@@ -81,28 +81,79 @@ function stringHash(value: string, seed: number): number {
 }
 
 // ---------------------------------------------------------------------------
-// Remote provider stubs
+// Remote providers
 // ---------------------------------------------------------------------------
-// Real providers (Voyage, OpenAI) plug in here. They share the LocalDeterministic
-// fallback when their API key is missing — we deliberately don't throw, because
-// "no API key" is the expected dev/test state.
+// These use direct HTTP calls instead of SDK clients so the embedding layer
+// stays small and can soft-fail back to local mode when no key is configured.
 
 class VoyageEmbedder implements Embedder {
   readonly model = "voyage-3";
-  // Stub. Wire fetch -> https://api.voyageai.com/v1/embeddings when key arrives.
+
   async embed(input: EmbedRequest): Promise<number[]> {
-    void input;
-    throw new Error("VoyageEmbedder not implemented yet — set USE_LOCAL_EMBEDDER=true or remove VOYAGE_API_KEY");
+    const apiKey = process.env.VOYAGE_API_KEY;
+    if (!apiKey) {
+      throw new Error("VOYAGE_API_KEY is not configured");
+    }
+
+    const response = await fetch("https://api.voyageai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        input: [input.text],
+        model: this.model,
+        output_dimension: EMBEDDING_DIMENSIONS
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Voyage embeddings request failed with ${response.status}`);
+    }
+
+    const payload = (await response.json()) as { data?: Array<{ embedding?: number[] }> };
+    return normaliseRemoteVector(payload.data?.[0]?.embedding, "Voyage");
   }
 }
 
 class OpenAIEmbedder implements Embedder {
   readonly model = "openai-text-embedding-3-small";
-  // Stub. Wire fetch -> https://api.openai.com/v1/embeddings when key arrives.
+
   async embed(input: EmbedRequest): Promise<number[]> {
-    void input;
-    throw new Error("OpenAIEmbedder not implemented yet — set USE_LOCAL_EMBEDDER=true or remove OPENAI_API_KEY");
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OPENAI_API_KEY is not configured");
+    }
+
+    const response = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        input: input.text,
+        model: this.model,
+        dimensions: EMBEDDING_DIMENSIONS
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI embeddings request failed with ${response.status}`);
+    }
+
+    const payload = (await response.json()) as { data?: Array<{ embedding?: number[] }> };
+    return normaliseRemoteVector(payload.data?.[0]?.embedding, "OpenAI");
   }
+}
+
+function normaliseRemoteVector(vector: number[] | undefined, provider: string): number[] {
+  if (!vector || vector.length !== EMBEDDING_DIMENSIONS) {
+    throw new Error(`${provider} embeddings response did not include a ${EMBEDDING_DIMENSIONS}-dimension vector`);
+  }
+
+  return vector;
 }
 
 // ---------------------------------------------------------------------------

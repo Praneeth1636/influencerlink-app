@@ -1,4 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Env validation runs in src/instrumentation.ts (Next boot hook) — that
 // path can resolve TS, this config can't. Pass SKIP_ENV_VALIDATION=true to
@@ -12,7 +14,10 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }
 ];
 
+const projectRoot = dirname(fileURLToPath(import.meta.url));
+
 const nextConfig = {
+  outputFileTracingRoot: projectRoot,
   eslint: {
     // ESLint runs in pre-commit (lint-staged) and CI (pnpm lint), not during the build.
     // next build's internal runner can't resolve @next/eslint-plugin-next through pnpm's
@@ -37,6 +42,10 @@ export default withSentryConfig(nextConfig, {
   telemetry: false,
   widenClientFileUpload: true,
   webpack: {
+    // Sentry's App Router component auto-wrapping can emit SSR module keys
+    // that Next 15.5 does not register for client-heavy app pages. Keep the
+    // SDK installed, but avoid wrapping page/layout modules at build time.
+    autoInstrumentAppDirectory: false,
     treeshake: {
       removeDebugLogging: true
     }

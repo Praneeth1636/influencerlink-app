@@ -100,10 +100,10 @@ export function TerraceBentoGrid() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-10 max-w-3xl text-center">
           <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">How Terrace works</p>
-          <h2 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[#111318] md:text-5xl">
+          <h2 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[#37352f] md:text-5xl">
             One network for creators and the brands hiring them.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#687386]">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#787774]">
             Same product, same language, same feed. Creators share proof, brands discover fit, and both sides move into
             messaging when the signal is right.
           </p>
@@ -152,20 +152,20 @@ function BentoCard({ item }: { item: BentoItem }) {
       variants={fadeInUp}
       whileHover={{ y: -4 }}
     >
-      <div className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-[#ececec] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.045)] transition duration-500 hover:border-[#dce3ea] hover:shadow-[0_24px_58px_rgba(17,24,39,0.07)]">
+      <div className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.045)] transition duration-500 hover:border-[#dce3ea] hover:shadow-[0_24px_58px_rgba(17,24,39,0.07)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(216,107,61,0.08),transparent_34%),radial-gradient(circle_at_82%_24%,rgba(140,201,232,0.12),transparent_30%)]" />
         <div className="relative z-10 flex h-full flex-col gap-4">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">{item.eyebrow}</p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-[-0.045em] text-[#111318]">{item.title}</h3>
+              <h3 className="mt-2 text-2xl font-semibold tracking-[-0.045em] text-[#37352f]">{item.title}</h3>
             </div>
-            <div className="rounded-full border border-[#ececec] bg-white p-2 text-[#687386] opacity-0 transition group-hover:opacity-100">
+            <div className="rounded-full border border-[#e9e9e7] bg-white p-2 text-[#787774] opacity-0 transition group-hover:opacity-100">
               <ArrowUpRight className="h-4 w-4" />
             </div>
           </div>
 
-          <p className="text-sm leading-6 text-[#687386]">{item.description}</p>
+          <p className="text-sm leading-6 text-[#787774]">{item.description}</p>
 
           <div className="mt-auto">{renderFeature(item.feature)}</div>
         </div>
@@ -187,7 +187,7 @@ function SpotlightFeature() {
       {proofItems.map((item, index) => (
         <motion.li
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2 rounded-2xl border border-[#ececec] bg-white px-3 py-2 text-sm font-medium text-[#303847]"
+          className="flex items-center gap-2 rounded-2xl border border-[#e9e9e7] bg-white px-3 py-2 text-sm font-medium text-[#303847]"
           initial={{ opacity: 0, x: -8 }}
           key={item}
           transition={{ delay: 0.08 * index }}
@@ -202,7 +202,7 @@ function SpotlightFeature() {
 
 function MatchFeature() {
   return (
-    <div className="rounded-[22px] border border-[#ececec] bg-white p-4">
+    <div className="rounded-[22px] border border-[#e9e9e7] bg-white p-4">
       <div className="flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-[#8a94a5] uppercase">
         <Sparkles className="h-3.5 w-3.5 text-[#D86B3D]" />
         Brand brief
@@ -213,7 +213,7 @@ function MatchFeature() {
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
         {["94% fit", "2.4M reach", "$3.2K avg"].map((item) => (
           <div
-            className="rounded-2xl border border-[#ececec] bg-[#fbfcfd] px-3 py-2 text-xs font-semibold text-[#303847]"
+            className="rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] px-3 py-2 text-xs font-semibold text-[#303847]"
             key={item}
           >
             {item}
@@ -227,7 +227,7 @@ function MatchFeature() {
 function TimelineFeature() {
   return (
     <div className="relative grid gap-3">
-      <div className="absolute top-5 bottom-5 left-[18px] w-px bg-[#ececec]" />
+      <div className="absolute top-5 bottom-5 left-[18px] w-px bg-[#e9e9e7]" />
       {timelineItems.map((item, index) => {
         const Icon = item.icon;
         return (
@@ -238,7 +238,7 @@ function TimelineFeature() {
             key={item.label}
             transition={{ delay: index * 0.08 }}
           >
-            <div className="z-10 grid h-9 w-9 place-items-center rounded-full border border-[#ececec] bg-white text-[#D86B3D]">
+            <div className="z-10 grid h-9 w-9 place-items-center rounded-full border border-[#e9e9e7] bg-white text-[#D86B3D]">
               <Icon className="h-4 w-4" />
             </div>
             <span className="text-sm font-semibold text-[#303847]">{item.label}</span>
@@ -257,7 +257,7 @@ function MetricsFeature() {
         return (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-[#ececec] bg-white p-3"
+            className="rounded-2xl border border-[#e9e9e7] bg-white p-3"
             initial={{ opacity: 0, y: 8 }}
             key={metric.label}
             transition={{ delay: 0.08 * index }}
