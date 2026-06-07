@@ -47,7 +47,8 @@ test("jobs board and job detail pages load open briefs", async ({ page }) => {
   await page.goto("/jobs/00000000-0000-4000-8000-000000008000");
 
   await expect(page.getByRole("heading", { name: /Glossier: Summer skincare launch creator brief/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Sign in to apply" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Apply with a tight pitch." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Apply to brief" })).toBeVisible();
 });
 
 test("brand brief builder renders the real job create form", async ({ page }) => {
@@ -55,7 +56,7 @@ test("brand brief builder renders the real job create form", async ({ page }) =>
 
   await expect(page).toHaveTitle(/Terrace/);
   await expect(page.getByRole("heading", { name: "Create briefs creators can act on." })).toBeVisible();
-  await expect(page.getByText(/No brand session found|Loading your brand teams/)).toBeVisible();
+  await expect(page.getByText(/No brand memberships yet|Loading your brand teams/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Publish brief" })).toBeDisabled();
 });
 

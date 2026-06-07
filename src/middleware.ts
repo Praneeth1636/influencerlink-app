@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { neon } from "@neondatabase/serverless";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/creator(.*)",
@@ -53,13 +53,10 @@ async function isSuspendedInDb(clerkId: string): Promise<boolean> {
   return Boolean(rows[0]?.suspended_at);
 }
 
-// `clerkMiddleware` must run on every request — even local-demo ones —
-// because server components call `auth()` from the Clerk SDK, and that
-// throws if the middleware hasn't set up the request context. The
-// previous wrapper short-circuited Clerk entirely on localhost, which
-// broke any page that does `await auth()` (login, signup, onboarding,
-// dashboard, …). Bypass the gating logic for local-demo paths instead.
-export default clerkMiddleware(async (auth, req) => {
+// CI/e2e starts the production server without real Clerk credentials. In that
+// mode, bypass Clerk at the edge entirely; app routes under test use local-demo
+// fallbacks before calling `auth()`.
+const terraceClerkMiddleware = clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) return;
   if (shouldBypassAuthForLocalDemo(req)) return;
 
@@ -84,6 +81,14 @@ export default clerkMiddleware(async (auth, req) => {
 
   return NextResponse.redirect(new URL("/onboarding", req.url));
 });
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (process.env.E2E_BYPASS_AUTH === "true") {
+    return NextResponse.next();
+  }
+
+  return terraceClerkMiddleware(req, event);
+}
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"]

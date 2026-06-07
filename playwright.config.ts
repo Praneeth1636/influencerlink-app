@@ -11,7 +11,8 @@ export default defineConfig({
     trace: "on-first-retry"
   },
   webServer: {
-    command: "E2E_BYPASS_AUTH=true corepack pnpm start --hostname localhost --port 3100",
+    command:
+      "SKIP_ENV_VALIDATION=true E2E_BYPASS_AUTH=true NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZHVtbXkuY2xlcmsuYWNjb3VudHMuZGV2JA CLERK_SECRET_KEY=sk_test_dummy corepack pnpm start --hostname localhost --port 3100",
     url: "http://localhost:3100/feed",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000
