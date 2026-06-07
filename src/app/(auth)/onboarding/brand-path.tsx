@@ -17,7 +17,7 @@ import { completeBrandOnboarding } from "@/lib/onboarding/actions";
 import { slugifyBrandName } from "@/lib/onboarding/schemas";
 
 const inputClassName =
-  "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
+  "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
 
 export function BrandPath({ onBack }: { onBack: () => void }) {
   const { organization, isLoaded } = useOrganization();
@@ -28,18 +28,18 @@ export function BrandPath({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <div className="grid gap-5 rounded-[28px] border border-[#e8ebef] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7">
+    <div className="grid gap-5 rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7">
       <BackLink onClick={onBack} />
 
       <div>
         <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Brand setup</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Create your hiring workspace.</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#687386]">
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#787774]">
           Brand teams use organizations, so recruiters, admins, and teammates can work from one shared Terrace page.
         </p>
       </div>
 
-      <div className="rounded-[24px] border border-[#e8ebef] bg-[#fbfcfd] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="rounded-[24px] border border-[#e9e9e7] bg-[#fbfbfa] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
         <div className="mb-3 flex items-center gap-3">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#eaf7fd] text-[#3487ad]">
             <Users className="h-4 w-4" />
@@ -56,7 +56,7 @@ export function BrandPath({ onBack }: { onBack: () => void }) {
         />
       </div>
 
-      <div className="rounded-[24px] border border-[#e8ebef] bg-[#fbfcfd] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="rounded-[24px] border border-[#e9e9e7] bg-[#fbfbfa] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
         <div className="mb-3 flex items-center gap-3">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff0e8] text-[#D86B3D]">
             <Building2 className="h-4 w-4" />
@@ -74,7 +74,7 @@ export function BrandPath({ onBack }: { onBack: () => void }) {
         <div className="flex justify-end">
           <NoiseBackground containerClassName="rounded-2xl">
             <Button
-              className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
+              className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
               onClick={() => setStep("profile")}
               type="button"
             >
@@ -109,7 +109,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
   return (
     <form
-      className="grid gap-5 rounded-[28px] border border-[#e8ebef] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7"
+      className="grid gap-5 rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7"
       onSubmit={(event) => {
         event.preventDefault();
         submit();
@@ -120,7 +120,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
       <div>
         <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Company profile</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Make your brand discoverable.</h2>
-        <p className="mt-3 text-sm leading-6 text-[#687386]">
+        <p className="mt-3 text-sm leading-6 text-[#787774]">
           This becomes your public Terrace page for jobs, posts, and creator outreach.
         </p>
       </div>
@@ -151,7 +151,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
       <Field label="Team size" error={errors.sizeRange?.[0]}>
         <select
-          className="h-[52px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
+          className="h-[52px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           onChange={(event) => setSizeRange(event.target.value)}
           value={sizeRange}
         >
@@ -166,7 +166,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
       <Field label="About" error={errors.about?.[0]}>
         <textarea
-          className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
+          className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           maxLength={1000}
           onChange={(event) => setAbout(event.target.value)}
           placeholder="What does your brand stand for?"
@@ -183,8 +183,8 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
               aria-pressed={plan === tier}
               className={`rounded-2xl border px-4 py-3 text-left transition ${
                 plan === tier
-                  ? "border-[#111318] bg-[#111318] text-white shadow-[0_18px_38px_rgba(17,24,39,0.16)]"
-                  : "border-[#d8dee8] bg-white text-[#111318] hover:border-[#bfc8d4]"
+                  ? "border-[#37352f] bg-[#37352f] text-white shadow-[0_18px_38px_rgba(17,24,39,0.16)]"
+                  : "border-[#d8dee8] bg-white text-[#37352f] hover:border-[#bfc8d4]"
               }`}
               key={tier}
               onClick={() => setPlan(tier)}
@@ -194,7 +194,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
                 {plan === tier && <CheckCircle2 className="h-4 w-4 text-[#f5b38e]" />}
                 {tier}
               </p>
-              <p className={`mt-1 text-xs ${plan === tier ? "text-white/62" : "text-[#687386]"}`}>
+              <p className={`mt-1 text-xs ${plan === tier ? "text-white/62" : "text-[#787774]"}`}>
                 {tier === "free" && "Browse, save creators."}
                 {tier === "growth" && "DMs, briefs, 3 active campaigns."}
                 {tier === "scale" && "Unlimited campaigns, recruiter seats."}
@@ -204,11 +204,11 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
         </div>
       </Field>
 
-      <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfcfd] p-4">
+      <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfbfa] p-4">
         <p className="text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">
           Placeholder - Invite teammates
         </p>
-        <p className="mt-2 text-sm leading-6 text-[#687386]">
+        <p className="mt-2 text-sm leading-6 text-[#787774]">
           Use Clerk&apos;s organization invites once your team is set up. Admins can invite from the org dashboard.
         </p>
       </div>
@@ -216,7 +216,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
       <div className="flex items-center justify-end gap-3">
         <NoiseBackground containerClassName="rounded-2xl">
           <Button
-            className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
+            className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
             disabled={pending}
             type="submit"
           >
@@ -252,7 +252,7 @@ function Field({
 function BackLink({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="self-start text-xs font-semibold tracking-wide text-[#687386] uppercase transition hover:text-[#111318]"
+      className="self-start text-xs font-semibold tracking-wide text-[#787774] uppercase transition hover:text-[#37352f]"
       onClick={onClick}
       type="button"
     >

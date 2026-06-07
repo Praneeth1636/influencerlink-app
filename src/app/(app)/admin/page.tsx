@@ -29,12 +29,12 @@ export default async function AdminPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-white p-6 font-sans text-[#111318] sm:p-10">
+    <main className="min-h-screen bg-white p-6 font-sans text-[#37352f] sm:p-10">
       <section className="mx-auto max-w-[1280px] space-y-8">
-        <header className="rounded-[28px] border border-[#ececec] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
-          <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9aa3b2] uppercase">Admin</p>
+        <header className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
+          <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Admin</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-[-0.05em]">Moderation surface</h1>
-          <p className="mt-1 text-sm text-[#687386]">
+          <p className="mt-1 text-sm text-[#787774]">
             Reports, users, and audit log. Be deliberate — every action here writes to the audit trail.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-5">
@@ -49,19 +49,19 @@ export default async function AdminPage() {
         <section className="grid gap-6 lg:grid-cols-2">
           <Panel title="Open reports" eyebrow="Reports">
             {openReports.length === 0 ? (
-              <p className="text-sm text-[#687386]">No open reports.</p>
+              <p className="text-sm text-[#787774]">No open reports.</p>
             ) : (
               <ul className="space-y-3">
                 {openReports.map(({ report, reporter }) => (
-                  <li key={report.id} className="rounded-2xl border border-[#ececec] bg-[#fbfcfd] p-4">
+                  <li key={report.id} className="rounded-lg border border-[#e9e9e7] bg-[#fbfbfa] p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-[11px] font-semibold tracking-[0.16em] text-[#9aa3b2] uppercase">
+                        <p className="text-[11px] font-semibold tracking-[0.16em] text-[#9b9a97] uppercase">
                           {report.targetType}
                         </p>
-                        <p className="mt-1 font-mono text-xs text-[#687386]">{report.targetId.slice(0, 8)}…</p>
+                        <p className="mt-1 font-mono text-xs text-[#787774]">{report.targetId.slice(0, 8)}…</p>
                         <p className="mt-2 text-sm font-semibold">{report.reason}</p>
-                        <p className="mt-1 text-xs text-[#9aa3b2]">
+                        <p className="mt-1 text-xs text-[#9b9a97]">
                           by {reporter.email} · {new Date(report.createdAt).toLocaleString()}
                         </p>
                       </div>
@@ -77,11 +77,11 @@ export default async function AdminPage() {
             <ul className="space-y-2 text-sm">
               {recentAudit.map(({ audit, actor }) => (
                 <li key={audit.id} className="flex items-start gap-2 border-b border-[#f0f0f0] pb-2 last:border-0">
-                  <span className="inline-flex shrink-0 rounded-full border border-[#ececec] bg-[#fbfcfd] px-2 py-0.5 font-mono text-[10px] text-[#687386]">
+                  <span className="inline-flex shrink-0 rounded-full border border-[#e9e9e7] bg-[#fbfbfa] px-2 py-0.5 font-mono text-[10px] text-[#787774]">
                     {audit.action}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-xs text-[#687386]">
+                    <p className="truncate text-xs text-[#787774]">
                       {actor?.email ?? "system"} · {audit.entityType} · {new Date(audit.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -95,7 +95,7 @@ export default async function AdminPage() {
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="text-left text-[11px] font-semibold tracking-[0.14em] text-[#9aa3b2] uppercase">
+                <tr className="text-left text-[11px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">
                   <th className="py-2 pr-4">Email</th>
                   <th className="py-2 pr-4">Type</th>
                   <th className="py-2 pr-4">Status</th>
@@ -108,7 +108,7 @@ export default async function AdminPage() {
                   <tr key={u.id} className="border-t border-[#f0f0f0]">
                     <td className="py-3 pr-4">{u.email}</td>
                     <td className="py-3 pr-4">
-                      <span className="rounded-full border border-[#ececec] bg-[#fbfcfd] px-2 py-0.5 text-xs">
+                      <span className="rounded-full border border-[#e9e9e7] bg-[#fbfbfa] px-2 py-0.5 text-xs">
                         {u.type}
                       </span>
                     </td>
@@ -123,7 +123,7 @@ export default async function AdminPage() {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 pr-4 text-[#687386]">{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td className="py-3 pr-4 text-[#787774]">{new Date(u.createdAt).toLocaleDateString()}</td>
                     <td className="py-3 pr-4">
                       <AdminUserActions userId={u.id} suspended={!!u.suspendedAt} />
                     </td>
@@ -140,9 +140,9 @@ export default async function AdminPage() {
 
 function Panel({ title, eyebrow, children }: { title: string; eyebrow: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-[24px] border border-[#ececec] bg-white p-6 shadow-[0_10px_30px_rgba(17,24,39,0.03)]">
+    <section className="rounded-[24px] border border-[#e9e9e7] bg-white p-6 shadow-[0_10px_30px_rgba(17,24,39,0.03)]">
       <div className="mb-4">
-        <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9aa3b2] uppercase">{eyebrow}</p>
+        <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">{eyebrow}</p>
         <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em]">{title}</h2>
       </div>
       {children}
@@ -153,9 +153,9 @@ function Panel({ title, eyebrow, children }: { title: string; eyebrow: string; c
 function Stat({ label, value, icon: Icon, tone }: { label: string; value: string; icon: typeof Users; tone?: "warn" }) {
   return (
     <div
-      className={`rounded-2xl border bg-white p-4 ${tone === "warn" ? "border-[#fce4cf]" : "border-[#ececec]"} shadow-[0_8px_24px_rgba(17,24,39,0.03)]`}
+      className={`rounded-lg border bg-white p-4 ${tone === "warn" ? "border-[#fce4cf]" : "border-[#e9e9e7]"} shadow-[0_8px_24px_rgba(17,24,39,0.03)]`}
     >
-      <div className="flex items-center justify-between text-[#9aa3b2]">
+      <div className="flex items-center justify-between text-[#9b9a97]">
         <span className="text-[11px] font-semibold tracking-[0.16em] uppercase">{label}</span>
         <Icon className="h-4 w-4" />
       </div>

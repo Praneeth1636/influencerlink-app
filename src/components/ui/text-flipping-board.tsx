@@ -17,7 +17,7 @@ export function TextFlippingBoard({ text, className, characterClassName }: TextF
     <div
       aria-label={text.replace(/\n/g, " ")}
       className={cn(
-        "rounded-[26px] border border-white/10 bg-[#0b0d12] p-4 shadow-[0_24px_70px_rgba(17,24,39,0.18)]",
+        "rounded-[26px] border border-white/10 bg-[#37352f] p-4 shadow-[0_24px_70px_rgba(17,24,39,0.18)]",
         className
       )}
     >

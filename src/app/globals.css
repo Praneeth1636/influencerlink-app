@@ -134,36 +134,38 @@
   --radius: 0.5rem;
 }
 
-/* LIGHT ─ warm cream surface, same warm-hue family as dark. */
+/* LIGHT ─ pure white app canvas. Keep warmth in accents, not the page background. */
 .light {
   color-scheme: light;
 
-  --button-outline: rgba(40, 24, 12, 0.12);
-  --badge-outline: rgba(40, 24, 12, 0.06);
+  --button-outline: rgba(17, 24, 39, 0.12);
+  --badge-outline: rgba(17, 24, 39, 0.06);
   --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(40, 24, 12, 0.035);
-  --elevate-2: rgba(40, 24, 12, 0.08);
+  --elevate-1: rgba(17, 24, 39, 0.035);
+  --elevate-2: rgba(17, 24, 39, 0.08);
 
-  --background: 36 36% 98%; /* warm cream */
-  --foreground: 24 18% 10%;
+  /* Notion-warm light palette (matches the hardcoded #37352f / #787774 /
+     #e9e9e7 used across pages) so token-based components stay consistent. */
+  --background: 0 0% 100%;
+  --foreground: 42 9% 20%; /* #37352f warm ink */
 
   --card: 0 0% 100%;
-  --card-foreground: 24 18% 10%;
+  --card-foreground: 42 9% 20%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 24 18% 10%;
+  --popover-foreground: 42 9% 20%;
 
-  --primary: 15 70% 48%;
+  --primary: 18 66% 54%; /* #D86B3D brand orange */
   --primary-foreground: 36 25% 98%;
 
-  --secondary: 30 18% 95%;
-  --secondary-foreground: 24 18% 14%;
+  --secondary: 48 9% 96%; /* #f7f7f5 */
+  --secondary-foreground: 42 9% 22%;
 
-  --muted: 30 18% 95%;
-  --muted-foreground: 28 8% 42%;
+  --muted: 48 9% 96%;
+  --muted-foreground: 45 3% 46%; /* #787774 */
 
-  --accent: 252 78% 58%;
-  --accent-foreground: 36 25% 98%;
+  --accent: 200 67% 73%; /* #8CC9E8 light blue */
+  --accent-foreground: 42 9% 20%;
 
   --destructive: 0 80% 50%;
   --destructive-foreground: 36 25% 98%;
@@ -171,18 +173,18 @@
   --success: 158 64% 38%;
   --warning: 38 92% 45%;
 
-  --border: 30 14% 88%;
-  --input: 30 14% 90%;
-  --ring: 15 70% 48%;
+  --border: 60 5% 91%; /* #e9e9e7 hairline */
+  --input: 60 5% 91%;
+  --ring: 18 66% 54%;
 
-  --sidebar: 36 30% 96%;
-  --sidebar-foreground: 24 14% 28%;
-  --sidebar-border: 30 14% 88%;
-  --sidebar-primary: 15 70% 48%;
+  --sidebar: 48 9% 96%; /* #f7f7f5 two-tone */
+  --sidebar-foreground: 42 8% 28%;
+  --sidebar-border: 60 5% 91%;
+  --sidebar-primary: 18 66% 54%;
   --sidebar-primary-foreground: 36 25% 98%;
-  --sidebar-accent: 30 18% 93%;
-  --sidebar-accent-foreground: 24 18% 14%;
-  --sidebar-ring: 15 70% 48%;
+  --sidebar-accent: 48 9% 94%;
+  --sidebar-accent-foreground: 42 9% 22%;
+  --sidebar-ring: 18 66% 54%;
 }
 
 @layer base {
@@ -192,9 +194,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    background:
-      radial-gradient(circle at 16% -8%, hsl(var(--primary) / 0.08), transparent 34rem),
-      linear-gradient(180deg, hsl(24 8% 9%) 0%, hsl(var(--background)) 38rem);
+    background: hsl(var(--background));
     font-family: var(--app-font-sans);
     font-feature-settings:
       "ss01" 1,
@@ -227,6 +227,116 @@
 
   .cl-coral-pill {
     @apply border-primary/25 bg-primary/10 text-primary;
+  }
+
+  .terrace-app-bg {
+    background: linear-gradient(180deg, #fbfbfc 0%, #f5f5f7 42%, #f7f7f8 100%);
+    color: #1d1d1f;
+  }
+
+  .terrace-topbar {
+    background: rgba(251, 251, 252, 0.9);
+    border-color: #dedfe3;
+    backdrop-filter: blur(22px);
+  }
+
+  .terrace-shell-card {
+    background: #fbfbfc;
+    border: 1px solid #dedfe3;
+    box-shadow:
+      0 1px 2px rgba(17, 24, 39, 0.04),
+      0 18px 48px rgba(17, 24, 39, 0.045);
+  }
+
+  .terrace-panel {
+    background: #fbfbfc;
+    border: 1px solid #dedfe3;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.035);
+  }
+
+  .terrace-pill {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dedfe3;
+    border-radius: 999px;
+    color: #5f6672;
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: 600;
+    gap: 0.375rem;
+    line-height: 1;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .terrace-primary-action {
+    align-items: center;
+    background: #1d1d1f;
+    border-radius: 14px;
+    color: #fbfbfc;
+    display: inline-flex;
+    font-weight: 650;
+    justify-content: center;
+    transition:
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .terrace-primary-action:hover {
+    background: #333336;
+  }
+
+  .terrace-primary-action:active {
+    transform: scale(0.98);
+  }
+
+  .terrace-secondary-action {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dedfe3;
+    border-radius: 14px;
+    color: #1d1d1f;
+    display: inline-flex;
+    font-weight: 650;
+    justify-content: center;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .terrace-secondary-action:hover {
+    background: #fbfbfc;
+    border-color: #cfd7df;
+  }
+
+  .terrace-secondary-action:active {
+    transform: scale(0.98);
+  }
+
+  .terrace-story-ring {
+    background:
+      linear-gradient(#fbfbfc, #fbfbfc) padding-box,
+      linear-gradient(135deg, #9fc9e4, #f5b38e, #d86b3d) border-box;
+    border: 2px solid transparent;
+  }
+
+  .terrace-media-tile {
+    background: #eef0f3;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .terrace-media-tile::after {
+    background: linear-gradient(180deg, transparent 46%, rgba(17, 24, 39, 0.28));
+    content: "";
+    inset: 0;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 180ms ease;
+  }
+
+  .terrace-media-tile:hover::after {
+    opacity: 1;
   }
 
   .creatorlink-auth-light,
@@ -356,6 +466,88 @@
     color: #7b8494 !important;
   }
 
+  /* Identity preview pill (shown above OTP) — make the email readable. */
+  .creatorlink-signup-form .cl-identityPreview {
+    background: #f8fafc !important;
+    border: 1px solid #e6e8ed !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+  }
+  .creatorlink-signup-form .cl-identityPreviewText {
+    color: #111318 !important;
+    font-weight: 600 !important;
+  }
+  .creatorlink-signup-form .cl-identityPreviewEditButton {
+    color: #d86b3d !important;
+  }
+
+  /* OTP — Clerk renders ONE wide input (not 6 cells) in current versions.
+     Style it as a single full-width, centered, large-text field. The 6-cell
+     UI Clerk used to ship has been deprecated — don't try to force a narrow
+     50px width or digits pile up on top of each other. */
+  .creatorlink-signup-form .cl-otpCodeFieldInputs,
+  .creatorlink-signup-form .cl-formFieldInputGroup {
+    display: flex !important;
+    gap: 10px !important;
+    justify-content: center !important;
+  }
+  .creatorlink-signup-form .cl-otpCodeFieldInput {
+    background: #f8fafc !important;
+    border: 1.5px solid #d8dee8 !important;
+    border-radius: 14px !important;
+    color: #111318 !important;
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 0 !important;
+    text-align: center !important;
+    width: 50px !important;
+    -webkit-text-fill-color: #111318 !important;
+  }
+  .creatorlink-signup-form .cl-otpCodeFieldInput:focus {
+    background: #fff !important;
+    border-color: #d86b3d !important;
+    box-shadow: 0 0 0 3px rgba(216, 107, 61, 0.18) !important;
+    outline: none !important;
+  }
+  .creatorlink-signup-form .cl-formFieldInput[name="code"] {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    height: 64px !important;
+    letter-spacing: 0.4em !important;
+    padding-left: 12px !important;
+    text-align: center !important;
+  }
+  .creatorlink-signup-form .cl-formResendCodeLink {
+    color: #d86b3d !important;
+    font-weight: 600 !important;
+  }
+
+  /* Chrome autofill — overrides the dark-yellow autofilled background paint
+     so saved credentials don't render as black pills. */
+  .creatorlink-signup-form input:-webkit-autofill,
+  .creatorlink-signup-form input:-webkit-autofill:hover,
+  .creatorlink-signup-form input:-webkit-autofill:focus,
+  .creatorlink-signup-form .cl-formFieldInput:-webkit-autofill,
+  .creatorlink-signup-form .cl-formFieldInput:-webkit-autofill:hover,
+  .creatorlink-signup-form .cl-formFieldInput:-webkit-autofill:focus {
+    -webkit-box-shadow:
+      0 0 0 1000px #f8fafc inset,
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    -webkit-text-fill-color: #111318 !important;
+    caret-color: #111318 !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+  }
+
+  /* Scoped serif display utility — Fraunces variable serif. Used ONLY where
+     explicitly applied (currently the landing hero) so the global font-serif
+     binding can stay Inter for product surfaces. */
+  .font-display {
+    font-family: var(--font-serif-app), Georgia, "Times New Roman", serif;
+    font-feature-settings: "ss01", "ss02";
+  }
+
   .creatorlink-animate-in {
     animation: creatorlink-fade-up 0.72s cubic-bezier(0.19, 1, 0.22, 1) both;
   }
@@ -387,6 +579,29 @@
   .creatorlink-progress {
     transform-origin: left center;
     animation: creatorlink-progress 2.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+
+  /* Like-tap feedback: heart scales up then settles (no elastic overshoot). */
+  .creatorlink-pop {
+    animation: creatorlink-pop 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Radiating ring on like. Base opacity 0 keeps it invisible when motion is
+     reduced or the animation isn't running. */
+  .creatorlink-ping {
+    opacity: 0;
+    animation: creatorlink-ping 0.5s cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  /* Inline panel reveal (reply box, toast): short fade + slide, product-speed. */
+  .creatorlink-reveal {
+    animation: creatorlink-reveal 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Per-route page fade. Opacity-only so it never creates a containing block
+     (won't break the sticky page headers it wraps). */
+  .creatorlink-fade-in {
+    animation: creatorlink-fade-in 0.4s ease-out both;
   }
 
   .creatorlink-marquee-mask {
@@ -550,6 +765,54 @@
   }
 }
 
+@keyframes creatorlink-pop {
+  0% {
+    transform: scale(0.82);
+  }
+
+  45% {
+    transform: scale(1.28);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes creatorlink-ping {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+@keyframes creatorlink-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creatorlink-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .creatorlink-animate-in,
   .creatorlink-float,
@@ -558,6 +821,10 @@
   .creatorlink-progress,
   .creatorlink-marquee,
   .creatorlink-flip-char,
+  .creatorlink-pop,
+  .creatorlink-ping,
+  .creatorlink-reveal,
+  .creatorlink-fade-in,
   .creatorlink-noise-button::before {
     animation: none !important;
   }
@@ -648,10 +915,14 @@ html {
 
 .logoMark {
   --logo-box: 52px;
-  --logo-tile: 22px;
-  --logo-radius: 7px;
-  background: #050505;
-  border-radius: 10px;
+  --logo-tile: 21px;
+  --logo-radius: 8px;
+  background: linear-gradient(145deg, #111317, #050607);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(17, 24, 39, 0.1);
   display: block;
   height: var(--logo-box);
   overflow: hidden;
@@ -660,34 +931,49 @@ html {
 }
 
 .logoMark span {
-  background: #fff;
+  background: #fbfbfc;
   border-radius: var(--logo-radius);
   display: block;
   height: var(--logo-tile);
   position: absolute;
+  transform: rotate(0.001deg);
   width: var(--logo-tile);
 }
 
 .logoMark span:nth-child(1) {
-  left: 18%;
-  top: 13%;
+  left: 17%;
+  top: 15%;
 }
 
 .logoMark span:nth-child(2) {
   left: calc(50% - (var(--logo-tile) / 2));
   top: calc(50% - (var(--logo-tile) / 2));
+  opacity: 0.94;
 }
 
 .logoMark span:nth-child(3) {
-  bottom: 13%;
-  right: 18%;
+  bottom: 15%;
+  right: 17%;
+  opacity: 0.88;
+}
+
+.logoMark::after {
+  background: #d86b3d;
+  border-radius: 999px;
+  bottom: 10%;
+  box-shadow: 0 0 0 3px rgba(216, 107, 61, 0.16);
+  content: "";
+  height: 5px;
+  position: absolute;
+  right: 10%;
+  width: 5px;
 }
 
 .miniLogo {
   --logo-box: 36px;
-  --logo-tile: 15px;
+  --logo-tile: 14px;
   --logo-radius: 5px;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 .authLogo {

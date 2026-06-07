@@ -56,7 +56,7 @@ const STATUS_COPY: Record<
   },
   refunded: {
     label: "Refunded",
-    pillClass: "border-[#ececec] bg-[#fbfcfd] text-[#687386]",
+    pillClass: "border-[#e9e9e7] bg-[#fbfbfa] text-[#787774]",
     brandHint: "Payment refunded.",
     creatorHint: "Brand refunded this brief.",
     icon: Undo2
@@ -118,7 +118,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-[#ececec] bg-white p-4 shadow-[0_8px_24px_rgba(17,24,39,0.035)]">
+    <div className="rounded-2xl border border-[#e9e9e7] bg-white p-4 shadow-[0_8px_24px_rgba(17,24,39,0.035)]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span
@@ -130,7 +130,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
           <p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">
             {formatMoney(payment.amountCents, payment.currency)}
           </p>
-          <p className="mt-1 text-xs text-[#687386]">
+          <p className="mt-1 text-xs text-[#787774]">
             {viewer === "brand"
               ? `${formatMoney(payment.platformFeeCents, payment.currency)} platform fee · ${formatMoney(payment.creatorPayoutCents, payment.currency)} to creator`
               : `You receive ${formatMoney(payment.creatorPayoutCents, payment.currency)} after delivery`}
@@ -139,7 +139,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
         {viewer === "brand" && payment.status === "captured" && brandId && (
           <div className="flex flex-col gap-2">
             <button
-              className="inline-flex h-10 items-center justify-center rounded-full bg-[#090b10] px-4 text-sm font-semibold text-white transition hover:bg-[#1b1f27] disabled:opacity-50"
+              className="inline-flex h-10 items-center justify-center rounded-full bg-[#37352f] px-4 text-sm font-semibold text-white transition hover:bg-[#262420] disabled:opacity-50"
               onClick={handleRelease}
               type="button"
               disabled={pending}
@@ -147,7 +147,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
               {pending ? "Releasing..." : "Release funds"}
             </button>
             <button
-              className="inline-flex h-10 items-center justify-center rounded-full border border-[#ececec] px-4 text-sm font-semibold text-[#687386] transition hover:border-[#dce3ea] disabled:opacity-50"
+              className="inline-flex h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-4 text-sm font-semibold text-[#787774] transition hover:border-[#dce3ea] disabled:opacity-50"
               onClick={handleRefund}
               type="button"
               disabled={pending}
@@ -161,7 +161,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
             // Hosted Stripe Checkout flow. Form POST → API redirects to Stripe.
             <form action={`/api/stripe/checkout/brief/${payment.id}`} method="post">
               <button
-                className="inline-flex h-10 items-center justify-center rounded-full bg-[#090b10] px-5 text-sm font-semibold text-white transition hover:bg-[#1b1f27]"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-[#37352f] px-5 text-sm font-semibold text-white transition hover:bg-[#262420]"
                 type="submit"
               >
                 {payment.status === "failed" ? "Try again" : "Pay now"}
@@ -169,7 +169,7 @@ export function PaymentTile({ payment, viewer, brandId }: Props) {
             </form>
           )}
       </div>
-      <p className="mt-3 text-xs text-[#687386]">{viewer === "brand" ? meta.brandHint : meta.creatorHint}</p>
+      <p className="mt-3 text-xs text-[#787774]">{viewer === "brand" ? meta.brandHint : meta.creatorHint}</p>
       {error && <p className="mt-2 text-xs font-semibold text-[#a4262c]">{error}</p>}
     </div>
   );

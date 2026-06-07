@@ -70,9 +70,9 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
 
   return (
     <div className="grid gap-2">
-      <p className="text-sm font-semibold text-white/80">{label}</p>
+      <p className="text-sm font-semibold text-[#37352f]">{label}</p>
       <div
-        className={`relative overflow-hidden rounded-xl border border-dashed border-white/15 bg-white/[0.03] ${ASPECT_CLASSES[aspect]}`}
+        className={`group relative overflow-hidden rounded-xl border border-dashed border-[#d8dee8] bg-white transition hover:border-[#bf5a30] ${ASPECT_CLASSES[aspect]}`}
       >
         {value ? (
           // Plain img keeps remotePatterns config out of scope until the
@@ -80,25 +80,26 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
           // eslint-disable-next-line @next/next/no-img-element
           <img alt={label} className="h-full w-full object-cover" src={value} />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-white/40">
-            <ImagePlus className="h-8 w-8" />
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-3 text-center text-[#787774]">
+            <ImagePlus className="h-7 w-7 text-[#9b9a97]" />
+            <span className="text-xs font-semibold text-[#37352f]">Click to upload</span>
           </div>
         )}
 
         <button
           aria-label={`Upload ${label.toLowerCase()}`}
-          className="absolute inset-0 flex items-center justify-center bg-black/0 transition hover:bg-black/40"
+          className="absolute inset-0 flex items-center justify-center bg-transparent transition group-hover:bg-black/30"
           disabled={isWorking}
           onClick={() => inputRef.current?.click()}
           type="button"
         >
-          <span className="rounded-full bg-black/65 px-4 py-2 text-xs font-bold tracking-wide text-white opacity-0 transition group-hover:opacity-100 hover:opacity-100">
+          <span className="rounded-full bg-[#37352f] px-4 py-2 text-xs font-bold tracking-wide text-white opacity-0 transition group-hover:opacity-100">
             {value ? "Replace" : "Upload"}
           </span>
         </button>
 
         {isWorking && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/55 text-sm font-semibold text-white">
+          <div className="absolute inset-0 flex items-center justify-center bg-white/85 text-sm font-semibold text-[#37352f]">
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             {progress === "presign" ? "Preparing…" : "Uploading…"}
           </div>
@@ -108,10 +109,10 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
       <input accept="image/*" className="hidden" onChange={handleFile} ref={inputRef} type="file" />
 
       <div className="flex items-center justify-between text-xs">
-        <span className="text-white/40">{hint}</span>
+        <span className="text-[#787774]">{hint}</span>
         {value && !isWorking && (
           <button
-            className="inline-flex items-center gap-1 text-white/50 hover:text-rose-300"
+            className="inline-flex items-center gap-1 text-[#787774] transition hover:text-[#bf5a30]"
             onClick={clear}
             type="button"
           >
@@ -121,7 +122,7 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
         )}
       </div>
 
-      {error && <p className="text-xs text-rose-400">{error}</p>}
+      {error && <p className="text-xs text-[#bf5a30]">{error}</p>}
     </div>
   );
 }

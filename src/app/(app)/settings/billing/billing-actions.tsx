@@ -21,7 +21,7 @@ export function CheckoutButton({
   return (
     <div className="grid gap-2">
       <Button
-        className="h-10 rounded-xl bg-[#D85A30] text-xs font-black text-white hover:bg-[#c54f29]"
+        className="h-10 rounded-full bg-[#37352f] text-xs font-semibold text-white hover:bg-[#262420]"
         disabled={mutation.isPending}
         onClick={async () => {
           setMessage(null);
@@ -38,7 +38,7 @@ export function CheckoutButton({
         Upgrade
         <ArrowUpRight className="h-4 w-4" />
       </Button>
-      {message && <p className="text-xs leading-5 text-[#ffb49c]">{message}</p>}
+      {message && <p className="text-xs leading-5 text-[#787774]">{message}</p>}
     </div>
   );
 }
@@ -50,7 +50,7 @@ export function CustomerPortalButton({ brandId }: { brandId?: string }) {
   return (
     <div className="grid justify-items-start gap-2">
       <Button
-        className="h-10 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-black text-white/68 hover:bg-white/[0.08] hover:text-white"
+        className="h-10 rounded-full border border-[#e9e9e7] bg-white text-xs font-semibold text-[#37352f] hover:bg-[#f8f9fb]"
         disabled={mutation.isPending}
         onClick={async () => {
           setMessage(null);
@@ -68,7 +68,7 @@ export function CustomerPortalButton({ brandId }: { brandId?: string }) {
         <CreditCard className="h-4 w-4" />
         Manage billing
       </Button>
-      {message && <p className="max-w-[240px] text-xs leading-5 text-white/48">{message}</p>}
+      {message && <p className="max-w-[240px] text-xs leading-5 text-[#787774]">{message}</p>}
     </div>
   );
 }

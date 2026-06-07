@@ -35,7 +35,7 @@ export function WobbleCard({ children, className, containerClassName }: WobbleCa
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0b0d12] p-6 text-white shadow-[0_24px_64px_rgba(17,24,39,0.16)] transition-transform duration-300 ease-out",
+        "group relative overflow-hidden rounded-[28px] border border-white/10 bg-[#37352f] p-6 text-white shadow-[0_24px_64px_rgba(17,24,39,0.16)] transition-transform duration-300 ease-out",
         containerClassName
       )}
       onPointerLeave={resetTransform}

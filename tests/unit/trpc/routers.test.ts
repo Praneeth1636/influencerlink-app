@@ -200,7 +200,8 @@ describe("appRouter Phase 4.2 routers", () => {
       creator,
       aggregate: null,
       platforms: [],
-      posts: []
+      posts: [],
+      collabs: []
     });
     vi.mocked(updateCreatorProfile).mockResolvedValueOnce({ ...creator, headline: "UGC strategist" });
     vi.mocked(searchCreators).mockResolvedValueOnce([{ creator, aggregate: null }]);
@@ -230,6 +231,9 @@ describe("appRouter Phase 4.2 routers", () => {
       mediaJson: [],
       type: "milestone" as const,
       visibility: "public" as const,
+      source: "terrace" as const,
+      externalUrl: null,
+      externalId: null,
       createdAt: now,
       updatedAt: now
     };

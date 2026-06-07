@@ -23,8 +23,8 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-[#111318]">
-      <header className="sticky top-0 z-40 border-b border-[#ececec] bg-white/94 backdrop-blur-xl">
+    <main className="min-h-screen bg-white font-sans text-[#37352f]">
+      <header className="sticky top-0 z-40 border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-5 py-4">
           <Link
             className="logoMark miniLogo ring-border shrink-0 bg-white/5 ring-1"
@@ -36,18 +36,18 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
             <span />
           </Link>
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9aa3b2] uppercase">Terrace</p>
-            <p className="hidden text-sm text-[#687386] sm:block">Brand company page</p>
+            <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Terrace</p>
+            <p className="hidden text-sm text-[#787774] sm:block">Brand company page</p>
           </div>
           <nav className="ml-auto flex items-center gap-2">
             <Link
-              className="rounded-full px-3 py-2 text-sm font-medium text-[#687386] transition hover:bg-[#f4f5f7] hover:text-[#111318]"
+              className="rounded-full px-3 py-2 text-sm font-medium text-[#787774] transition hover:bg-[#f7f7f5] hover:text-[#37352f]"
               href="/search"
             >
               Search
             </Link>
             <Link
-              className="rounded-full bg-[#090b10] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1b1f27]"
+              className="rounded-full bg-[#37352f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#262420]"
               href="/messages"
             >
               Contact
@@ -58,7 +58,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
 
       <section className="relative z-10 mx-auto grid max-w-[1180px] gap-6 px-5 py-7 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section className="grid gap-6">
-          <article className="overflow-hidden rounded-[28px] border border-[#ececec] bg-white shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
+          <article className="overflow-hidden rounded-[28px] border border-[#e9e9e7] bg-white shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
             <div className="h-56 bg-[linear-gradient(135deg,rgba(159,201,228,0.55),rgba(226,138,119,0.28)),url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
             <div className="p-6 pt-0">
               <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -69,7 +69,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                       <h1 className="text-4xl font-semibold tracking-[-0.05em]">{profile.brand.name}</h1>
                       {profile.brand.verified && <BadgeCheck className="h-6 w-6 text-[#78bde8]" />}
                     </div>
-                    <p className="mt-2 text-sm text-[#687386]">/{profile.brand.slug}</p>
+                    <p className="mt-2 text-sm text-[#787774]">/{profile.brand.slug}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -88,7 +88,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
               <p className="mt-5 max-w-3xl text-lg leading-8 font-semibold text-[#252932]">
                 {profile.brand.tagline ?? "Building measurable creator partnerships"}
               </p>
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-[#687386]">
+              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-[#787774]">
                 {profile.brand.industry && (
                   <span className="inline-flex items-center gap-1.5">
                     <Building2 className="h-4 w-4" />
@@ -109,7 +109,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                 )}
               </div>
               {profile.brand.about && (
-                <p className="mt-6 max-w-4xl text-sm leading-7 text-[#5f6673]">{profile.brand.about}</p>
+                <p className="mt-6 max-w-4xl text-sm leading-7 text-[#787774]">{profile.brand.about}</p>
               )}
 
               <div className="mt-6 grid gap-3 md:grid-cols-4">
@@ -134,21 +134,21 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
               )}
               {profile.jobs.map((job) => (
                 <article
-                  className="grid gap-4 rounded-[22px] border border-[#ececec] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] md:grid-cols-[minmax(0,1fr)_auto]"
+                  className="grid gap-4 rounded-[22px] border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] md:grid-cols-[minmax(0,1fr)_auto]"
                   key={job.id}
                 >
                   <div>
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] text-[#D86B3D] hover:bg-[#fff7f2]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
                       {job.remote ? "Remote" : "Location-based"}
                     </Badge>
                     <h2 className="mt-4 text-xl font-semibold tracking-[-0.04em]">{job.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-[#687386]">{job.description}</p>
+                    <p className="mt-2 text-sm leading-6 text-[#787774]">{job.description}</p>
                   </div>
                   <div className="grid gap-2 md:min-w-48">
-                    <span className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] px-3 py-2 text-sm font-semibold text-[#D86B3D]">
+                    <span className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-2 text-sm font-semibold text-[#D86B3D]">
                       {formatBudget(job.budgetMinCents, job.budgetMaxCents)}
                     </span>
-                    <span className="rounded-full border border-[#ececec] bg-[#f8f9fb] px-3 py-2 text-sm text-[#687386]">
+                    <span className="rounded-full border border-[#e9e9e7] bg-[#f8f9fb] px-3 py-2 text-sm text-[#787774]">
                       {job.applicationCount} applicants
                     </span>
                   </div>
@@ -165,16 +165,16 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
               )}
               {profile.posts.map((post) => (
                 <article
-                  className="rounded-[22px] border border-[#ececec] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]"
+                  className="rounded-[22px] border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]"
                   key={post.id}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#fff7f2] text-[#D86B3D] hover:bg-[#fff7f2]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
                       {post.type.replace("_", " ")}
                     </Badge>
-                    <span className="text-xs font-semibold text-[#9aa3b2]">{formatDate(post.createdAt)}</span>
+                    <span className="text-xs font-semibold text-[#9b9a97]">{formatDate(post.createdAt)}</span>
                   </div>
-                  <p className="mt-3 text-sm leading-7 text-[#5f6673]">{post.body}</p>
+                  <p className="mt-3 text-sm leading-7 text-[#787774]">{post.body}</p>
                 </article>
               ))}
             </div>
@@ -182,25 +182,25 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
         </section>
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <article className="rounded-[22px] border border-[#ececec] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
+          <article className="rounded-[22px] border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
             <SectionHeader eyebrow="Team" title="Public members" />
             <div className="mt-5 grid gap-3">
               {profile.team.map(({ member, user }) => (
                 <div
-                  className="flex items-center gap-3 rounded-2xl border border-[#ececec] bg-[#fbfcfd] p-3"
+                  className="flex items-center gap-3 rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-3"
                   key={user.id}
                 >
                   <BrandAvatar name={user.email} className="h-10 w-10 text-sm" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{user.email}</p>
-                    <p className="text-xs text-[#687386] capitalize">{member.role}</p>
+                    <p className="text-xs text-[#787774] capitalize">{member.role}</p>
                   </div>
                 </div>
               ))}
             </div>
           </article>
 
-          <article className="rounded-[22px] border border-[#f3d5c4] bg-[#fff7f2] p-5">
+          <article className="rounded-[22px] border border-[#f3d5c4] bg-[#faf0ea] p-5">
             <div className="flex items-center gap-3">
               <MessageCircle className="h-5 w-5 text-[#D86B3D]" />
               <SectionHeader eyebrow="Brand action" title="Pitch this team" />
@@ -209,7 +209,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
               Terrace company pages collect brand credibility, hiring intent, public briefs, and creator-facing updates.
             </p>
             <Link
-              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-[#090b10] text-sm font-semibold text-white transition hover:bg-[#1b1f27]"
+              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-[#37352f] text-sm font-semibold text-white transition hover:bg-[#262420]"
               href="/messages"
             >
               Start conversation
@@ -224,7 +224,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
 async function getBrandProfile(slug: string) {
   try {
     const caller = await createTRPCServerCaller();
-    return await caller.brand.profile({ slug });
+    return (await caller.brand.profile({ slug })) ?? getSeedBrandProfile(slug);
   } catch {
     return getSeedBrandProfile(slug);
   }
@@ -274,6 +274,9 @@ function getSeedBrandProfile(slug: string): BrandProfileData {
       mediaJson: post.mediaJson ?? [],
       type: post.type ?? "update",
       visibility: post.visibility ?? "public",
+      source: post.source ?? "terrace",
+      externalUrl: post.externalUrl ?? null,
+      externalId: post.externalId ?? null,
       createdAt: post.createdAt ?? new Date("2026-04-28T00:00:00.000Z"),
       updatedAt: post.updatedAt ?? new Date("2026-04-28T00:00:00.000Z")
     }));
@@ -304,8 +307,8 @@ function getSeedBrandProfile(slug: string): BrandProfileData {
 
 function BrandAvatar({ name, className }: { name: string; className?: string }) {
   return (
-    <Avatar className={`bg-[linear-gradient(135deg,#9fc9e4,#e28a77)] font-semibold text-[#111318] ${className ?? ""}`}>
-      <AvatarFallback className="bg-transparent text-[#111318]">{initials(name)}</AvatarFallback>
+    <Avatar className={`bg-[linear-gradient(135deg,#9fc9e4,#e28a77)] font-semibold text-[#37352f] ${className ?? ""}`}>
+      <AvatarFallback className="bg-transparent text-[#37352f]">{initials(name)}</AvatarFallback>
     </Avatar>
   );
 }
@@ -323,11 +326,11 @@ function CompanyMetric({
 }) {
   return (
     <div
-      className={`rounded-2xl border p-4 ${highlighted ? "border-[#f3d5c4] bg-[#fff7f2]" : "border-[#ececec] bg-[#fbfcfd]"}`}
+      className={`rounded-2xl border p-4 ${highlighted ? "border-[#f3d5c4] bg-[#faf0ea]" : "border-[#e9e9e7] bg-[#fbfbfa]"}`}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-semibold tracking-[0.16em] text-[#9aa3b2] uppercase">{label}</span>
-        <Icon className={`h-4 w-4 ${highlighted ? "text-[#D86B3D]" : "text-[#9aa3b2]"}`} />
+        <span className="text-[11px] font-semibold tracking-[0.16em] text-[#9b9a97] uppercase">{label}</span>
+        <Icon className={`h-4 w-4 ${highlighted ? "text-[#D86B3D]" : "text-[#9b9a97]"}`} />
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-[-0.05em]">{value}</p>
     </div>
@@ -336,9 +339,9 @@ function CompanyMetric({
 
 function EmptyPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-[22px] border border-[#ececec] bg-white p-5">
+    <div className="rounded-[22px] border border-[#e9e9e7] bg-white p-5">
       <p className="text-sm font-semibold">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-[#687386]">{body}</p>
+      <p className="mt-1 text-xs leading-5 text-[#787774]">{body}</p>
     </div>
   );
 }
@@ -346,8 +349,8 @@ function EmptyPanel({ title, body }: { title: string; body: string }) {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9aa3b2] uppercase">{eyebrow}</p>
-      <h2 className="mt-2 text-[22px] leading-tight font-semibold tracking-[-0.04em] text-[#111318]">{title}</h2>
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">{eyebrow}</p>
+      <h2 className="mt-2 text-[22px] leading-tight font-semibold tracking-[-0.04em] text-[#37352f]">{title}</h2>
     </div>
   );
 }

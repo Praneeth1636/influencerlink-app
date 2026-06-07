@@ -21,6 +21,8 @@ export type CreatorSearchResult = {
   weightedEngagement: number;
   baseRateCents: number | null;
   matchScore: number;
+  avatarUrl: string | null;
+  coverUrl: string | null;
 };
 
 export type CreatorSearchFilters = {
@@ -115,7 +117,9 @@ function toSearchResult(row: CreatorListRow | CreatorSearchRow): CreatorSearchRe
       verified: row.creator.verified,
       openToCollabs: row.creator.openToCollabs,
       rateCents: rateValue
-    })
+    }),
+    avatarUrl: row.creator.avatarUrl ?? null,
+    coverUrl: row.creator.coverUrl ?? null
   };
 }
 

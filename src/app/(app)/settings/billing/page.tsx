@@ -12,25 +12,25 @@ export default async function BillingSettingsPage() {
   const brandAccountId = summary.brand?.accountId;
 
   return (
-    <main className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8">
-      <section className="border-border bg-muted/30 rounded-3xl border p-6 shadow-2xl shadow-black/20">
+    <main className="mx-auto grid max-w-[1180px] gap-6 bg-white px-5 py-8 font-sans text-[#37352f]">
+      <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
           <div>
-            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
               <BadgeDollarSign className="mr-2 h-3.5 w-3.5" />
               Billing MVP
             </Badge>
-            <h1 className="mt-5 max-w-3xl text-[clamp(34px,6vw,64px)] leading-[0.96] font-black tracking-[-0.06em]">
+            <h1 className="mt-5 max-w-3xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
               Turn Terrace into a paid marketplace.
             </h1>
-            <p className="text-foreground/55 mt-4 max-w-2xl text-sm leading-7">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
               Free plans now have real server-side limits for creator applications, brand briefs, DMs, and creator
               searches. Stripe checkout comes next; this phase makes the product enforce value before payment wiring.
             </p>
           </div>
 
-          <div className="border-primary/25 bg-primary/10 rounded-2xl border p-5">
-            <p className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">Paywall levers</p>
+          <div className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Paywall levers</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Creator apps" value="5 free" />
               <Metric label="Brand DMs" value="5 free" />
@@ -47,9 +47,9 @@ export default async function BillingSettingsPage() {
             <AccountUsageCard account={account} key={`${account.audience}-${account.ownerLabel}`} />
           ))
         ) : (
-          <div className="border-border bg-card rounded-xl border p-6">
-            <p className="text-lg font-black">No billing profile yet</p>
-            <p className="text-muted-foreground mt-2 text-sm leading-6">
+          <div className="rounded-xl border border-[#e9e9e7] bg-white p-6">
+            <p className="text-lg font-semibold">No billing profile yet</p>
+            <p className="mt-2 text-sm leading-6 text-[#787774]">
               Finish creator or brand onboarding to activate plan tracking.
             </p>
           </div>
@@ -59,11 +59,11 @@ export default async function BillingSettingsPage() {
       <section className="grid gap-4">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-muted-foreground text-[11px] font-black tracking-[0.22em] uppercase">Plan catalog</p>
-            <h2 className="mt-2 text-2xl font-black tracking-[-0.045em]">Upgrade paths</h2>
+            <p className="text-[11px] font-semibold tracking-[0.22em] text-[#9b9a97] uppercase">Plan catalog</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.045em]">Upgrade paths</h2>
           </div>
           <Link
-            className="border-border text-muted-foreground hover:border-primary/35 hover:text-primary hidden rounded-xl border px-4 py-2 text-sm font-bold transition sm:inline-flex"
+            className="hidden rounded-full border border-[#e9e9e7] px-4 py-2 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#D86B3D] sm:inline-flex"
             href="/contact"
           >
             Talk to sales
@@ -74,25 +74,23 @@ export default async function BillingSettingsPage() {
         <div className="grid gap-4 xl:grid-cols-3">
           {BILLING_PLANS.map((plan) => (
             <article
-              className="border-border bg-card hover:border-primary/35 rounded-xl border p-5 transition"
+              className="rounded-xl border border-[#e9e9e7] bg-white p-5 transition hover:border-[#f3d5c4]"
               key={plan.id}
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-muted-foreground text-xs font-black tracking-[0.18em] uppercase">
-                    {plan.audience}
-                  </p>
-                  <h3 className="mt-2 text-xl font-black tracking-[-0.035em]">{plan.name}</h3>
+                  <p className="text-xs font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">{plan.audience}</p>
+                  <h3 className="mt-2 text-xl font-semibold tracking-[-0.035em]">{plan.name}</h3>
                 </div>
-                <p className="bg-muted/40 text-foreground/68 rounded-full px-3 py-1 text-xs font-black">
+                <p className="rounded-full border border-[#e9e9e7] bg-[#fbfbfa] px-3 py-1 text-xs font-semibold text-[#787774]">
                   {formatPlanPrice(plan)}
                 </p>
               </div>
-              <p className="text-muted-foreground mt-3 min-h-12 text-sm leading-6">{plan.description}</p>
-              <ul className="border-border mt-4 grid gap-2 border-t pt-4">
+              <p className="mt-3 min-h-12 text-sm leading-6 text-[#787774]">{plan.description}</p>
+              <ul className="mt-4 grid gap-2 border-t border-[#e9e9e7] pt-4">
                 {plan.features.slice(0, 4).map((feature) => (
-                  <li className="text-muted-foreground flex items-center gap-2 text-sm" key={feature}>
-                    <Sparkles className="text-primary h-3.5 w-3.5" />
+                  <li className="flex items-center gap-2 text-sm text-[#787774]" key={feature}>
+                    <Sparkles className="h-3.5 w-3.5 text-[#D86B3D]" />
                     {feature}
                   </li>
                 ))}
@@ -162,17 +160,17 @@ function buildFallbackAccount(audience: "creator" | "brand", ownerLabel: string)
 
 function AccountUsageCard({ account }: { account: BillingAccountSummary }) {
   return (
-    <article className="border-border bg-card rounded-xl border p-6">
+    <article className="rounded-xl border border-[#e9e9e7] bg-white p-6 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-muted-foreground text-[11px] font-black tracking-[0.2em] uppercase">
+          <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">
             {account.audience} billing
           </p>
-          <h2 className="mt-2 text-2xl font-black tracking-[-0.045em]">{account.ownerLabel}</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.045em]">{account.ownerLabel}</h2>
         </div>
-        <div className="border-primary/25 bg-primary/10 rounded-2xl border px-4 py-3 text-right">
-          <p className="text-primary text-sm font-black">{account.plan.name}</p>
-          <p className="text-foreground/45 mt-1 text-xs font-bold">{account.priceLabel}</p>
+        <div className="rounded-lg border border-[#f3d5c4] bg-[#faf0ea] px-4 py-3 text-right">
+          <p className="text-sm font-semibold text-[#D86B3D]">{account.plan.name}</p>
+          <p className="mt-1 text-xs font-medium text-[#7a513f]">{account.priceLabel}</p>
         </div>
       </div>
 
@@ -196,18 +194,18 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Gauge className="text-primary h-4 w-4" />
-          <p className="text-foreground/78 text-sm font-black">{label}</p>
+          <Gauge className="h-4 w-4 text-[#D86B3D]" />
+          <p className="text-sm font-semibold text-[#252932]">{label}</p>
         </div>
-        <p className="text-muted-foreground text-xs font-bold">
+        <p className="text-xs font-medium text-[#787774]">
           {limit === null ? `${used} / unlimited` : `${used} / ${limit}`}
         </p>
       </div>
-      <div className="bg-muted/40 h-2 rounded-full">
-        <div className="bg-primary h-full rounded-full" style={{ width: `${percent}%` }} />
+      <div className="h-2 rounded-full bg-[#eef0f3]">
+        <div className="h-full rounded-full bg-[#D86B3D]" style={{ width: `${percent}%` }} />
       </div>
       {limit !== null && used >= limit ? (
-        <p className="text-primary flex items-center gap-2 text-xs font-bold">
+        <p className="flex items-center gap-2 text-xs font-medium text-[#D86B3D]">
           <LockKeyhole className="h-3.5 w-3.5" />
           Limit reached. Upgrade to continue.
         </p>
@@ -218,9 +216,9 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-border bg-muted/30 rounded-xl border p-3">
-      <p className="text-lg font-black tracking-[-0.04em]">{value}</p>
-      <p className="text-muted-foreground mt-1 text-[11px] font-bold">{label}</p>
+    <div className="rounded-lg border border-[#e9e9e7] bg-white p-3">
+      <p className="text-lg font-semibold tracking-[-0.04em]">{value}</p>
+      <p className="mt-1 text-[11px] font-medium text-[#787774]">{label}</p>
     </div>
   );
 }

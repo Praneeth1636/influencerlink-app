@@ -17,8 +17,8 @@ export function SaveJobButton({ jobId }: { jobId: string }) {
       <Button
         className={
           saved
-            ? "border-primary/35 bg-primary/14 text-primary hover:bg-primary/20 h-11 rounded-xl border font-black"
-            : "border-border bg-muted/30 text-foreground/68 hover:bg-muted/40 hover:text-foreground h-11 rounded-xl border font-black"
+            ? "h-11 rounded-full border border-[#f3d5c4] bg-[#faf0ea] font-semibold text-[#D86B3D] hover:bg-[#faf0ea]"
+            : "h-11 rounded-full border border-[#e9e9e7] bg-white font-semibold text-[#787774] hover:border-[#dce3ea] hover:text-[#37352f]"
         }
         disabled={isPending}
         onClick={async () => {
@@ -44,7 +44,7 @@ export function SaveJobButton({ jobId }: { jobId: string }) {
         {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
         {saved ? "Saved" : "Save job"}
       </Button>
-      {message && <p className="text-foreground/48 text-xs leading-5">{message}</p>}
+      {message && <p className="text-xs leading-5 text-[#787774]">{message}</p>}
     </div>
   );
 }

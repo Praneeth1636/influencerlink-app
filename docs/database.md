@@ -22,9 +22,9 @@ migrations, seed data, and service layer come online in later Phase 2 work.
 - `pnpm db:seed` populates deterministic development data.
 - `pnpm db:studio` opens Drizzle Studio.
 
-`drizzle.config.ts` reads `DIRECT_URL` first, then falls back to
-`DATABASE_URL`. A local placeholder URL exists only so migration generation can
-run in development before real credentials are configured.
+`drizzle.config.ts` reads `DIRECT_URL`. Use the direct/non-pooled Neon URL for
+migrations so Drizzle can apply schema changes reliably. Runtime app requests
+use `DATABASE_URL`.
 
 ## Seed Data
 
@@ -49,4 +49,6 @@ pnpm db:migrate
 pnpm db:seed
 ```
 
-The seed script reads `DIRECT_URL` first, then `DATABASE_URL`, matching the migration config.
+The seed script reads `DIRECT_URL` first, then `DATABASE_URL`. In production,
+prefer `DIRECT_URL` for one-off seed/migration commands and `DATABASE_URL` for
+the deployed app runtime.

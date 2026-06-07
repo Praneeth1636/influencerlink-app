@@ -1,8 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
-import { brandMembers, creators, users, type Creator, type User } from "@/lib/db/schema";
+import { brandMembers, creators, type Creator, type User } from "@/lib/db/schema";
 import { ForbiddenError, NotFoundError, UnauthorizedError } from "@/lib/errors";
+import { ensureDefaultUserRow } from "./ensure-user";
 
 export const BRAND_ROLES = ["viewer", "recruiter", "admin", "owner"] as const;
 export type BrandRole = (typeof BRAND_ROLES)[number];
@@ -24,11 +25,11 @@ export async function requireUser(): Promise<User> {
     throw new UnauthorizedError("Not authenticated");
   }
 
-  const [row] = await db.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-  if (!row) {
+  try {
+    return await ensureDefaultUserRow(userId);
+  } catch {
     throw new NotFoundError("User row not found for current session");
   }
-  return row;
 }
 
 /**

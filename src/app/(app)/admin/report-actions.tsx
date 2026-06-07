@@ -32,7 +32,7 @@ export function AdminReportActions({ reportId }: { reportId: string }) {
         {pending === "resolve" ? "..." : "Resolve"}
       </button>
       <button
-        className="rounded-full border border-[#ececec] bg-white px-3 py-1 text-xs font-semibold text-[#687386] hover:border-[#dce3ea] disabled:opacity-50"
+        className="rounded-full border border-[#e9e9e7] bg-white px-3 py-1 text-xs font-semibold text-[#787774] hover:border-[#dce3ea] disabled:opacity-50"
         type="button"
         onClick={() => handle("dismissed")}
         disabled={pending !== null}

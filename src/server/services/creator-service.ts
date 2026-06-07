@@ -1,9 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, gte, ilike, inArray, or, sql } from "drizzle-orm";
 import {
+  brands,
   creatorAggregates,
   creatorPlatforms,
   creators,
+  jobApplications,
+  jobs,
   platformMetrics,
   posts,
   type Creator,
@@ -128,13 +131,30 @@ export async function getCreatorProfileByHandle(db: Database, handle: string) {
     .orderBy(desc(posts.createdAt))
     .limit(12);
 
+  // Past collaborations — every job_application this creator has where the
+  // brand marked them `hired`. Joined with jobs + brands so the profile UI
+  // can show "Worked with: Glossier, Aera Studio, …" without an N+1 fetch.
+  const collabs = await db
+    .select({
+      application: jobApplications,
+      job: jobs,
+      brand: brands
+    })
+    .from(jobApplications)
+    .innerJoin(jobs, eq(jobs.id, jobApplications.jobId))
+    .innerJoin(brands, eq(brands.id, jobs.brandId))
+    .where(and(eq(jobApplications.creatorId, profile.creator.id), eq(jobApplications.status, "hired")))
+    .orderBy(desc(jobApplications.updatedAt))
+    .limit(20);
+
   return {
     ...profile,
     platforms: platformRows.map((platform) => ({
       platform,
       latestMetrics: latestMetricsByPlatform.get(platform.id) ?? null
     })),
-    posts: creatorPosts
+    posts: creatorPosts,
+    collabs
   };
 }
 

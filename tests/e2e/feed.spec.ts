@@ -15,7 +15,8 @@ test("public creator profile loads by handle", async ({ page }) => {
 
   await expect(page).toHaveTitle(/Terrace/);
   await expect(page.getByRole("heading", { name: "Sara Rivera" })).toBeVisible();
-  await expect(page.getByText("Connected accounts")).toBeVisible();
+  await expect(page.getByText("Brand snapshot")).toBeVisible();
+  await expect(page.getByText("Posts", { exact: true })).toBeVisible();
 });
 
 test("public company page loads by slug", async ({ page }) => {
@@ -33,18 +34,14 @@ test("creator search filters creators", async ({ page }) => {
   // is right, and the niche filter survives a round-trip in the form.
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/Terrace/);
-  await expect(
-    page.locator('option[value="Beauty"]:checked, [aria-selected="true"]:has-text("Beauty")').first()
-  ).toBeVisible();
+  await expect(page.locator('select[name="niche"]')).toHaveValue("Beauty");
 });
 
 test("jobs board and job detail pages load open briefs", async ({ page }) => {
   await page.goto("/jobs?niche=Beauty&minBudget=300000&remote=1");
 
   await expect(page).toHaveTitle(/Terrace/);
-  await expect(
-    page.getByRole("heading", { name: "Browse brand campaigns built for creator proof, not vanity." })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Open work from verified brand teams." })).toBeVisible();
   await expect(page.getByRole("link", { name: "View brief" }).first()).toBeVisible();
 
   await page.goto("/jobs/00000000-0000-4000-8000-000000008000");

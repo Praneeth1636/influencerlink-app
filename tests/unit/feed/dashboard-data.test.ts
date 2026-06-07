@@ -48,6 +48,9 @@ const postData = [
     mediaJson: [],
     type: "milestone",
     visibility: "public",
+    source: "terrace",
+    externalUrl: null,
+    externalId: null,
     createdAt,
     updatedAt: createdAt
   }

@@ -53,9 +53,14 @@ async function isSuspendedInDb(clerkId: string): Promise<boolean> {
   return Boolean(rows[0]?.suspended_at);
 }
 
+// `clerkMiddleware` must run on every request — even local-demo ones —
+// because server components call `auth()` from the Clerk SDK, and that
+// throws if the middleware hasn't set up the request context. The
+// previous wrapper short-circuited Clerk entirely on localhost, which
+// broke any page that does `await auth()` (login, signup, onboarding,
+// dashboard, …). Bypass the gating logic for local-demo paths instead.
 export default clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) return;
-
   if (shouldBypassAuthForLocalDemo(req)) return;
 
   const { userId, sessionClaims, redirectToSignIn } = await auth();
@@ -63,24 +68,18 @@ export default clerkMiddleware(async (auth, req) => {
     return redirectToSignIn();
   }
 
-  // Suspension check fires before everything else — suspended users see a
-  // hard 403, not the onboarding gate or app surface. We don't query the DB
-  // on every request — only when the session is stale enough to matter
-  // (the DB read for onboarded already happens, so suspension piggy-backs
-  // on the same trip cost).
+  // Suspension check fires before the onboarding gate — suspended users
+  // see a hard 403, not a redirect.
   if (await isSuspendedInDb(userId)) {
     return new NextResponse("Account suspended. Contact support.", { status: 403 });
   }
 
-  // Onboarding gate. The fast path is the JWT claim — it requires the Clerk
-  // session token to surface public_metadata via the
-  // {"metadata":"{{user.public_metadata}}"} template (see docs/setup.md).
-  // If the claim is missing (template not configured, or session JWT is stale
-  // after a metadata write), we fall back to a direct DB check so users with
-  // a finished onboarding row don't get bounced into a redirect loop.
+  // Onboarding gate. Fast path = the JWT claim (requires the Clerk
+  // session template to surface public_metadata as `metadata`). Falls
+  // back to a direct DB check so users with a finished onboarding row
+  // don't loop when the template is missing.
   if (sessionClaims?.metadata?.onboarded === true) return;
   if (isOnboardingRoute(req)) return;
-
   if (await isOnboardedInDb(userId)) return;
 
   return NextResponse.redirect(new URL("/onboarding", req.url));

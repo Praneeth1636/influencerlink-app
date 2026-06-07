@@ -13,7 +13,7 @@ export function MarkAllNotificationsReadButton({ unreadCount }: { unreadCount: n
   return (
     <div className="grid justify-items-start gap-2 sm:justify-items-end">
       <Button
-        className="h-11 rounded-xl border border-white/10 bg-white/[0.04] px-4 font-black text-white/68 hover:bg-white/[0.08] hover:text-white"
+        className="h-11 rounded-full border border-[#e9e9e7] bg-white px-4 font-semibold text-[#37352f] hover:bg-[#f8f9fb]"
         disabled={mutation.isPending || count === 0}
         onClick={async () => {
           setMessage(null);
@@ -32,8 +32,8 @@ export function MarkAllNotificationsReadButton({ unreadCount }: { unreadCount: n
         <CheckCheck className="h-4 w-4" />
         Mark all read
       </Button>
-      <p className="text-xs font-bold text-white/38">{count} unread</p>
-      {message && <p className="max-w-[220px] text-xs leading-5 text-white/48">{message}</p>}
+      <p className="text-xs font-medium text-[#9b9a97]">{count} unread</p>
+      {message && <p className="max-w-[220px] text-xs leading-5 text-[#787774]">{message}</p>}
     </div>
   );
 }

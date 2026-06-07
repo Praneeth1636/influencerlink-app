@@ -13,6 +13,7 @@ import { db } from "@/lib/db/client";
 import { creatorPlatforms } from "@/lib/db/schema";
 import { logger } from "@/lib/logger";
 import { syncInstagramMetrics, syncTikTokMetrics, syncYouTubeMetrics } from "@/server/services/platform-service";
+import { syncAllSocialContent } from "@/server/services/social-content-service";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // 5 minutes — Vercel hobby plan ceiling
@@ -63,5 +64,16 @@ export async function GET(req: NextRequest) {
     log.info({ total: results.length }, "platform sync completed");
   }
 
-  return NextResponse.json({ total: connections.length, succeeded, failed });
+  // After refreshing metrics, pull recent posts from each connected platform
+  // into the feed as synced content. Best-effort — a content failure must not
+  // fail the metrics sync.
+  let content = { creatorsSynced: 0, platformsSynced: 0, postsUpserted: 0 };
+  try {
+    content = await syncAllSocialContent(db);
+    log.info(content, "social content sync completed");
+  } catch (error) {
+    log.warn({ error }, "social content sync failed");
+  }
+
+  return NextResponse.json({ total: connections.length, succeeded, failed, content });
 }

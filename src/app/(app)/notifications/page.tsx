@@ -15,18 +15,18 @@ export default async function NotificationsPage() {
   const unreadCount = getUnreadCount(notifications);
 
   return (
-    <main className="mx-auto grid max-w-[1120px] gap-6 px-5 py-8">
-      <section className="border-border bg-muted/30 rounded-3xl border p-6 shadow-2xl shadow-black/20">
+    <main className="mx-auto grid max-w-[1120px] gap-6 bg-white px-5 py-8 font-sans text-[#37352f]">
+      <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
         <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
           <div>
-            <Badge className="bg-primary/12 text-primary hover:bg-primary/12 rounded-full px-3 py-1">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
               <Bell className="mr-2 h-3.5 w-3.5" />
               Workspace alerts
             </Badge>
-            <h1 className="mt-5 max-w-3xl text-[clamp(34px,6vw,64px)] leading-[0.96] font-black tracking-[-0.06em]">
+            <h1 className="mt-5 max-w-3xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
               Track every creator opportunity as it moves.
             </h1>
-            <p className="text-foreground/55 mt-4 max-w-2xl text-sm leading-7">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
               Notifications now sit behind real tRPC procedures. Job applications and recruiter status changes create
               alerts so creators and brands can react without digging through every page.
             </p>
@@ -40,9 +40,9 @@ export default async function NotificationsPage() {
         {notifications.length > 0 ? (
           notifications.map((notification) => <NotificationCard key={notification.id} notification={notification} />)
         ) : (
-          <div className="border-border bg-card rounded-xl border p-6">
-            <p className="text-lg font-black">No notifications yet</p>
-            <p className="text-foreground/50 mt-2 text-sm leading-6">
+          <div className="rounded-xl border border-[#e9e9e7] bg-white p-6">
+            <p className="text-lg font-semibold">No notifications yet</p>
+            <p className="mt-2 text-sm leading-6 text-[#787774]">
               Apply to briefs, publish jobs, or move applicants through the pipeline to create alerts.
             </p>
           </div>
@@ -68,30 +68,30 @@ function NotificationCard({ notification }: { notification: NotificationItem }) 
     <Link
       className={
         isUnread
-          ? "border-primary/25 bg-primary/10 hover:border-primary/45 grid gap-4 rounded-2xl border p-5 transition sm:grid-cols-[auto_minmax(0,1fr)_auto]"
-          : "border-border bg-card hover:border-border grid gap-4 rounded-xl border p-5 transition sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+          ? "grid gap-4 rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5 transition hover:border-[#e7b598] sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+          : "grid gap-4 rounded-xl border border-[#e9e9e7] bg-white p-5 transition hover:border-[#dcdfe5] sm:grid-cols-[auto_minmax(0,1fr)_auto]"
       }
       href={notification.href}
     >
-      <div className="bg-muted/30 text-primary ring-border grid h-11 w-11 place-items-center rounded-2xl ring-1">
+      <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-[#D86B3D] ring-1 ring-[#e9e9e7]">
         <BriefcaseBusiness className="h-5 w-5" />
       </div>
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-lg font-black tracking-[-0.035em]">{notification.title}</h2>
+          <h2 className="text-lg font-semibold tracking-[-0.035em]">{notification.title}</h2>
           {isUnread ? (
-            <span className="bg-primary inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-black">
+            <span className="inline-flex items-center rounded-full bg-[#D86B3D] px-2 py-0.5 text-[11px] font-semibold text-white">
               New
             </span>
           ) : null}
         </div>
-        <p className="text-foreground/56 mt-1 text-sm leading-6">{notification.body}</p>
-        <p className="text-muted-foreground mt-3 text-xs font-bold">
+        <p className="mt-1 text-sm leading-6 text-[#787774]">{notification.body}</p>
+        <p className="mt-3 text-xs font-medium text-[#9b9a97]">
           {notification.actorLabel} · {formatNotificationDate(notification.createdAt)}
         </p>
       </div>
-      <div className="text-muted-foreground flex items-center gap-2 text-xs font-black">
-        {isUnread ? <Circle className="fill-primary text-primary h-3 w-3" /> : <CheckCircle2 className="h-4 w-4" />}
+      <div className="flex items-center gap-2 text-xs font-semibold text-[#9b9a97]">
+        {isUnread ? <Circle className="h-3 w-3 fill-[#D86B3D] text-[#D86B3D]" /> : <CheckCircle2 className="h-4 w-4" />}
         {isUnread ? "Unread" : "Read"}
       </div>
     </Link>

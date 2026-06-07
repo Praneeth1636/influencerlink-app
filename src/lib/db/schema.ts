@@ -10,6 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   vector
 } from "drizzle-orm/pg-core";
@@ -24,10 +25,13 @@ const updatedTimestamp = {
 
 export const accountTypeEnum = pgEnum("account_type", ["creator", "brand_member", "admin"]);
 export const brandRoleEnum = pgEnum("brand_role", ["owner", "admin", "recruiter", "viewer"]);
-export const platformEnum = pgEnum("platform", ["instagram", "tiktok", "youtube", "linkedin"]);
+export const platformEnum = pgEnum("platform", ["instagram", "tiktok", "youtube", "linkedin", "twitter"]);
 export const postAuthorTypeEnum = pgEnum("post_author_type", ["creator", "brand"]);
 export const postTypeEnum = pgEnum("post_type", ["update", "milestone", "content_drop", "open_to_work", "job_share"]);
 export const postVisibilityEnum = pgEnum("post_visibility", ["public", "connections"]);
+// Where a post came from. `terrace` = authored natively in-app; the rest are
+// synced from a creator's connected platform (their real IG/YT/TikTok content).
+export const postSourceEnum = pgEnum("post_source", ["terrace", "instagram", "tiktok", "youtube"]);
 export const followedTypeEnum = pgEnum("followed_type", ["creator", "brand"]);
 export const jobStatusEnum = pgEnum("job_status", ["draft", "open", "closed", "archived"]);
 export const jobApplicationStatusEnum = pgEnum("job_application_status", [
@@ -195,10 +199,19 @@ export const posts = pgTable(
     mediaJson: jsonb("media_json").$type<Array<Record<string, unknown>>>().notNull().default([]),
     type: postTypeEnum("type").notNull().default("update"),
     visibility: postVisibilityEnum("visibility").notNull().default("public"),
+    // Social-content sync: `source` marks the origin platform, `externalUrl`
+    // links back to the original post, and `externalId` is the platform's own
+    // id (unique per source) so re-syncing upserts instead of duplicating.
+    source: postSourceEnum("source").notNull().default("terrace"),
+    externalUrl: text("external_url"),
+    externalId: text("external_id"),
     ...timestamps,
     ...updatedTimestamp
   },
-  (table) => [index("posts_author_created_at_idx").on(table.authorType, table.authorId, table.createdAt.desc())]
+  (table) => [
+    index("posts_author_created_at_idx").on(table.authorType, table.authorId, table.createdAt.desc()),
+    uniqueIndex("posts_source_external_id_idx").on(table.source, table.externalId)
+  ]
 );
 
 export const postLikes = pgTable(

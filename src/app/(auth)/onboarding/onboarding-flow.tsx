@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useClerk } from "@clerk/nextjs";
 import { ArrowLeft, BadgeCheck, BriefcaseBusiness, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,19 +21,20 @@ import { checkHandleAvailability, completeCreatorOnboarding } from "@/lib/onboar
 // continue to render — we don't take the whole page to a blank screen.
 const BrandPath = dynamic(() => import("./brand-path").then((m) => m.BrandPath), {
   ssr: false,
-  loading: () => <p className="text-sm font-medium text-[#687386]">Loading brand setup…</p>
+  loading: () => <p className="text-sm font-medium text-[#787774]">Loading brand setup…</p>
 });
 
 type Path = "creator" | "brand";
 
 const inputClassName =
-  "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
+  "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
 
 export function OnboardingFlow() {
   const [path, setPath] = useState<Path | null>(null);
+  const { signOut } = useClerk();
 
   return (
-    <main className="creatorlink-auth-light relative min-h-screen overflow-hidden bg-[#fbfaf8] px-4 py-8 font-sans text-[#111318] sm:px-6">
+    <main className="creatorlink-auth-light relative min-h-screen overflow-hidden bg-white px-4 py-8 font-sans text-[#37352f] sm:px-6">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[520px] max-w-6xl bg-[radial-gradient(circle_at_20%_18%,rgba(140,201,232,0.34),transparent_34%),radial-gradient(circle_at_82%_12%,rgba(246,176,132,0.32),transparent_30%)] blur-3xl"
@@ -43,30 +45,38 @@ export function OnboardingFlow() {
 
       <div className="relative z-10 mx-auto grid max-w-5xl gap-8">
         <header className="flex items-center justify-between gap-4">
-          <Link className="flex items-center gap-3" href="/" aria-label="Terrace">
-            <span className="logoMark miniLogo bg-[#111318]" aria-hidden>
+          <Link href="/" aria-label="Terrace" className="inline-flex items-center gap-3">
+            <span className="logoMark miniLogo" aria-hidden>
               <span />
               <span />
               <span />
             </span>
-            <span className="text-2xl font-semibold tracking-[-0.04em]">Terrace</span>
+            <span className="flex items-baseline text-2xl font-semibold tracking-[-0.04em]">
+              Terrace<span className="text-[#D86B3D]">.</span>
+            </span>
           </Link>
-          <Link className="text-sm font-semibold text-[#687386] transition hover:text-[#111318]" href="/login">
+          <button
+            type="button"
+            className="text-sm font-semibold text-[#787774] transition hover:text-[#37352f]"
+            onClick={() => {
+              void signOut({ redirectUrl: "/" });
+            }}
+          >
             Sign out
-          </Link>
+          </button>
         </header>
 
-        <section className="creatorlink-animate-in rounded-[32px] border border-[#e8ebef] bg-white/78 p-5 shadow-[0_28px_72px_rgba(17,24,39,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
+        <section className="creatorlink-animate-in rounded-[32px] border border-[#e9e9e7] bg-white/78 p-5 shadow-[0_28px_72px_rgba(17,24,39,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,1fr)]">
             <div className="max-w-2xl text-left">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#e8ebef] bg-white/80 px-4 py-2 text-sm font-bold text-[#657082] shadow-sm">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#e9e9e7] bg-white/80 px-4 py-2 text-sm font-bold text-[#657082] shadow-sm">
                 <Sparkles className="h-4 w-4 text-[#D86B3D]" />
                 First, shape your Terrace
               </div>
               <h1 className="text-[clamp(42px,7vw,74px)] leading-[0.94] font-semibold tracking-[-0.075em]">
                 Pick your side. See the network come alive.
               </h1>
-              <p className="mt-5 max-w-xl text-lg leading-8 text-[#687386]">
+              <p className="mt-5 max-w-xl text-lg leading-8 text-[#787774]">
                 Creators build verified proof. Brands build a hiring surface. Both meet in the same Terrace flow.
               </p>
             </div>
@@ -98,7 +108,7 @@ function OnboardingProductPreview() {
       <div className="relative z-10 grid gap-4">
         <div className="w-[78%] rounded-3xl border border-white/10 bg-white/[0.07] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.22)]">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f5b38e] text-sm font-black text-[#111318]">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f5b38e] text-sm font-black text-[#37352f]">
               SR
             </div>
             <div>
@@ -132,14 +142,14 @@ function OnboardingProductPreview() {
               </span>
             ))}
           </div>
-          <div className="mt-4 rounded-2xl bg-white p-3 text-[#111318]">
+          <div className="mt-4 rounded-2xl bg-white p-3 text-[#37352f]">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold">94% match</p>
               <span className="rounded-full bg-[#fff0e8] px-2.5 py-1 text-[11px] font-bold text-[#D86B3D]">
                 top fit
               </span>
             </div>
-            <p className="mt-1 text-xs leading-5 text-[#687386]">
+            <p className="mt-1 text-xs leading-5 text-[#787774]">
               High beauty audience fit and reliable response time.
             </p>
           </div>
@@ -198,7 +208,7 @@ function AccountTypeStep({ onPick }: { onPick: (path: Path) => void }) {
             </span>
             <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">For brands</p>
             <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em]">Run a campaign</p>
-            <p className="mt-4 text-sm leading-6 text-[#687386]">
+            <p className="mt-4 text-sm leading-6 text-[#787774]">
               Spin up a team, search creators, and brief campaigns end to end.
             </p>
           </div>
@@ -263,7 +273,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
   return (
     <form
-      className="grid gap-5 rounded-[28px] border border-[#e8ebef] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7"
+      className="grid gap-5 rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7"
       onSubmit={(event) => {
         event.preventDefault();
         submit();
@@ -316,7 +326,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
 
       <Field label="Bio" error={errors.bio?.[0]}>
         <textarea
-          className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
+          className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           maxLength={500}
           onChange={(event) => setBio(event.target.value)}
           placeholder="Tell brands what you make and who watches it."
@@ -343,7 +353,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
                 aria-pressed={active}
                 className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
                   active
-                    ? "bg-[#111318] text-white"
+                    ? "bg-[#37352f] text-white"
                     : "border border-[#d8dee8] bg-white text-[#566174] hover:border-[#bfc8d4]"
                 }`}
                 key={n}
@@ -360,10 +370,11 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
       <Separator className="bg-muted/30" />
 
       <PlaceholderBlock icon={<BadgeCheck className="h-4 w-4" />} title="Connect platforms">
-        Instagram, TikTok, and YouTube OAuth lights up in Phase 10. For now, your media kit shows the empty state.
+        Instagram, TikTok, and YouTube connection is available after platform approval. Until then, your media kit can
+        be completed manually.
       </PlaceholderBlock>
 
-      <div className="grid gap-4 rounded-[24px] border border-[#e8ebef] bg-[#fbfcfd] p-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+      <div className="grid gap-4 rounded-[24px] border border-[#e9e9e7] bg-[#fbfbfa] p-4 sm:grid-cols-[160px_minmax(0,1fr)]">
         <ImageUpload
           aspect="square"
           hint="JPG, PNG, WebP, or GIF. Max 5 MB."
@@ -385,7 +396,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
       <div className="flex items-center justify-end gap-3">
         <NoiseBackground containerClassName="rounded-2xl">
           <Button
-            className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#111318] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
+            className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
             disabled={pending}
             type="submit"
           >
@@ -430,7 +441,7 @@ function Field({
 function BackLink({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="self-start text-xs font-semibold tracking-wide text-[#687386] uppercase transition hover:text-[#111318]"
+      className="self-start text-xs font-semibold tracking-wide text-[#787774] uppercase transition hover:text-[#37352f]"
       onClick={onClick}
       type="button"
     >
@@ -450,12 +461,12 @@ function PlaceholderBlock({
   title: string;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfcfd] p-4">
+    <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfbfa] p-4">
       <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">
         {icon}
         Placeholder · {title}
       </p>
-      <p className="mt-2 text-sm leading-6 text-[#687386]">{children}</p>
+      <p className="mt-2 text-sm leading-6 text-[#787774]">{children}</p>
     </div>
   );
 }

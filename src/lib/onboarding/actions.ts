@@ -2,8 +2,11 @@
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { APP_ROLE_COOKIE, type AppRole } from "@/lib/auth/role";
 import { logger } from "@/lib/logger";
+import { ensureDefaultUserRow } from "@/lib/auth/ensure-user";
 import { db } from "@/lib/db/client";
 import { brandMembers, brands, creators, users } from "@/lib/db/schema";
 import {
@@ -22,9 +25,8 @@ async function loadAuthedUser() {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
-  const [row] = await db.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-  if (!row) throw new Error("User row missing — webhook may not have fired");
-  return { clerkId: userId, user: row };
+  const user = await ensureDefaultUserRow(userId);
+  return { clerkId: userId, user };
 }
 
 async function markOnboarded(clerkId: string, userRowId: string) {
@@ -33,6 +35,17 @@ async function markOnboarded(clerkId: string, userRowId: string) {
   const client = await clerkClient();
   await client.users.updateUserMetadata(clerkId, {
     publicMetadata: { onboarded: true }
+  });
+}
+
+async function setOnboardingRole(role: AppRole) {
+  const cookieStore = await cookies();
+
+  cookieStore.set(APP_ROLE_COOKIE, role, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365
   });
 }
 
@@ -62,32 +75,41 @@ export async function completeCreatorOnboarding(input: CreatorOnboardingInput): 
 
   const handle = parsed.data.handle.toLowerCase();
   const [existing] = await db.select({ id: creators.id }).from(creators).where(eq(creators.handle, handle)).limit(1);
-  if (existing) {
+  const [ownCreator] = await db.select({ id: creators.id }).from(creators).where(eq(creators.userId, user.id)).limit(1);
+  if (existing && existing.id !== ownCreator?.id) {
     return { ok: false, error: "Handle is taken", fieldErrors: { handle: ["Handle is taken"] } };
   }
 
-  const [created] = await db
-    .insert(creators)
-    .values({
-      userId: user.id,
-      handle,
-      displayName: parsed.data.displayName,
-      headline: parsed.data.headline || null,
-      bio: parsed.data.bio || null,
-      location: parsed.data.location || null,
-      niches: parsed.data.niches,
-      avatarUrl: parsed.data.avatarUrl || null,
-      coverUrl: parsed.data.coverUrl || null
-    })
-    .returning({ id: creators.id });
+  const creatorValues = {
+    handle,
+    displayName: parsed.data.displayName,
+    headline: parsed.data.headline || null,
+    bio: parsed.data.bio || null,
+    location: parsed.data.location || null,
+    niches: parsed.data.niches,
+    avatarUrl: parsed.data.avatarUrl || null,
+    coverUrl: parsed.data.coverUrl || null,
+    updatedAt: new Date()
+  };
+
+  const [createdOrUpdated] = ownCreator
+    ? await db.update(creators).set(creatorValues).where(eq(creators.id, ownCreator.id)).returning({ id: creators.id })
+    : await db
+        .insert(creators)
+        .values({
+          userId: user.id,
+          ...creatorValues
+        })
+        .returning({ id: creators.id });
 
   await db.update(users).set({ type: "creator" }).where(eq(users.id, user.id));
 
-  if (created) {
-    await generateCreatorEmbedding(db, created.id);
+  if (createdOrUpdated) {
+    await generateCreatorEmbedding(db, createdOrUpdated.id);
   }
 
   await markOnboarded(clerkId, user.id);
+  await setOnboardingRole("creator");
   log.info({ clerkId, handle }, "creator onboarded");
 
   redirect(`/profile/${handle}`);
@@ -111,26 +133,36 @@ export async function completeBrandOnboarding(input: BrandOnboardingInput): Prom
   const slug = parsed.data.slug.toLowerCase();
 
   const [slugTaken] = await db.select({ id: brands.id }).from(brands).where(eq(brands.slug, slug)).limit(1);
-  if (slugTaken) {
+  const [ownMembership] = await db
+    .select({ brandId: brandMembers.brandId })
+    .from(brandMembers)
+    .where(eq(brandMembers.userId, user.id))
+    .limit(1);
+  if (slugTaken && slugTaken.id !== ownMembership?.brandId) {
     return { ok: false, error: "Slug is taken", fieldErrors: { slug: ["Slug is taken"] } };
   }
 
-  const [brand] = await db
-    .insert(brands)
-    .values({
-      slug,
-      name: parsed.data.name,
-      industry: parsed.data.industry,
-      sizeRange: parsed.data.sizeRange,
-      about: parsed.data.about || null
-    })
-    .returning({ id: brands.id });
+  const brandValues = {
+    slug,
+    name: parsed.data.name,
+    industry: parsed.data.industry,
+    sizeRange: parsed.data.sizeRange,
+    about: parsed.data.about || null,
+    updatedAt: new Date()
+  };
 
-  await db.insert(brandMembers).values({
-    brandId: brand.id,
-    userId: user.id,
-    role: "owner"
-  });
+  const [brand] = ownMembership
+    ? await db.update(brands).set(brandValues).where(eq(brands.id, ownMembership.brandId)).returning({ id: brands.id })
+    : await db.insert(brands).values(brandValues).returning({ id: brands.id });
+
+  await db
+    .insert(brandMembers)
+    .values({
+      brandId: brand.id,
+      userId: user.id,
+      role: "owner"
+    })
+    .onConflictDoNothing();
 
   await db.update(users).set({ type: "brand_member" }).where(eq(users.id, user.id));
 
@@ -141,6 +173,7 @@ export async function completeBrandOnboarding(input: BrandOnboardingInput): Prom
   });
 
   await markOnboarded(clerkId, user.id);
+  await setOnboardingRole("brand");
   log.info({ clerkId, brandId: brand.id, slug, plan: parsed.data.plan }, "brand onboarded");
 
   redirect("/search");

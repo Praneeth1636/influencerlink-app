@@ -1,6 +1,6 @@
-# InfluencerLink Product Blueprint
+# Terrace Product Blueprint
 
-InfluencerLink is a professional network and marketplace for creator-brand partnerships. The MVP centers on three screens: verified creator profiles, AI-ranked creator discovery, and an active campaign workspace.
+Terrace is a professional network and marketplace for creator-brand partnerships. The MVP centers on three screens: verified creator profiles, AI-ranked creator discovery, and an active campaign workspace.
 
 ## Core Screens
 
