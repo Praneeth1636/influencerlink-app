@@ -1,4 +1,7 @@
+import { config } from "dotenv";
 import { neon } from "@neondatabase/serverless";
+
+config({ path: ".env.local" });
 
 const url = process.env.DATABASE_URL || process.env.DIRECT_URL;
 if (!url) {

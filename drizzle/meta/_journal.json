@@ -57,6 +57,13 @@
       "when": 1779061668956,
       "tag": "0007_slippery_dust",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1780878336410,
+      "tag": "0008_easy_tinkerer",
+      "breakpoints": true
     }
   ]
 }

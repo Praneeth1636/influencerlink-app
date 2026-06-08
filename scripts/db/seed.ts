@@ -1,20 +1,31 @@
+import { config } from "dotenv";
+
 import { createSeedDatabase, seedDatabase } from "@/lib/db/seed";
 
-const databaseUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+config({ path: ".env.local" });
 
-if (!databaseUrl) {
-  throw new Error("Set DIRECT_URL or DATABASE_URL before running pnpm db:seed");
+async function main() {
+  const databaseUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error("Set DIRECT_URL or DATABASE_URL before running pnpm db:seed");
+  }
+
+  const result = await seedDatabase(createSeedDatabase(databaseUrl));
+
+  console.log(
+    [
+      "Seed complete:",
+      `${result.users} users`,
+      `${result.creators} creators`,
+      `${result.brands} brands`,
+      `${result.posts} posts`,
+      `${result.follows} follows`
+    ].join(" ")
+  );
 }
 
-const result = await seedDatabase(createSeedDatabase(databaseUrl));
-
-console.log(
-  [
-    "Seed complete:",
-    `${result.users} users`,
-    `${result.creators} creators`,
-    `${result.brands} brands`,
-    `${result.posts} posts`,
-    `${result.follows} follows`
-  ].join(" ")
-);
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});
