@@ -143,6 +143,7 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
             <Link
               className="inline-flex h-12 items-center justify-center rounded-full border border-[#dfe4eb] bg-[#fbfcfd] px-7 text-sm font-semibold text-[#23272f] shadow-[0_12px_30px_rgba(17,24,39,0.05)] transition duration-300 hover:-translate-y-0.5 hover:border-[#cfeffc]"
               href="/feed"
+              prefetch={false}
             >
               View product
             </Link>

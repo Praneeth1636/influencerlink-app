@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { href: "/jobs", label: "Briefs" },
-  { href: "/search", label: "Creators" },
+  { href: "/search", label: "Creators", prefetch: false },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }
@@ -55,7 +55,7 @@ export function MarketingNav() {
 
         <nav className="hidden items-center gap-7 text-sm font-semibold text-[#787774] md:flex lg:gap-9">
           {navItems.map((item) => (
-            <Link className="transition hover:text-[#37352f]" href={item.href} key={item.href}>
+            <Link className="transition hover:text-[#37352f]" href={item.href} key={item.href} prefetch={item.prefetch}>
               {item.label}
             </Link>
           ))}

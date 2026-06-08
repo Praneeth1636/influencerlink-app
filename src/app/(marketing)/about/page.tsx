@@ -78,6 +78,7 @@ export default function AboutPage() {
             <Link
               className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-[#37352f]"
               href="/feed"
+              prefetch={false}
             >
               Open feed
               <ArrowRight className="ml-2 h-4 w-4" />

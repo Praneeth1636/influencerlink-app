@@ -30,6 +30,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
             className="logoMark miniLogo ring-border shrink-0 bg-white/5 ring-1"
             href="/feed"
             aria-label="Terrace feed"
+            prefetch={false}
           >
             <span />
             <span />
@@ -43,12 +44,14 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
             <Link
               className="rounded-full px-3 py-2 text-sm font-medium text-[#787774] transition hover:bg-[#f7f7f5] hover:text-[#37352f]"
               href="/search"
+              prefetch={false}
             >
               Search
             </Link>
             <Link
               className="rounded-full bg-[#37352f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#262420]"
               href="/messages"
+              prefetch={false}
             >
               Contact
             </Link>
@@ -211,6 +214,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
             <Link
               className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-[#37352f] text-sm font-semibold text-white transition hover:bg-[#262420]"
               href="/messages"
+              prefetch={false}
             >
               Start conversation
             </Link>
