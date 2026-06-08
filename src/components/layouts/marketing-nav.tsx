@@ -41,7 +41,7 @@ export function MarketingNav() {
 
   return (
     <header className="sticky top-0 z-50 w-full px-3 pt-3 sm:px-6 sm:pt-4">
-      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between gap-4 rounded-full border border-[#e6e8ec] bg-[#fbfcfd]/92 px-3 shadow-[0_14px_42px_rgba(17,24,39,0.09)] backdrop-blur-xl sm:px-4">
+      <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-[#e6e8ec] bg-[#fbfcfd]/92 px-3 shadow-[0_14px_42px_rgba(17,24,39,0.09)] backdrop-blur-xl sm:px-4 lg:px-5">
         <Link href="/" className="flex items-center gap-3" aria-label="Terrace">
           <span className="logoMark miniLogo" aria-hidden>
             <span />
@@ -53,7 +53,7 @@ export function MarketingNav() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-semibold text-[#787774] md:flex">
+        <nav className="hidden items-center gap-7 text-sm font-semibold text-[#787774] md:flex lg:gap-9">
           {navItems.map((item) => (
             <Link className="transition hover:text-[#37352f]" href={item.href} key={item.href}>
               {item.label}

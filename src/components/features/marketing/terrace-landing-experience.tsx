@@ -106,7 +106,7 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
         <DiagonalLineBackground reducedMotion={prefersReducedMotion} />
         <motion.div
           animate="visible"
-          className="relative mx-auto flex max-w-[1440px] flex-col items-center px-4 pb-0 text-center sm:px-6"
+          className="relative mx-auto flex max-w-[1680px] flex-col items-center px-4 pb-0 text-center sm:px-6 lg:px-10"
           initial="hidden"
           variants={staggerVariants}
         >
@@ -149,7 +149,7 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
           </motion.div>
 
           <motion.div
-            className="relative mt-7 w-full max-w-4xl overflow-visible"
+            className="relative mt-7 w-full max-w-[1120px] overflow-visible xl:max-w-[1240px]"
             initial={{ opacity: 1, rotateX: 0, y: 0 }}
             animate={{ opacity: 1, rotateX: 0, y: 0 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
@@ -278,19 +278,19 @@ function DiagonalLineBackground({ reducedMotion }: { reducedMotion: boolean | nu
 
 function ProductShowcase({ creatorRows, prompt }: { creatorRows: LandingCreatorRow[]; prompt: string }) {
   return (
-    <div className="relative mx-auto max-w-4xl">
-      <div className="overflow-hidden rounded-t-[34px] border border-[#e6e8ec] bg-[#f3f5f7] p-3 shadow-[0_24px_76px_rgba(17,24,39,0.13)] sm:p-4">
-        <div className="rounded-t-[26px] border border-[#e0e4ea] bg-[#fbfcfd] p-3">
+    <div className="relative mx-auto w-full">
+      <div className="overflow-hidden rounded-t-[34px] border border-[#e6e8ec] bg-[#f3f5f7] p-3 shadow-[0_24px_76px_rgba(17,24,39,0.13)] sm:p-4 lg:p-5">
+        <div className="rounded-t-[26px] border border-[#e0e4ea] bg-[#fbfcfd] p-3 lg:p-4">
           <div className="mx-auto mb-3 h-1.5 w-20 rounded-full bg-[#d2d8e0]" />
-          <div className="max-h-[310px] overflow-hidden rounded-[20px] border border-[#e6e8ec] bg-[#fbfcfd] text-left">
-            <div className="flex items-center justify-between border-b border-[#e6e8ec] p-3">
+          <div className="max-h-[360px] overflow-hidden rounded-[20px] border border-[#e6e8ec] bg-[#fbfcfd] text-left xl:max-h-[390px]">
+            <div className="flex items-center justify-between border-b border-[#e6e8ec] p-3 lg:p-4">
               <div className="flex items-center gap-2">
                 <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#15171c] text-xs font-semibold text-[#fbfcfd]">
                   T
                 </span>
                 <span className="text-sm font-semibold text-[#23272f]">Terrace</span>
               </div>
-              <div className="hidden w-full max-w-sm items-center gap-3 rounded-full border border-[#e6e8ec] bg-[#f7f9fb] px-4 py-2 text-sm text-[#667085] md:flex">
+              <div className="hidden w-full max-w-sm items-center gap-3 rounded-full border border-[#e6e8ec] bg-[#f7f9fb] px-4 py-2 text-sm text-[#667085] md:flex lg:max-w-lg">
                 <Search className="h-4 w-4 text-[#D86B3D]" />
                 <motion.span
                   animate={{ opacity: 1, y: 0 }}
@@ -304,8 +304,8 @@ function ProductShowcase({ creatorRows, prompt }: { creatorRows: LandingCreatorR
               <Command className="h-5 w-5 text-[#98a2b3]" />
             </div>
 
-            <div className="grid min-h-[300px] bg-[#f7f9fb] lg:grid-cols-[180px_1fr]">
-              <aside className="hidden border-r border-[#e6e8ec] bg-[#fbfcfd] p-3 lg:block">
+            <div className="grid min-h-[340px] bg-[#f7f9fb] lg:grid-cols-[220px_1fr] xl:grid-cols-[250px_1fr]">
+              <aside className="hidden border-r border-[#e6e8ec] bg-[#fbfcfd] p-3 lg:block lg:p-4">
                 {["Feed", "Search", "Briefs", "Messages"].map((item, index) => (
                   <div
                     className={cn(
@@ -319,11 +319,11 @@ function ProductShowcase({ creatorRows, prompt }: { creatorRows: LandingCreatorR
                 ))}
               </aside>
 
-              <div className="grid gap-3 p-3 sm:p-4 lg:grid-cols-[1fr_232px]">
-                <div className="grid gap-2.5">
+              <div className="grid gap-3 p-3 sm:p-4 lg:grid-cols-[1fr_292px] lg:gap-4 lg:p-5 xl:grid-cols-[1fr_330px]">
+                <div className="grid gap-3">
                   {creatorRows.map((creator, index) => (
                     <motion.div
-                      className="rounded-[18px] border border-[#e6e8ec] bg-[#fbfcfd] p-3 shadow-[0_10px_26px_rgba(17,24,39,0.04)]"
+                      className="rounded-[18px] border border-[#e6e8ec] bg-[#fbfcfd] p-3 shadow-[0_10px_26px_rgba(17,24,39,0.04)] lg:p-4"
                       initial={{ opacity: 0, y: 12 }}
                       key={creator.name}
                       transition={{ delay: 0.42 + index * 0.08, duration: 0.42 }}
@@ -345,9 +345,9 @@ function ProductShowcase({ creatorRows, prompt }: { creatorRows: LandingCreatorR
                   ))}
                 </div>
 
-                <div className="rounded-[20px] border border-[#e6e8ec] bg-[#15171c] p-4 text-[#fbfcfd]">
+                <div className="rounded-[20px] border border-[#e6e8ec] bg-[#15171c] p-4 text-[#fbfcfd] lg:p-5">
                   <p className="text-xs font-semibold tracking-[0.16em] text-[#f7a777] uppercase">Brief scan</p>
-                  <p className="mt-2 text-lg leading-tight font-semibold tracking-[-0.05em]">
+                  <p className="mt-2 text-lg leading-tight font-semibold tracking-[-0.05em] lg:text-xl">
                     Beauty creators, women 18-30, strong TikTok demos.
                   </p>
                   <div className="mt-3 grid gap-1.5">
