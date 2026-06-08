@@ -6,7 +6,7 @@ export const metadata = {
 export default function AupPage() {
   return (
     <>
-      <p className="text-xs font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Legal · placeholder</p>
+      <p className="text-xs font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Legal</p>
       <h1>Acceptable Use Policy</h1>
       <p>
         <em>Last updated: May 18, 2026.</em>

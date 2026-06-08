@@ -1,34 +1,40 @@
 import Link from "next/link";
 import { Bell, CreditCard, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { resolveAppRole } from "@/lib/auth/role";
 
-const sections = [
-  {
-    title: "Profile settings",
-    body: "Edit creator or company identity, headline, niches, public rates, and collaboration status.",
-    href: "/onboarding",
-    icon: UserRound
-  },
-  {
-    title: "Billing",
-    body: "Manage plan, usage, invoices, and Stripe customer portal access.",
-    href: "/settings/billing",
-    icon: CreditCard
-  },
-  {
-    title: "Notifications",
-    body: "Control email, product, and brief-match notifications.",
-    href: "/notifications",
-    icon: Bell
-  },
-  {
-    title: "Trust and safety",
-    body: "Manage privacy, blocked accounts, reports, and verification preferences.",
-    href: "/contact",
-    icon: Shield
-  }
-];
+function getSections(profileHref: string) {
+  return [
+    {
+      title: "Profile settings",
+      body: "Edit creator or company identity, headline, niches, public rates, and collaboration status.",
+      href: profileHref,
+      icon: UserRound
+    },
+    {
+      title: "Billing",
+      body: "Manage plan, usage, invoices, and Stripe customer portal access.",
+      href: "/settings/billing",
+      icon: CreditCard
+    },
+    {
+      title: "Notifications",
+      body: "Control email, product, and brief-match notifications.",
+      href: "/notifications",
+      icon: Bell
+    },
+    {
+      title: "Trust and safety",
+      body: "Manage privacy, blocked accounts, reports, and verification preferences.",
+      href: "/contact",
+      icon: Shield
+    }
+  ];
+}
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const role = await resolveAppRole();
+  const sections = getSections(role === "brand" ? "/dashboard" : "/creator");
+
   return (
     <main className="min-h-screen bg-white font-sans text-[#37352f]">
       <header className="sticky top-0 z-40 border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
