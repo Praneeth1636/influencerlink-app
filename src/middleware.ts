@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
+import { APP_ONBOARDED_COOKIE } from "@/lib/auth/cookies";
 
 const isProtectedRoute = createRouteMatcher([
   "/creator(.*)",
@@ -40,8 +41,10 @@ const terraceClerkMiddleware = clerkMiddleware(async (auth, req) => {
   }
 
   // Keep edge middleware lightweight: no database calls here. The JWT claim is
-  // enough for routing, and pages/routes can do deeper DB checks in Node.
+  // the durable source. The cookie is an immediate same-user bridge for the
+  // first redirect after onboarding, before Clerk refreshes session claims.
   if (sessionClaims?.metadata?.onboarded === true) return;
+  if (req.cookies.get(APP_ONBOARDED_COOKIE)?.value === userId) return;
   if (isOnboardingRoute(req)) return;
 
   return NextResponse.redirect(new URL("/onboarding", req.url));

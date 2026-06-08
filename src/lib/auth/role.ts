@@ -8,13 +8,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { cookies, headers } from "next/headers";
+import { APP_ROLE_COOKIE } from "@/lib/auth/cookies";
 import { isLocalDemoRequest } from "@/lib/auth/local-demo";
 import { db } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 
 export type AppRole = "creator" | "brand";
-
-export const APP_ROLE_COOKIE = "terrace_app_role";
 
 function parseAppRole(value: string | undefined): AppRole | null {
   if (value === "creator" || value === "brand") return value;

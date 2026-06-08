@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { APP_ROLE_COOKIE, type AppRole } from "@/lib/auth/role";
+import { APP_ROLE_COOKIE } from "@/lib/auth/cookies";
+import type { AppRole } from "@/lib/auth/role";
 
 export async function setAppRolePreference(role: AppRole) {
   const cookieStore = await cookies();

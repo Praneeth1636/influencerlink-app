@@ -4,7 +4,8 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { APP_ROLE_COOKIE, type AppRole } from "@/lib/auth/role";
+import { APP_ONBOARDED_COOKIE, APP_ROLE_COOKIE } from "@/lib/auth/cookies";
+import type { AppRole } from "@/lib/auth/role";
 import { logger } from "@/lib/logger";
 import { ensureDefaultUserRow } from "@/lib/auth/ensure-user";
 import { db } from "@/lib/db/client";
@@ -35,6 +36,14 @@ async function markOnboarded(clerkId: string, userRowId: string) {
   const client = await clerkClient();
   await client.users.updateUserMetadata(clerkId, {
     publicMetadata: { onboarded: true }
+  });
+
+  const cookieStore = await cookies();
+  cookieStore.set(APP_ONBOARDED_COOKIE, clerkId, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365
   });
 }
 
@@ -105,7 +114,9 @@ export async function completeCreatorOnboarding(input: CreatorOnboardingInput): 
   await db.update(users).set({ type: "creator" }).where(eq(users.id, user.id));
 
   if (createdOrUpdated) {
-    await generateCreatorEmbedding(db, createdOrUpdated.id);
+    void generateCreatorEmbedding(db, createdOrUpdated.id).catch((err: unknown) => {
+      log.warn({ err, creatorId: createdOrUpdated.id }, "creator embedding deferred after onboarding failed");
+    });
   }
 
   await markOnboarded(clerkId, user.id);

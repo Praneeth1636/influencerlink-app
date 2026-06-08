@@ -96,11 +96,11 @@ const metrics = [
 
 export function TerraceBentoGrid() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-white py-16 sm:py-[88px]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-10 max-w-3xl text-center">
+        <div className="mx-auto mb-8 max-w-3xl text-center">
           <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">How Terrace works</p>
-          <h2 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[#37352f] md:text-5xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-[#37352f] md:text-[42px]">
             One network for creators and the brands hiring them.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#787774]">
@@ -152,13 +152,13 @@ function BentoCard({ item }: { item: BentoItem }) {
       variants={fadeInUp}
       whileHover={{ y: -4 }}
     >
-      <div className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.045)] transition duration-500 hover:border-[#dce3ea] hover:shadow-[0_24px_58px_rgba(17,24,39,0.07)]">
+      <div className="group relative flex h-full min-h-[268px] flex-col overflow-hidden rounded-[24px] border border-[#e9e9e7] bg-white p-4 shadow-[0_16px_38px_rgba(17,24,39,0.04)] transition duration-500 hover:border-[#dce3ea] hover:shadow-[0_22px_48px_rgba(17,24,39,0.065)] sm:p-5">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(216,107,61,0.08),transparent_34%),radial-gradient(circle_at_82%_24%,rgba(140,201,232,0.12),transparent_30%)]" />
         <div className="relative z-10 flex h-full flex-col gap-4">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">{item.eyebrow}</p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-[-0.045em] text-[#37352f]">{item.title}</h3>
+              <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#37352f] sm:text-2xl">{item.title}</h3>
             </div>
             <div className="rounded-full border border-[#e9e9e7] bg-white p-2 text-[#787774] opacity-0 transition group-hover:opacity-100">
               <ArrowUpRight className="h-4 w-4" />

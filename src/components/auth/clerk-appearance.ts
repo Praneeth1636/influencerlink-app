@@ -37,14 +37,14 @@ export const clerkLightAppearance = {
     headerTitle: "hidden",
     headerSubtitle: "hidden",
     socialButtonsBlockButton: "h-12 rounded-md border-[#e9e9e7] bg-white text-[#37352f] hover:bg-[#f7f7f5]",
-    formButtonPrimary: "h-12 rounded-md bg-[#37352f] text-white hover:bg-[#262420]",
+    formButtonPrimary: "h-11 rounded-md bg-[#37352f] text-white hover:bg-[#262420]",
     footerActionLink: "text-[#D86B3D] hover:text-[#bf5a30] hover:underline",
     formFieldLabel: "text-[#37352f] font-semibold",
     formFieldInput:
-      "h-12 rounded-md border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f] focus:border-[#8CC9E8] focus:ring-[#8CC9E8]/25",
+      "h-11 rounded-md border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f] focus:border-[#8CC9E8] focus:ring-[#8CC9E8]/25",
     otpCodeFieldInputs: "gap-2 justify-center",
     otpCodeFieldInput:
-      "h-14 w-12 rounded-md border border-[#e9e9e7] bg-white text-center text-xl font-semibold text-[#37352f] focus:border-[#D86B3D] focus:ring-2 focus:ring-[#D86B3D]/25 focus:outline-none",
+      "h-12 w-11 rounded-md border border-[#e9e9e7] bg-white text-center text-lg font-semibold text-[#37352f] focus:border-[#D86B3D] focus:ring-2 focus:ring-[#D86B3D]/25 focus:outline-none",
     formResendCodeLink: "text-[#D86B3D] hover:text-[#bf5a30] font-semibold",
     identityPreview: "rounded-md border border-[#e9e9e7] bg-[#fbfbfa] text-[#37352f]",
     identityPreviewText: "text-[#37352f]",

@@ -494,15 +494,15 @@
   .creatorlink-signup-form .cl-otpCodeFieldInput {
     background: #f8fafc !important;
     border: 1.5px solid #d8dee8 !important;
-    border-radius: 14px !important;
+    border-radius: 12px !important;
     color: #111318 !important;
-    font-size: 22px !important;
+    font-size: 18px !important;
     font-weight: 600 !important;
-    height: 58px !important;
-    min-height: 58px !important;
+    height: 48px !important;
+    min-height: 48px !important;
     padding: 0 !important;
     text-align: center !important;
-    width: 50px !important;
+    width: 44px !important;
     -webkit-text-fill-color: #111318 !important;
   }
   .creatorlink-signup-form .cl-otpCodeFieldInput:focus {
@@ -512,12 +512,15 @@
     outline: none !important;
   }
   .creatorlink-signup-form .cl-formFieldInput[name="code"] {
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    height: 64px !important;
-    letter-spacing: 0.4em !important;
-    padding-left: 12px !important;
+    direction: ltr !important;
+    font-size: 22px !important;
+    font-variant-numeric: tabular-nums !important;
+    font-weight: 650 !important;
+    height: 52px !important;
+    letter-spacing: 0.12em !important;
+    padding: 0 16px !important;
     text-align: center !important;
+    width: 100% !important;
   }
   .creatorlink-signup-form .cl-formResendCodeLink {
     color: #d86b3d !important;

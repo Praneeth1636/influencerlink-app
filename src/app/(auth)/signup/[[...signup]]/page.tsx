@@ -23,14 +23,14 @@ export default async function SignupPage() {
   }
 
   return (
-    <main className="relative grid min-h-screen overflow-hidden bg-white px-4 py-10 font-sans text-[#37352f] sm:px-6">
+    <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-white px-4 py-8 font-sans text-[#37352f] sm:px-6">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[420px] max-w-5xl bg-[radial-gradient(circle_at_24%_20%,rgba(140,201,232,0.28),transparent_36%),radial-gradient(circle_at_78%_16%,rgba(246,176,132,0.26),transparent_32%)] blur-3xl"
       />
 
-      <section className="relative z-10 mx-auto grid w-full max-w-[440px] content-center">
-        <Link href="/" aria-label="Terrace" className="mx-auto mb-8 inline-flex items-center gap-3">
+      <section className="relative z-10 mx-auto grid w-full max-w-[408px]">
+        <Link href="/" aria-label="Terrace" className="mx-auto mb-6 inline-flex items-center gap-3">
           <span className="logoMark miniLogo" aria-hidden>
             <span />
             <span />
@@ -46,13 +46,13 @@ export default async function SignupPage() {
             <Sparkles className="h-3.5 w-3.5 text-[#D86B3D]" />
             Create your account
           </div>
-          <h1 className="text-[clamp(28px,5vw,40px)] leading-[1.05] font-semibold tracking-[-0.05em]">Join Terrace.</h1>
+          <h1 className="text-[32px] leading-[1.05] font-semibold tracking-[-0.045em] sm:text-[36px]">Join Terrace.</h1>
           <p className="mt-3 text-sm leading-6 text-[#787774]">
             Pick creator or brand during onboarding. Free to start.
           </p>
         </div>
 
-        <section className="creatorlink-signup-form w-full rounded-[20px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-6">
+        <section className="creatorlink-signup-form w-full rounded-[18px] border border-[#e9e9e7] bg-white p-4 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-5">
           <SignUp
             appearance={clerkLightAppearance}
             path="/signup"
