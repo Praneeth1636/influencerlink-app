@@ -40,7 +40,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             </p>
           </div>
           <div className="flex gap-2">
-            <Link className="terrace-secondary-action h-9 px-4 text-sm sm:h-10" href="/jobs/saved">
+            <Link className="terrace-secondary-action h-9 px-4 text-sm sm:h-10" href="/jobs/saved" prefetch={false}>
               Saved
             </Link>
             <Link className="terrace-primary-action h-9 px-4 text-sm sm:h-10" href="/jobs/new" prefetch={false}>
