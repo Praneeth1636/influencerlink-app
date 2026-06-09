@@ -42,7 +42,7 @@ describe("notification mapping", () => {
   });
 
   it("builds seeded notifications for the demo creator workspace", () => {
-    const notifications = buildSeedNotifications("sararivera");
+    const notifications = buildSeedNotifications("mayachen");
 
     expect(notifications.length).toBeGreaterThan(0);
     expect(getUnreadCount(notifications)).toBeGreaterThan(0);

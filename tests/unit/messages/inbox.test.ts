@@ -9,7 +9,7 @@ describe("messages inbox adapter", () => {
 
     expect(previews).toHaveLength(1);
     expect(previews[0]).toMatchObject({
-      title: "Glossier",
+      title: "GlowHaus",
       type: "job"
     });
     expect(previews[0]?.lastMessage).toContain("content angles");
@@ -21,6 +21,6 @@ describe("messages inbox adapter", () => {
 
     expect(detail?.messages).toHaveLength(3);
     expect(detail?.messages.some((message) => message.sentByViewer)).toBe(true);
-    expect(detail?.messages.some((message) => message.senderLabel === "Glossier")).toBe(true);
+    expect(detail?.messages.some((message) => message.senderLabel === "GlowHaus")).toBe(true);
   });
 });
