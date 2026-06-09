@@ -1,23 +1,37 @@
 # Terrace Product Blueprint
 
-Terrace is a professional network and marketplace for creator-brand partnerships. The MVP centers on three screens: verified creator profiles, AI-ranked creator discovery, and an active campaign workspace.
+Terrace is a professional network and marketplace for creator-brand partnerships. The MVP centers on two role journeys: creators publish proof and apply to gigs, while brands search creators, post gigs, review applicants, and message matches.
 
 ## Core Screens
 
-1. Creator profile
+1. Creator onboarding and profile
    - Verified identity, niche, location, availability, response time.
+   - Profile photo, cover photo, bio, and visible social links.
    - Total reach, engagement, completed campaigns, average rate.
    - Connected social accounts with synced metrics.
    - Past brand collaborations and audience demographics.
    - AI profile and pricing helpers.
 
-2. Brand discovery
+2. Feed
+   - Creator posts can originate from Terrace, Instagram, YouTube, TikTok, or X.
+   - Each post shows media, platform source, likes, shares, comments, and optional analytics.
+   - Creators can hide public analytics when they do not want to expose performance.
+
+3. Gigs
+   - Creators browse open promotion opportunities and apply when they fit.
+   - Brands post gigs, review applicants, and continue the deal in messages.
+
+4. Brand discovery
    - Search by niche, creator name, audience, platform, and keyword.
-   - Filters for niche, geography, follower/rate range, and campaign fit.
+   - Filters for niche, geography, follower/rate range, engagement growth, audience age/gender, and campaign fit.
    - AI match score for each creator.
    - Shortlist and outreach draft helpers.
 
-3. Campaign workspace
+5. Ranks
+   - Category leaderboards for niches such as fashion, food, travel, tech, beauty, and fitness.
+   - Overall rankings for creators doing best across the network.
+
+6. Campaign workspace
    - Budget, deliverable progress, deadline, campaign status.
    - Deliverable tracker with approved, revision, in-progress, and pending states.
    - Collaboration chat, content submission, negotiation guidance, and message drafts.

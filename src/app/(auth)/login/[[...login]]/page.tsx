@@ -47,7 +47,7 @@ export default async function LoginPage() {
           <h1 className="text-[32px] leading-[1.05] font-semibold tracking-[-0.045em] sm:text-[36px]">
             Sign in to Terrace.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-[#787774]">Feed, search, messages, and briefs are waiting.</p>
+          <p className="mt-3 text-sm leading-6 text-[#787774]">Feed, search, messages, and gigs are waiting.</p>
         </div>
 
         <section className="creatorlink-signup-form w-full rounded-[18px] border border-[#e9e9e7] bg-white p-4 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-5">

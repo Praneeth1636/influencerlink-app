@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const productLinks = [
-  { href: "/jobs", label: "Briefs" },
+  { href: "/jobs", label: "Gigs" },
   { href: "/search", label: "Creators", prefetch: false },
   { href: "/pricing", label: "Pricing" }
 ];
@@ -35,7 +35,7 @@ export function MarketingFooter() {
             </span>
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-6 text-[#787774]">
-            The professional network for creator deals. Verified reach, brand briefs, and payouts in one workspace.
+            The professional network for creator deals. Verified reach, brand gigs, and payouts in one workspace.
           </p>
         </div>
 

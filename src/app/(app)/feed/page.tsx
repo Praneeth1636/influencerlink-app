@@ -531,7 +531,7 @@ function VisualFeed({
           </section>
 
           <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
-            <h2 className="text-base font-semibold tracking-[-0.03em]">Briefs for you</h2>
+            <h2 className="text-base font-semibold tracking-[-0.03em]">Gigs for you</h2>
             <div className="mt-4 grid gap-5">
               {seedCampaigns.slice(0, 2).map((campaign, index) => (
                 <Link className="block text-left" href={`/jobs/${campaign.id}`} key={campaign.id}>
@@ -965,7 +965,7 @@ function metricForPost(type: string, creator: Influencer) {
   if (type === "content_drop") return `${creator.engagementRate}% engagement`;
   if (type === "open_to_work") return `$${shortCurrency(creator.rate)} avg rate`;
   if (type === "milestone") return `${formatNumber(creator.totalReach)} reach`;
-  if (type === "job_share") return "Hiring brief";
+  if (type === "job_share") return "Hiring gig";
   return `${creator.campaignsCompleted} campaigns`;
 }
 

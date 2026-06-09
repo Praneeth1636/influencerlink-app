@@ -42,7 +42,7 @@ const DEFAULT_ACTIONS: TerraceSearchAction[] = [
     id: "open-collabs",
     label: "Open to collabs",
     icon: <BadgeCheck className="h-4 w-4 text-[#3e95bd]" />,
-    description: "Creators accepting briefs",
+    description: "Creators accepting gigs",
     href: "/search?open=1",
     shortcut: "O",
     end: "Signal",
@@ -50,13 +50,13 @@ const DEFAULT_ACTIONS: TerraceSearchAction[] = [
   },
   {
     id: "brand-briefs",
-    label: "Brand briefs",
+    label: "Brand gigs",
     icon: <BriefcaseBusiness className="h-4 w-4 text-[#c87544]" />,
     description: "Active campaign asks",
     href: "/jobs",
     shortcut: "J",
-    end: "Jobs",
-    query: "brief"
+    end: "Gigs",
+    query: "gig"
   },
   {
     id: "content-drops",
@@ -69,7 +69,7 @@ const DEFAULT_ACTIONS: TerraceSearchAction[] = [
   },
   {
     id: "ai-match",
-    label: "AI match a brief",
+    label: "AI match a gig",
     icon: <Sparkles className="h-4 w-4 text-[#de8c68]" />,
     description: "Find creators from a campaign note",
     href: "/search?mode=ai",
@@ -80,7 +80,7 @@ const DEFAULT_ACTIONS: TerraceSearchAction[] = [
     id: "voice-note",
     label: "Voice note to search",
     icon: <AudioLines className="h-4 w-4 text-[#6ea3c1]" />,
-    description: "Capture a brief idea",
+    description: "Capture a gig idea",
     end: "Beta",
     query: ""
   },
@@ -139,7 +139,7 @@ export function TerraceActionSearchBar({
   label = "Search Terrace",
   onActionSelect,
   onQueryChange,
-  placeholder = "Search creators, brands, briefs...",
+  placeholder = "Search creators, brands, gigs...",
   query
 }: {
   actions?: TerraceSearchAction[];

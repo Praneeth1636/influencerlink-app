@@ -28,14 +28,14 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   return (
     <main className="terrace-app-bg min-h-screen font-sans">
       <section className="mx-auto max-w-[1280px] px-4 pt-7 pb-4 sm:px-5 sm:pt-12 sm:pb-6">
-        <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Creator briefs</p>
+        <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Creator gigs</p>
         <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <h1 className="text-3xl leading-tight font-semibold tracking-[-0.05em] sm:text-5xl sm:leading-[1.02]">
               Open work from verified brand teams.
             </h1>
             <p className="mt-3 text-sm leading-6 text-[#787774]">
-              Each brief has budget, deliverables, audience fit, and a match score. Filter to your niche and apply with
+              Each gig has budget, deliverables, audience fit, and a match score. Filter to your niche and apply with
               proof, not pitches.
             </p>
           </div>
@@ -44,7 +44,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
               Saved
             </Link>
             <Link className="terrace-primary-action h-9 px-4 text-sm sm:h-10" href="/jobs/new" prefetch={false}>
-              Post brief
+              Post gig
             </Link>
           </div>
         </div>
@@ -112,13 +112,13 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         <section className="grid min-w-0 content-start gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-[#787774]">
-              {jobs.length} {jobs.length === 1 ? "brief" : "briefs"} match your filters
+              {jobs.length} {jobs.length === 1 ? "gig" : "gigs"} match your filters
             </p>
           </div>
 
           {jobs.length === 0 && (
             <div className="rounded-[24px] border border-[#e9e9e7] bg-white p-6">
-              <p className="text-lg font-semibold">No briefs found</p>
+              <p className="text-lg font-semibold">No gigs found</p>
               <p className="mt-2 text-sm leading-6 text-[#787774]">
                 Try a broader niche, lower budget threshold, or include local campaigns.
               </p>
@@ -209,7 +209,7 @@ function JobCard({ job }: { job: JobBoardItem }) {
           className="inline-flex h-10 items-center justify-center rounded-full bg-[#37352f] px-4 text-sm font-semibold text-white transition hover:bg-[#1d222b]"
           href={`/jobs/${job.id}`}
         >
-          View brief
+          View gig
         </Link>
         <Link
           className="inline-flex h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-4 text-sm font-semibold text-[#787774] transition hover:border-[#dce3ea] hover:text-[#37352f]"

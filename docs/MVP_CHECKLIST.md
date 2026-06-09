@@ -4,19 +4,20 @@ Use this as the 24-hour launch tracker. Keep `docs/DEPLOY.md` for deployment mec
 
 ## Product Routes
 
-- [ ] `/feed`: creator social feed loads on desktop and mobile
-- [ ] `/profile/[handle]`: public creator profile shows posts, stats, socials, and brand snapshot
-- [ ] `/search`: brand creator search loads with filters and result cards
+- [ ] `/feed`: creator social feed loads on desktop and mobile with platform source, media, and engagement actions
+- [ ] `/profile/[handle]`: public creator profile shows posts, stats, social links, followers/following/posts, and brand snapshot
+- [ ] `/search`: brand creator search loads with filters for niche, platform, reach, engagement, growth, and audience
 - [ ] `/ranks`: category leaderboards load
-- [ ] `/jobs`: creator brief board loads
-- [ ] `/jobs/new`: brand brief form can publish in local demo and authenticated brand mode
+- [ ] `/jobs`: creator gigs board loads
+- [ ] `/jobs/new`: brand gig form can publish in local demo and authenticated brand mode
 - [ ] `/messages`: message list and thread routes render
+- [ ] `/notifications`: notification list renders
 - [ ] `/settings`: settings landing renders
 
 ## Role Behavior
 
-- [ ] Creator sidebar focuses on Feed, Ranks, Briefs, Messages, Analytics, Profile
-- [ ] Brand sidebar keeps Search and Brief posting prominent
+- [ ] Creator sidebar focuses on Feed, Gigs, Ranks, Search, Messages, Notifications, Profile, Settings
+- [ ] Brand sidebar focuses on Feed, Gigs, Search, Ranks, Messages, Notifications, Profile, Settings
 - [ ] Workspace switcher changes role without breaking navigation
 - [ ] Local demo role fallback works without Clerk session
 

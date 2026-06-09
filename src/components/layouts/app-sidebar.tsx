@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3,
   Bell,
-  Bookmark,
   BriefcaseBusiness,
   Home,
   MessageCircle,
@@ -32,26 +30,23 @@ export type AppRole = "creator" | "brand";
 
 const CREATOR_NAV = [
   { title: "Feed", url: "/feed", icon: Home },
+  { title: "Gigs", url: "/jobs", icon: BriefcaseBusiness },
   { title: "Ranks", url: "/ranks", icon: Trophy },
-  { title: "Briefs", url: "/jobs/saved", icon: BriefcaseBusiness },
+  { title: "Search", url: "/search", icon: Search },
   { title: "Messages", url: "/messages", icon: MessageCircle },
   { title: "Notifications", url: "/notifications", icon: Bell },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Profile", url: "/creator", icon: UserRound },
-  { title: "Saved", url: "/saved", icon: Bookmark },
   { title: "Settings", url: "/settings", icon: Settings }
 ];
 
 const BRAND_NAV = [
   { title: "Feed", url: "/feed", icon: Home },
+  { title: "Gigs", url: "/jobs", icon: BriefcaseBusiness },
   { title: "Search", url: "/search", icon: Search },
   { title: "Ranks", url: "/ranks", icon: Trophy },
-  { title: "Briefs", url: "/jobs", icon: BriefcaseBusiness },
   { title: "Messages", url: "/messages", icon: MessageCircle },
   { title: "Notifications", url: "/notifications", icon: Bell },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Profile", url: "/dashboard", icon: UserRound },
-  { title: "Saved", url: "/saved", icon: Bookmark },
   { title: "Settings", url: "/settings", icon: Settings }
 ];
 
@@ -118,12 +113,16 @@ export function AppSidebar({ role }: { role: AppRole }) {
             </span>
             <h2 className="text-sm font-semibold text-[#37352f]">AI Match</h2>
           </div>
-          <p className="mt-3 text-xs leading-5 text-[#787774]">Briefs matched to your niche, refreshed weekly.</p>
+          <p className="mt-3 text-xs leading-5 text-[#787774]">
+            {role === "brand"
+              ? "Find creators by audience, growth, and fit."
+              : "Gigs matched to your niche, refreshed weekly."}
+          </p>
           <Link
             className="mt-3 inline-flex text-xs font-semibold text-[#37352f] transition-colors hover:text-[#D86B3D]"
-            href="/search"
+            href={role === "brand" ? "/search" : "/jobs"}
           >
-            See matches
+            {role === "brand" ? "Search creators" : "See gigs"}
           </Link>
         </section>
         <AppProfileDropdown role={role} />
