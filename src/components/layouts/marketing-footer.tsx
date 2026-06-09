@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const productLinks = [
   { href: "/jobs", label: "Briefs" },
-  { href: "/search", label: "Creators" },
+  { href: "/search", label: "Creators", prefetch: false },
   { href: "/pricing", label: "Pricing" }
 ];
 
@@ -57,14 +57,24 @@ export function MarketingFooter() {
   );
 }
 
-function FooterColumn({ title, links }: { title: string; links: Array<{ href: string; label: string }> }) {
+function FooterColumn({
+  title,
+  links
+}: {
+  title: string;
+  links: Array<{ href: string; label: string; prefetch?: boolean }>;
+}) {
   return (
     <div>
       <p className="text-xs font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">{title}</p>
       <ul className="mt-4 grid gap-2.5">
         {links.map((link) => (
           <li key={link.href}>
-            <Link className="text-sm font-medium text-[#787774] transition hover:text-[#37352f]" href={link.href}>
+            <Link
+              className="text-sm font-medium text-[#787774] transition hover:text-[#37352f]"
+              href={link.href}
+              prefetch={link.prefetch}
+            >
               {link.label}
             </Link>
           </li>
