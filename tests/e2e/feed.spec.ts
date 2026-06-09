@@ -31,8 +31,8 @@ test("public creator profile loads by handle", async ({ page }) => {
 
   await expect(page).toHaveTitle(/Terrace/);
   await expect(page.getByRole("heading", { name: "Maya Chen" })).toBeVisible();
-  await expect(page.getByText("Brand snapshot")).toBeVisible();
-  await expect(page.getByText("Posts", { exact: true })).toBeVisible();
+  await expect(page.getByText("Creator snapshot")).toBeVisible();
+  await expect(page.locator("span").filter({ hasText: /^Posts$/ })).toBeVisible();
 });
 
 test("public company page loads by slug", async ({ page }) => {
