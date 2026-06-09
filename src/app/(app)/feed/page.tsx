@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { TerraceFeedCard } from "@/components/features/feed/terrace-feed-card";
 import { TerraceActionSearchBar } from "@/components/features/search/action-search-bar";
+import { useAppRole } from "@/components/layouts/app-shell";
 import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar";
 import { AttractButton } from "@/components/ui/attract-button";
 import { Button } from "@/components/ui/button";
@@ -154,6 +155,7 @@ type VisualPost = {
 };
 
 export default function FeedPage() {
+  const role = useAppRole();
   const [clientHost, setClientHost] = useState<string | null>(null);
 
   useEffect(() => {
@@ -321,6 +323,7 @@ export default function FeedPage() {
           onStreamSelect={setActiveStream}
           posts={visiblePosts}
           query={query}
+          role={role}
           setQuery={setQuery}
           status={
             localPostStatus ??
@@ -331,7 +334,7 @@ export default function FeedPage() {
                 : null)
           }
         />
-        <CreatorProfileSheet creator={selectedCreator} campaign={initialCampaign} />
+        <CreatorProfileSheet creator={selectedCreator} campaign={initialCampaign} role={role} />
       </main>
     </Sheet>
   );
@@ -346,6 +349,7 @@ function VisualFeed({
   onStreamSelect,
   posts,
   query,
+  role,
   setQuery,
   status
 }: {
@@ -357,6 +361,7 @@ function VisualFeed({
   onStreamSelect: (stream: string) => void;
   posts: VisualPost[];
   query: string;
+  role: "creator" | "brand";
   setQuery: (query: string) => void;
   status: string | null;
 }) {
@@ -375,7 +380,9 @@ function VisualFeed({
         <div className="mx-auto flex max-w-[1220px] items-center gap-4 px-5 py-3">
           <div className="hidden min-w-[220px] lg:block">
             <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">Home</p>
-            <p className="mt-0.5 text-sm font-medium text-[#5f6672]">Creator posts and drops</p>
+            <p className="mt-0.5 text-sm font-medium text-[#5f6672]">
+              {role === "brand" ? "Creator proof and market signal" : "Following, posts, and creator drops"}
+            </p>
           </div>
           <TerraceActionSearchBar
             className="mx-auto hidden max-w-[560px] md:block"
@@ -504,21 +511,13 @@ function VisualFeed({
         </main>
 
         <aside className="hidden content-start gap-4 xl:sticky xl:top-24 xl:grid">
-          <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 text-[#1d1d1f] shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] backdrop-blur-xl">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Inspector</p>
-            <h2 className="mt-2 text-xl leading-tight font-semibold tracking-[-0.045em]">
-              Beauty reels are moving fastest.
-            </h2>
-            <div className="mt-4 grid gap-2">
-              <DarkRailMetric label="Views this month" value="4.3M" />
-              <DarkRailMetric label="Avg engagement" value="8.4%" />
-              <DarkRailMetric label="Fastest growth" value="+32%" />
-            </div>
-          </section>
+          {role === "brand" ? <BrandFeedInspector /> : <CreatorFeedPulse />}
 
           <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold tracking-[-0.03em]">Suggested creators</h2>
+              <h2 className="text-base font-semibold tracking-[-0.03em]">
+                {role === "brand" ? "Suggested creators" : "People to follow"}
+              </h2>
               <Link className="text-sm text-[#787774] hover:text-[#37352f]" href="/search">
                 See all
               </Link>
@@ -531,7 +530,9 @@ function VisualFeed({
           </section>
 
           <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
-            <h2 className="text-base font-semibold tracking-[-0.03em]">Gigs for you</h2>
+            <h2 className="text-base font-semibold tracking-[-0.03em]">
+              {role === "brand" ? "Active briefs" : "Gigs for you"}
+            </h2>
             <div className="mt-4 grid gap-5">
               {seedCampaigns.slice(0, 2).map((campaign, index) => (
                 <Link className="block text-left" href={`/jobs/${campaign.id}`} key={campaign.id}>
@@ -641,6 +642,37 @@ function DarkRailMetric({ label, value }: { label: string; value: string }) {
       <span className="text-[#667085]">{label}</span>
       <strong>{value}</strong>
     </div>
+  );
+}
+
+function BrandFeedInspector() {
+  return (
+    <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 text-[#1d1d1f] shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] backdrop-blur-xl">
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Inspector</p>
+      <h2 className="mt-2 text-xl leading-tight font-semibold tracking-[-0.045em]">Beauty reels are moving fastest.</h2>
+      <div className="mt-4 grid gap-2">
+        <DarkRailMetric label="Views this month" value="4.3M" />
+        <DarkRailMetric label="Avg engagement" value="8.4%" />
+        <DarkRailMetric label="Fastest growth" value="+32%" />
+      </div>
+    </section>
+  );
+}
+
+function CreatorFeedPulse() {
+  return (
+    <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 text-[#1d1d1f] shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] backdrop-blur-xl">
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Your feed</p>
+      <h2 className="mt-2 text-xl leading-tight font-semibold tracking-[-0.045em]">Share what you posted today.</h2>
+      <p className="mt-2 text-sm leading-6 text-[#667085]">
+        Creator home is for posts, follows, replies, and gigs. Brand pricing and fit scores stay out of this view.
+      </p>
+      <div className="mt-4 grid gap-2">
+        <DarkRailMetric label="New posts seen" value="18" />
+        <DarkRailMetric label="Replies waiting" value="4" />
+        <DarkRailMetric label="Gigs saved" value="3" />
+      </div>
+    </section>
   );
 }
 
@@ -800,9 +832,18 @@ function ComposerTypeButton({
   );
 }
 
-function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campaign: Campaign }) {
+function CreatorProfileSheet({
+  creator,
+  campaign,
+  role
+}: {
+  creator: Influencer;
+  campaign: Campaign;
+  role: "creator" | "brand";
+}) {
   const rate = suggestRate(creator);
   const matchScore = getMatchScore(creator, campaign);
+  const brandView = role === "brand";
 
   return (
     <SheetContent className="w-full overflow-y-auto border-[#e9e9e7] bg-white p-0 text-[#37352f] sm:max-w-xl">
@@ -811,7 +852,7 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         <SheetHeader className="-mt-12 text-left">
           <div className="flex items-end justify-between gap-4">
             <CreatorAvatar creator={creator} className="h-24 w-24 border-4 border-white text-2xl" showBadge />
-            <MatchPill score={matchScore} />
+            {brandView ? <MatchPill score={matchScore} /> : <FollowPill />}
           </div>
           <div className="pt-4">
             <SheetTitle className="font-sans text-3xl font-semibold tracking-[-0.045em] text-[#37352f]">
@@ -826,9 +867,17 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
         <p className="text-sm leading-7 text-[#787774]">{creator.bio}</p>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <ProfileStat icon={Users} label="Reach" value={formatNumber(creator.totalReach)} />
+          <ProfileStat
+            icon={Users}
+            label={brandView ? "Reach" : "Followers"}
+            value={formatNumber(creator.totalReach)}
+          />
           <ProfileStat icon={TrendingUp} label="Eng" value={`${creator.engagementRate}%`} />
-          <ProfileStat icon={DollarSign} label="Rate" value={`$${shortCurrency(creator.rate)}`} />
+          <ProfileStat
+            icon={brandView ? DollarSign : ImageIcon}
+            label={brandView ? "Rate" : "Posts"}
+            value={brandView ? `$${shortCurrency(creator.rate)}` : String(Math.max(12, creator.campaignsCompleted * 4))}
+          />
           <ProfileStat icon={BriefcaseBusiness} label="Deals" value={String(creator.campaignsCompleted)} />
         </div>
 
@@ -849,16 +898,27 @@ function CreatorProfileSheet({ creator, campaign }: { creator: Influencer; campa
           ))}
         </section>
 
-        <section className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-4">
-          <p className="text-xs font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Suggested range</p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.045em]">{rate.range}</p>
-          <p className="mt-2 text-sm leading-6 text-[#7a513f]">{rate.reason}</p>
-        </section>
+        {brandView ? (
+          <section className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-4">
+            <p className="text-xs font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Suggested range</p>
+            <p className="mt-2 text-2xl font-semibold tracking-[-0.045em]">{rate.range}</p>
+            <p className="mt-2 text-sm leading-6 text-[#7a513f]">{rate.reason}</p>
+          </section>
+        ) : (
+          <section className="rounded-xl border border-[#dceff8] bg-[#f1faff] p-4">
+            <p className="text-xs font-semibold tracking-[0.16em] text-[#2b8fc4] uppercase">Creator activity</p>
+            <p className="mt-2 text-lg font-semibold tracking-[-0.035em]">Recent posts, collabs, and social links.</p>
+            <p className="mt-2 text-sm leading-6 text-[#315f76]">
+              Creator accounts see public profile context here. Campaign fit, private rates, and buyer scores are only
+              shown to brand workspaces.
+            </p>
+          </section>
+        )}
 
         <SheetFooter className="gap-3 sm:flex-col">
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
             <Button asChild className="h-11 rounded-full bg-[#37352f] text-white hover:bg-[#262420]">
-              <Link href="/messages">Message creator</Link>
+              <Link href="/messages">{brandView ? "Message creator" : "Message"}</Link>
             </Button>
             <SheetClose asChild>
               <Button className="h-11 rounded-full border-[#e9e9e7]" variant="outline">
@@ -897,6 +957,14 @@ function MatchPill({ score }: { score: number }) {
     <div className="grid h-12 w-14 shrink-0 place-items-center rounded-lg border border-[#e9e9e7] bg-white text-center text-[#D86B3D]">
       <strong className="text-base font-semibold tracking-[-0.04em]">{score}%</strong>
       <span className="-mt-2 text-[9px] font-bold tracking-[0.12em] uppercase opacity-70">match</span>
+    </div>
+  );
+}
+
+function FollowPill() {
+  return (
+    <div className="grid h-12 shrink-0 place-items-center rounded-full border border-[#dceff8] bg-[#f1faff] px-4 text-center text-[#2b8fc4]">
+      <strong className="text-sm font-semibold tracking-[-0.02em]">Follow</strong>
     </div>
   );
 }
