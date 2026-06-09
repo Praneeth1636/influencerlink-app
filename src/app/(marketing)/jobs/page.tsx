@@ -43,7 +43,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             <Link className="terrace-secondary-action h-9 px-4 text-sm sm:h-10" href="/jobs/saved">
               Saved
             </Link>
-            <Link className="terrace-primary-action h-9 px-4 text-sm sm:h-10" href="/jobs/new">
+            <Link className="terrace-primary-action h-9 px-4 text-sm sm:h-10" href="/jobs/new" prefetch={false}>
               Post brief
             </Link>
           </div>
