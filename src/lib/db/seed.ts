@@ -1,5 +1,5 @@
 import { neon } from "@neondatabase/serverless";
-import { sql } from "drizzle-orm";
+import { inArray, like, or, sql } from "drizzle-orm";
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 import * as schema from "@/lib/db/schema";
 import {
@@ -728,6 +728,8 @@ export function buildSeedData() {
 export async function seedDatabase(db: SeedDatabase) {
   const data = buildSeedData();
 
+  await deleteExistingSeedFixtures(db, data);
+
   await db
     .insert(users)
     .values(data.users)
@@ -968,6 +970,93 @@ export async function seedDatabase(db: SeedDatabase) {
     messages: data.messages.length,
     notifications: data.notifications.length
   };
+}
+
+async function deleteExistingSeedFixtures(db: SeedDatabase, data: SeedData) {
+  const userIds = present(data.users.map((user) => user.id));
+  const clerkIds = present(data.users.map((user) => user.clerkId));
+  const creatorIds = present(data.creators.map((creator) => creator.id));
+  const creatorHandles = data.creators.map((creator) => creator.handle);
+  const brandIds = present(data.brands.map((brand) => brand.id));
+  const brandSlugs = data.brands.map((brand) => brand.slug);
+  const creatorPlatformIds = present(data.creatorPlatforms.map((platform) => platform.id));
+  const jobIds = present(data.jobs.map((job) => job.id));
+  const messageThreadIds = present(data.messageThreads.map((thread) => thread.id));
+  const jobApplicationIds = present(data.jobApplications.map((application) => application.id));
+  const followIds = present(data.follows.map((follow) => follow.id));
+  const postIds = present(data.posts.map((post) => post.id));
+  const platformMetricIds = present(data.platformMetrics.map((metric) => metric.id));
+
+  // Production/demo databases can contain older Terrace seed fixtures with the
+  // same unique Clerk IDs but different UUIDs. Clear only rows owned by this
+  // deterministic fixture set so `pnpm db:seed` stays safe and repeatable.
+  await db
+    .delete(notifications)
+    .where(or(inArray(notifications.userId, userIds), inArray(notifications.actorId, userIds)));
+  await db
+    .delete(messages)
+    .where(or(inArray(messages.threadId, messageThreadIds), inArray(messages.senderId, userIds)));
+  await db
+    .delete(threadParticipants)
+    .where(or(inArray(threadParticipants.threadId, messageThreadIds), inArray(threadParticipants.userId, userIds)));
+  await db.delete(messageThreads).where(inArray(messageThreads.id, messageThreadIds));
+  await db
+    .delete(jobApplications)
+    .where(
+      or(
+        inArray(jobApplications.id, jobApplicationIds),
+        inArray(jobApplications.jobId, jobIds),
+        inArray(jobApplications.creatorId, creatorIds)
+      )
+    );
+  await db
+    .delete(jobSavedByCreator)
+    .where(or(inArray(jobSavedByCreator.jobId, jobIds), inArray(jobSavedByCreator.creatorId, creatorIds)));
+  await db
+    .delete(jobs)
+    .where(or(inArray(jobs.id, jobIds), inArray(jobs.brandId, brandIds), inArray(jobs.postedById, userIds)));
+  await db
+    .delete(follows)
+    .where(
+      or(
+        inArray(follows.id, followIds),
+        inArray(follows.followerId, userIds),
+        inArray(follows.followedId, [...creatorIds, ...brandIds])
+      )
+    );
+  await db.delete(posts).where(or(inArray(posts.id, postIds), inArray(posts.authorId, [...creatorIds, ...brandIds])));
+  await db
+    .delete(platformMetrics)
+    .where(
+      or(inArray(platformMetrics.id, platformMetricIds), inArray(platformMetrics.creatorPlatformId, creatorPlatformIds))
+    );
+  await db
+    .delete(creatorPlatforms)
+    .where(or(inArray(creatorPlatforms.id, creatorPlatformIds), inArray(creatorPlatforms.creatorId, creatorIds)));
+  await db.delete(creatorAggregates).where(inArray(creatorAggregates.creatorId, creatorIds));
+  await db
+    .delete(brandMembers)
+    .where(or(inArray(brandMembers.brandId, brandIds), inArray(brandMembers.userId, userIds)));
+  await db
+    .delete(creators)
+    .where(
+      or(inArray(creators.id, creatorIds), inArray(creators.userId, userIds), inArray(creators.handle, creatorHandles))
+    );
+  await db.delete(brands).where(or(inArray(brands.id, brandIds), inArray(brands.slug, brandSlugs)));
+  await db
+    .delete(users)
+    .where(
+      or(
+        inArray(users.id, userIds),
+        inArray(users.clerkId, clerkIds),
+        like(users.clerkId, "seed_creator_%"),
+        like(users.clerkId, "seed_brand_%")
+      )
+    );
+}
+
+function present<T>(values: Array<T | undefined | null>): T[] {
+  return values.filter((value): value is T => value !== undefined && value !== null);
 }
 
 export function createSeedDatabase(databaseUrl: string): SeedDatabase {
