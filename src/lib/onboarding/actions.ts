@@ -33,10 +33,14 @@ async function loadAuthedUser() {
 async function markOnboarded(clerkId: string, userRowId: string) {
   await db.update(users).set({ onboardedAt: new Date() }).where(eq(users.id, userRowId));
 
-  const client = await clerkClient();
-  await client.users.updateUserMetadata(clerkId, {
-    publicMetadata: { onboarded: true }
-  });
+  try {
+    const client = await clerkClient();
+    await client.users.updateUserMetadata(clerkId, {
+      publicMetadata: { onboarded: true }
+    });
+  } catch (err) {
+    log.warn({ err, clerkId }, "failed to update Clerk onboarded metadata");
+  }
 
   const cookieStore = await cookies();
   cookieStore.set(APP_ONBOARDED_COOKIE, clerkId, {
@@ -177,11 +181,14 @@ export async function completeBrandOnboarding(input: BrandOnboardingInput): Prom
 
   await db.update(users).set({ type: "brand_member" }).where(eq(users.id, user.id));
 
-  // Plan selection is stubbed until Phase 8 (Stripe). Stash on Clerk metadata.
-  const client = await clerkClient();
-  await client.users.updateUserMetadata(clerkId, {
-    publicMetadata: { plan: parsed.data.plan, brandId: brand.id }
-  });
+  try {
+    const client = await clerkClient();
+    await client.users.updateUserMetadata(clerkId, {
+      publicMetadata: { plan: parsed.data.plan, brandId: brand.id }
+    });
+  } catch (err) {
+    log.warn({ err, clerkId, brandId: brand.id }, "failed to update Clerk brand metadata");
+  }
 
   await markOnboarded(clerkId, user.id);
   await setOnboardingRole("brand");

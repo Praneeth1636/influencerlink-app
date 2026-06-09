@@ -12,16 +12,16 @@ const log = logger.child({ module: "onboarding/page" });
 
 export default async function OnboardingPage() {
   const requestHeaders = await headers();
+
+  // Local-demo / E2E bypass runs before auth(); those modes deliberately skip
+  // Clerk middleware, so calling auth() first would throw.
+  if (process.env.E2E_BYPASS_AUTH === "true" || isLocalDemoRequest(requestHeaders)) {
+    return <OnboardingFlow />;
+  }
+
   const { userId } = await auth();
 
-  // Local-demo / E2E bypass: only for ANONYMOUS browsing. A real signed-in
-  // user must still go through the DB onboarded check — otherwise localhost
-  // would loop them back through onboarding on every sign-in even after
-  // they've finished.
   if (!userId) {
-    if (process.env.E2E_BYPASS_AUTH === "true" || isLocalDemoRequest(requestHeaders)) {
-      return <OnboardingFlow />;
-    }
     redirect("/login");
   }
 

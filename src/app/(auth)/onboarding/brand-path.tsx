@@ -1,13 +1,7 @@
 "use client";
 
-// Brand-side onboarding path. Lives in its own file so we can lazy-load it
-// from onboarding-flow — Clerk's <CreateOrganization>/<OrganizationList>
-// imports were a candidate for the original blank-screen blowup. Isolating
-// them means a failure in this subtree can't take down AccountTypeStep.
-
 import { useState, useTransition } from "react";
-import { CreateOrganization, OrganizationList, useOrganization } from "@clerk/nextjs";
-import { ArrowLeft, Building2, CheckCircle2, Users } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,76 +14,8 @@ const inputClassName =
   "h-[52px] rounded-2xl border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus-visible:ring-[#8CC9E8]/30";
 
 export function BrandPath({ onBack }: { onBack: () => void }) {
-  const { organization, isLoaded } = useOrganization();
-  const [step, setStep] = useState<"org" | "profile">("org");
-
-  if (step === "profile" && organization) {
-    return <BrandProfileStep onBack={() => setStep("org")} orgId={organization.id} orgName={organization.name} />;
-  }
-
-  return (
-    <div className="grid gap-5 rounded-[28px] border border-[#e9e9e7] bg-white p-5 shadow-[0_18px_46px_rgba(17,24,39,0.06)] sm:p-7">
-      <BackLink onClick={onBack} />
-
-      <div>
-        <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Brand setup</p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Create your hiring workspace.</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#787774]">
-          Brand teams use organizations, so recruiters, admins, and teammates can work from one shared Terrace page.
-        </p>
-      </div>
-
-      <div className="rounded-[24px] border border-[#e9e9e7] bg-[#fbfbfa] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-        <div className="mb-3 flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#eaf7fd] text-[#3487ad]">
-            <Users className="h-4 w-4" />
-          </span>
-          <div>
-            <h3 className="text-sm font-bold tracking-wide text-[#263142]">Existing teams</h3>
-            <p className="text-xs text-[#7b8494]">Join a brand workspace if you were invited.</p>
-          </div>
-        </div>
-        <OrganizationList
-          afterCreateOrganizationUrl="/onboarding"
-          afterSelectOrganizationUrl="/onboarding"
-          hidePersonal
-        />
-      </div>
-
-      <div className="rounded-[24px] border border-[#e9e9e7] bg-[#fbfbfa] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-        <div className="mb-3 flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff0e8] text-[#D86B3D]">
-            <Building2 className="h-4 w-4" />
-          </span>
-          <div>
-            <h3 className="text-sm font-bold tracking-wide text-[#263142]">Create a new brand team</h3>
-            <p className="text-xs text-[#7b8494]">Start fresh with a shared company profile.</p>
-          </div>
-        </div>
-        <CreateOrganization afterCreateOrganizationUrl="/onboarding" skipInvitationScreen={false} />
-      </div>
-
-      {!isLoaded && <p className="text-xs text-[#7b8494]">Loading Clerk org state...</p>}
-      {isLoaded && organization && (
-        <div className="flex justify-end">
-          <NoiseBackground containerClassName="rounded-2xl">
-            <Button
-              className="h-12 rounded-[14px] border-0 bg-white px-6 text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_34px_rgba(17,24,39,0.12)] hover:bg-white"
-              onClick={() => setStep("profile")}
-              type="button"
-            >
-              Continue with {organization.name}
-            </Button>
-          </NoiseBackground>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgId: string; orgName: string }) {
-  const [name, setName] = useState(orgName);
-  const [slug, setSlug] = useState(slugifyBrandName(orgName));
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
   const [industry, setIndustry] = useState("");
   const [sizeRange, setSizeRange] = useState("");
   const [about, setAbout] = useState("");
@@ -100,7 +26,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
   function submit() {
     setErrors({});
     startTransition(async () => {
-      const result = await completeBrandOnboarding({ orgId, name, slug, industry, sizeRange, about, plan });
+      const result = await completeBrandOnboarding({ name, slug, industry, sizeRange, about, plan });
       if (result && !result.ok) {
         setErrors(result.fieldErrors ?? {});
       }
@@ -127,6 +53,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
       <Field label="Brand name" error={errors.name?.[0]}>
         <Input
+          aria-label="Brand name"
           className={inputClassName}
           onChange={(event) => {
             setName(event.target.value);
@@ -137,11 +64,17 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
       </Field>
 
       <Field label="URL slug" hint="Used in your public brand page URL." error={errors.slug?.[0]}>
-        <Input className={inputClassName} onChange={(event) => setSlug(event.target.value)} value={slug} />
+        <Input
+          aria-label="URL slug"
+          className={inputClassName}
+          onChange={(event) => setSlug(event.target.value)}
+          value={slug}
+        />
       </Field>
 
       <Field label="Industry" error={errors.industry?.[0]}>
         <Input
+          aria-label="Industry"
           className={inputClassName}
           onChange={(event) => setIndustry(event.target.value)}
           placeholder="Beauty, DTC, SaaS..."
@@ -151,6 +84,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
       <Field label="Team size" error={errors.sizeRange?.[0]}>
         <select
+          aria-label="Team size"
           className="h-[52px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           onChange={(event) => setSizeRange(event.target.value)}
           value={sizeRange}
@@ -166,6 +100,7 @@ function BrandProfileStep({ onBack, orgId, orgName }: { onBack: () => void; orgI
 
       <Field label="About" error={errors.about?.[0]}>
         <textarea
+          aria-label="About"
           className="min-h-[120px] w-full rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-5 py-4 text-base text-[#37352f] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_8px_24px_rgba(17,24,39,0.04)] placeholder:text-[#667085] focus:ring-4 focus:ring-[#8CC9E8]/25 focus:outline-none"
           maxLength={1000}
           onChange={(event) => setAbout(event.target.value)}

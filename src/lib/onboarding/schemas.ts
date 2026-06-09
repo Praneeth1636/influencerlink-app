@@ -24,7 +24,6 @@ export const creatorOnboardingSchema = z.object({
 export type CreatorOnboardingInput = z.infer<typeof creatorOnboardingSchema>;
 
 export const brandOnboardingSchema = z.object({
-  orgId: z.string().min(1, "Organization is required"),
   name: z.string().min(1, "Brand name is required").max(120),
   slug: z
     .string()

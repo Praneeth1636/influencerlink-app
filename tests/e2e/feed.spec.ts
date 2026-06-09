@@ -11,6 +11,21 @@ test("feed loads the Terrace marketplace dashboard", async ({ page }) => {
   await expect(page.getByRole("navigation", { name: "Feed filters" })).toBeVisible();
 });
 
+test("onboarding lets users choose creator or brand setup", async ({ page }) => {
+  const response = await page.goto("/onboarding");
+
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle(/Terrace/);
+  await expect(page.getByRole("heading", { name: "Pick your side. See the network come alive." })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Build your media kit/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /Run a campaign/ }).click();
+
+  await expect(page.getByRole("heading", { name: "Make your brand discoverable." })).toBeVisible();
+  await expect(page.getByLabel("Brand name")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Finish brand setup" })).toBeVisible();
+});
+
 test("public creator profile loads by handle", async ({ page }) => {
   await page.goto("/profile/mayachen");
 
