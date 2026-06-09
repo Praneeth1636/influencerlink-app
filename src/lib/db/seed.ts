@@ -52,70 +52,164 @@ type BrandSeed = {
 
 export type SeedData = ReturnType<typeof buildSeedData>;
 
-const creatorNames = [
-  "Sara Rivera",
-  "Maya Torres",
-  "Dev Shah",
-  "Lena Brooks",
-  "Omar Reed",
-  "Nia Carter",
-  "Aria Kim",
-  "Jamie Kim",
-  "Maya Adeyemi",
-  "Noah Patel",
-  "Ivy Chen",
-  "Eli Morgan",
-  "Zara Hill",
-  "Mateo Cruz",
-  "Priya Rao",
-  "Kai Bennett",
-  "Ava Stone",
-  "Leo Wright",
-  "Mila James",
-  "Theo Grant",
-  "Anika Bose",
-  "Sofia Lane",
-  "Caleb Fox",
-  "Naomi Scott",
-  "Rhea Kapoor",
-  "Jonah Lee",
-  "Amara Cole",
-  "Ezra Brooks",
-  "Talia Green",
-  "Micah Young",
-  "Layla Hart",
-  "Rohan Mehta",
-  "Sienna Park",
-  "Miles Reed",
-  "Elena Ruiz",
-  "Ari Cohen",
-  "Mina Ali",
-  "Jules Carter",
-  "Samira Khan",
-  "Finn Walker",
-  "Gia Romano",
-  "Andre Lewis",
-  "Kira Novak",
-  "Nolan Price",
-  "Leah Woods",
-  "Dante Moore",
-  "Yara Silva",
-  "Hana Mori",
-  "Cole Adams",
-  "Mira Singh"
+const creatorProfiles = [
+  {
+    displayName: "Maya Chen",
+    handle: "mayachen",
+    headline: "Skincare creator turning routine videos into buyer trust",
+    bio: "Makes calm morning and night routine videos for sensitive skin, barrier repair, and affordable skincare swaps.",
+    location: "Los Angeles, CA",
+    niches: ["Beauty", "Skincare"],
+    totalReach: 1_430_000,
+    weightedEngagement: "6.400",
+    baseRateCents: 320_000,
+    samplePost: "My 5-minute morning routine for dry skin, with bathroom mirror closeups and product texture shots"
+  },
+  {
+    displayName: "Leo Martin",
+    handle: "leomartin",
+    headline: "Food creator mapping date-night restaurants for young professionals",
+    bio: "Creates restaurant discovery videos with menu breakdowns, honest price context, and high-save city guides.",
+    location: "New York, NY",
+    niches: ["Food", "Lifestyle"],
+    totalReach: 860_000,
+    weightedEngagement: "7.100",
+    baseRateCents: 240_000,
+    samplePost: "Three underrated dinner spots in Brooklyn under $60 per person"
+  },
+  {
+    displayName: "Ava Stone",
+    handle: "avastonefit",
+    headline: "Fitness creator for low-pressure strength and recovery content",
+    bio: "Builds approachable workout plans, studio reviews, recovery routines, and gym confidence content.",
+    location: "Austin, TX",
+    niches: ["Fitness", "Lifestyle"],
+    totalReach: 690_000,
+    weightedEngagement: "5.900",
+    baseRateCents: 185_000,
+    samplePost: "Beginner leg day without feeling lost at the gym"
+  },
+  {
+    displayName: "Priya Rao",
+    handle: "priyarao",
+    headline: "Tech creator explaining tools for solo founders and creators",
+    bio: "Posts clean workflow demos, productivity comparisons, and practical AI tool walkthroughs for small teams.",
+    location: "Seattle, WA",
+    niches: ["Tech", "Business"],
+    totalReach: 1_180_000,
+    weightedEngagement: "5.800",
+    baseRateCents: 410_000,
+    samplePost: "How I plan a launch week with one doc, one dashboard, and no chaos"
+  },
+  {
+    displayName: "Hana Mori",
+    handle: "hanamori",
+    headline: "Fashion creator blending capsule wardrobes with everyday streetwear",
+    bio: "Creates outfit breakdowns, try-on edits, styling rules, and shopping guides for minimal wardrobes.",
+    location: "Chicago, IL",
+    niches: ["Fashion", "Lifestyle"],
+    totalReach: 2_050_000,
+    weightedEngagement: "6.700",
+    baseRateCents: 520_000,
+    samplePost: "Five outfits from one linen blazer for work, dinner, and weekend"
+  },
+  {
+    displayName: "Dante Moore",
+    handle: "dantemoore",
+    headline: "Travel creator for city guides, hotel reviews, and weekend itineraries",
+    bio: "Turns quick trips into useful mini-guides with maps, packing notes, hotel context, and realistic budgets.",
+    location: "Atlanta, GA",
+    niches: ["Travel", "Lifestyle"],
+    totalReach: 2_240_000,
+    weightedEngagement: "4.900",
+    baseRateCents: 610_000,
+    samplePost: "A 48-hour Mexico City itinerary with cafes, hotels, and late-night tacos"
+  },
+  {
+    displayName: "Nia Carter",
+    handle: "niacarter",
+    headline: "Beauty creator focused on textured hair, makeup, and honest reviews",
+    bio: "Creates GRWM edits, foundation shade checks, wash-day routines, and beauty shopping guides.",
+    location: "Miami, FL",
+    niches: ["Beauty", "Fashion"],
+    totalReach: 1_720_000,
+    weightedEngagement: "7.400",
+    baseRateCents: 455_000,
+    samplePost: "Testing a transfer-proof base in Miami humidity"
+  },
+  {
+    displayName: "Kai Bennett",
+    handle: "kaibennett",
+    headline: "Gaming creator with clean commentary and high-retention short clips",
+    bio: "Posts gaming highlights, setup upgrades, creator gear reviews, and community challenge videos.",
+    location: "Denver, CO",
+    niches: ["Gaming", "Tech"],
+    totalReach: 940_000,
+    weightedEngagement: "6.100",
+    baseRateCents: 260_000,
+    samplePost: "I rebuilt my streaming setup for under $500"
+  },
+  {
+    displayName: "Mina Ali",
+    handle: "minaali",
+    headline: "Finance creator making money habits feel less intimidating",
+    bio: "Explains budgeting, creator income, savings habits, and beginner-friendly finance concepts.",
+    location: "Austin, TX",
+    niches: ["Finance", "Lifestyle"],
+    totalReach: 780_000,
+    weightedEngagement: "5.500",
+    baseRateCents: 300_000,
+    samplePost: "How I split one brand payment before I spend it"
+  },
+  {
+    displayName: "Sofia Lane",
+    handle: "sofialane",
+    headline: "Home and lifestyle creator for warm, practical interiors",
+    bio: "Posts small-space makeovers, rental-friendly decor, hosting ideas, and home product reviews.",
+    location: "Los Angeles, CA",
+    niches: ["Lifestyle", "Fashion"],
+    totalReach: 1_090_000,
+    weightedEngagement: "6.000",
+    baseRateCents: 335_000,
+    samplePost: "Turning a tiny balcony into a coffee corner for under $150"
+  },
+  {
+    displayName: "Rohan Mehta",
+    handle: "rohanmehta",
+    headline: "Travel and food creator for practical city itineraries",
+    bio: "Combines street food, transit tips, local stays, and creator-friendly shooting maps.",
+    location: "New York, NY",
+    niches: ["Travel", "Food"],
+    totalReach: 1_360_000,
+    weightedEngagement: "5.700",
+    baseRateCents: 390_000,
+    samplePost: "Eating through Queens in one afternoon, mapped stop by stop"
+  },
+  {
+    displayName: "Elena Ruiz",
+    handle: "elenaruiz",
+    headline: "Sustainable fashion creator with polished try-on storytelling",
+    bio: "Covers secondhand styling, capsule outfits, sustainable labels, and realistic cost-per-wear thinking.",
+    location: "Seattle, WA",
+    niches: ["Fashion", "Beauty"],
+    totalReach: 620_000,
+    weightedEngagement: "6.900",
+    baseRateCents: 210_000,
+    samplePost: "One thrifted skirt styled for office, dinner, and travel day"
+  }
 ];
 
 const brandNames = [
-  "Glossier",
-  "Sephora",
-  "Alo",
-  "Hydrant",
-  "Resy",
-  "Oatly",
-  "Reformation",
-  "Notion",
-  "Vercel",
-  "AllTrails"
+  "GlowHaus",
+  "Vela Athletic",
+  "Pantry Club",
+  "Threadline",
+  "Northstar Labs",
+  "BloomCart",
+  "Nomad & Co",
+  "Aura Kitchen",
+  "PixelNest",
+  "LumaTrail"
 ];
 
 const niches = ["Beauty", "Fitness", "Food", "Fashion", "Tech", "Travel", "Skincare", "Lifestyle", "Gaming", "Finance"];
@@ -133,9 +227,9 @@ const platformValues = ["instagram", "tiktok", "youtube", "linkedin"] as const;
 const postTypes = ["update", "milestone", "content_drop", "open_to_work", "job_share"] as const;
 const jobTemplates = [
   {
-    title: "Summer skincare launch creator brief",
+    title: "Sensitive skin serum launch",
     description:
-      "Create educational short-form content showing a realistic morning skincare routine with product integration and usage rights for paid social.",
+      "Looking for beauty creators who can show a real morning or night routine and explain why the serum fits sensitive skin.",
     deliverables: ["1 TikTok tutorial", "1 Instagram Reel", "3 story frames"],
     niches: ["Beauty", "Skincare"],
     minFollowers: 100_000,
@@ -144,9 +238,9 @@ const jobTemplates = [
     budgetMaxCents: 650_000
   },
   {
-    title: "Wellness studio opening campaign",
+    title: "Low-pressure strength studio opening",
     description:
-      "Bring local creators into a new studio opening and document the experience through polished lifestyle content.",
+      "Bring fitness creators into a new studio opening and document the full first-class experience without making it feel intimidating.",
     deliverables: ["1 Instagram Reel", "1 static carousel", "Event attendance"],
     niches: ["Fitness", "Lifestyle"],
     minFollowers: 50_000,
@@ -155,9 +249,9 @@ const jobTemplates = [
     budgetMaxCents: 420_000
   },
   {
-    title: "Creator-led restaurant discovery series",
+    title: "Restaurant discovery video series",
     description:
-      "Produce a restaurant discovery video that helps young professionals find high-intent dinner spots in major cities.",
+      "Produce a high-save food video that helps young professionals find a reliable dinner spot for dates, friends, or visiting family.",
     deliverables: ["1 TikTok video", "Usage rights for 30 days"],
     niches: ["Food", "Lifestyle"],
     minFollowers: 75_000,
@@ -166,38 +260,78 @@ const jobTemplates = [
     budgetMaxCents: 500_000
   },
   {
-    title: "SaaS workflow demo for creators",
+    title: "Creator workflow demo",
     description:
-      "Show how creator teams organize briefs, approvals, and content calendars with a practical workflow demo.",
+      "Show how creator teams organize gigs, approvals, and content calendars with a practical workflow demo.",
     deliverables: ["1 YouTube Short", "1 LinkedIn post", "Raw footage license"],
     niches: ["Tech", "Business"],
     minFollowers: 40_000,
     minEngagement: "3.000",
     budgetMinCents: 200_000,
     budgetMaxCents: 700_000
+  },
+  {
+    title: "Capsule wardrobe spring edit",
+    description:
+      "Need fashion creators who can style 5-7 pieces into repeatable everyday looks with clean try-on storytelling.",
+    deliverables: ["1 Instagram Reel", "1 carousel", "5 raw clips"],
+    niches: ["Fashion", "Lifestyle"],
+    minFollowers: 60_000,
+    minEngagement: "4.600",
+    budgetMinCents: 220_000,
+    budgetMaxCents: 580_000
+  },
+  {
+    title: "Weekend travel guide package",
+    description:
+      "Create a practical city guide with hotel context, food stops, transit notes, and a saveable 48-hour itinerary.",
+    deliverables: ["1 TikTok guide", "1 Instagram Reel", "Map link in caption"],
+    niches: ["Travel", "Food"],
+    minFollowers: 90_000,
+    minEngagement: "4.000",
+    budgetMinCents: 300_000,
+    budgetMaxCents: 800_000
+  },
+  {
+    title: "Home refresh under $200",
+    description:
+      "Show a small-space makeover using practical home products, before-and-after shots, and honest budget context.",
+    deliverables: ["1 Reel", "1 static post", "Usage rights for 45 days"],
+    niches: ["Lifestyle", "Fashion"],
+    minFollowers: 45_000,
+    minEngagement: "3.800",
+    budgetMinCents: 160_000,
+    budgetMaxCents: 420_000
+  },
+  {
+    title: "Creator finance habits campaign",
+    description:
+      "Explain how creators can split income, save for taxes, and plan variable cash flow without making the topic feel scary.",
+    deliverables: ["1 YouTube Short", "1 TikTok explainer", "1 newsletter mention"],
+    niches: ["Finance", "Business"],
+    minFollowers: 35_000,
+    minEngagement: "3.200",
+    budgetMinCents: 250_000,
+    budgetMaxCents: 720_000
   }
 ];
 
 export function buildSeedData() {
-  const creatorSeeds = creatorNames.map((displayName, index): CreatorSeed => {
-    const primaryNiche = niches[index % niches.length]!;
-    const totalReach = 65_000 + index * 47_500 + (index % 5) * 125_000;
-    const engagement = (3.8 + (index % 9) * 0.42).toFixed(3);
-
+  const creatorSeeds = creatorProfiles.map((profile, index): CreatorSeed => {
     return {
       id: seedUuid(1_000 + index),
       userId: seedUuid(100 + index),
-      handle: toHandle(displayName),
-      displayName,
-      bio: `${displayName} creates ${primaryNiche.toLowerCase()} content with verified audience signals, brand-safe storytelling, and repeatable campaign proof.`,
-      headline: `${primaryNiche} creator helping brands turn attention into trust`,
-      location: locations[index % locations.length]!,
-      niches: [primaryNiche, niches[(index + 3) % niches.length]!],
+      handle: profile.handle,
+      displayName: profile.displayName,
+      bio: profile.bio,
+      headline: profile.headline,
+      location: profile.location,
+      niches: profile.niches,
       verified: index % 4 !== 0,
       openToCollabs: index % 5 !== 3,
-      baseRateCents: 55_000 + index * 9_500,
-      totalReach,
-      weightedEngagement: engagement
+      baseRateCents: profile.baseRateCents,
+      totalReach: profile.totalReach,
+      weightedEngagement: profile.weightedEngagement
     };
   });
 
@@ -251,7 +385,7 @@ export function buildSeedData() {
     slug: brand.slug,
     name: brand.name,
     tagline: brand.tagline,
-    about: `${brand.name} uses Terrace to discover creators, post briefs, and build measurable creator partnerships.`,
+    about: `${brand.name} uses Terrace to discover creators, post gigs, and build measurable creator partnerships.`,
     websiteUrl: `https://example.com/${brand.slug}`,
     industry: brand.industry,
     sizeRange: "51-200",
@@ -310,20 +444,34 @@ export function buildSeedData() {
 
   const postRows = Array.from({ length: 100 }, (_, index): typeof posts.$inferInsert => {
     const isBrandPost = index % 5 === 4;
-    const creator = creatorSeeds[index % creatorSeeds.length]!;
+    const creatorIndex = index % creatorSeeds.length;
+    const creator = creatorSeeds[creatorIndex]!;
+    const profile = creatorProfiles[creatorIndex]!;
     const brand = brandSeeds[index % brandSeeds.length]!;
     const type = postTypes[index % postTypes.length]!;
+    const platform =
+      index % 4 === 0 ? "youtube" : index % 4 === 1 ? "instagram" : index % 4 === 2 ? "tiktok" : "terrace";
 
     return {
       id: seedUuid(5_000 + index),
       authorType: isBrandPost ? "brand" : "creator",
       authorId: isBrandPost ? brand.id : creator.id,
       body: isBrandPost
-        ? `${brand.name} is scouting ${niches[index % niches.length]!.toLowerCase()} creators for a new measurable launch brief.`
-        : `${creator.displayName} shared a ${type.replace("_", " ")}: ${creator.totalReach.toLocaleString()} reach and ${creator.weightedEngagement}% engagement across ${creator.niches.join(" and ")} audiences.`,
-      mediaJson: [],
+        ? `${brand.name} is scouting ${niches[index % niches.length]!.toLowerCase()} creators for a new measurable launch gig.`
+        : `Just posted: ${profile.samplePost}. Early signal is ${creator.weightedEngagement}% engagement across ${creator.niches.join(" and ")} audiences.`,
+      mediaJson: [
+        {
+          type: index % 3 === 0 ? "video" : "image",
+          alt: profile.samplePost,
+          thumbnail: `/demo/thumb-${(index % 8) + 1}.jpg`,
+          platform
+        }
+      ],
       type,
       visibility: "public",
+      source: platform,
+      externalUrl: `https://example.com/${platform}/${creator.handle}/${index}`,
+      externalId: `seed_${platform}_${index}`,
       createdAt: new Date(Date.UTC(2026, 3, 28, 12, index % 60, 0)),
       updatedAt: new Date(Date.UTC(2026, 3, 28, 12, index % 60, 0))
     };
@@ -383,7 +531,7 @@ export function buildSeedData() {
         id: seedUuid(8_500 + jobIndex * 10 + applicationIndex),
         jobId: job.id!,
         creatorId: creator.id,
-        pitch: `${creator.displayName} can turn this brief into ${creator.niches[0]?.toLowerCase()} content for an audience with verified reach and a clear brand fit.`,
+        pitch: `${creator.displayName} can turn this gig into ${creator.niches[0]?.toLowerCase()} content for an audience with verified reach and a clear brand fit.`,
         proposedRateCents,
         attachments: [],
         status: statuses[(jobIndex + applicationIndex) % statuses.length],
@@ -444,7 +592,7 @@ export function buildSeedData() {
         id: seedUuid(9_200 + index * 3),
         threadId: thread.id!,
         senderId: brand.ownerUserId,
-        body: `${brand.name} is interested in ${creator.displayName}'s ${creator.niches[0]?.toLowerCase()} audience for an upcoming creator brief.`,
+        body: `${brand.name} is interested in ${creator.displayName}'s ${creator.niches[0]?.toLowerCase()} audience for an upcoming creator gig.`,
         attachments: [],
         createdAt: new Date(Date.UTC(2026, 3, 28, 10, index, 0))
       },
