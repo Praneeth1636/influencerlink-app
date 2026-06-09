@@ -140,11 +140,9 @@ export function BrandPath({ onBack }: { onBack: () => void }) {
       </Field>
 
       <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfbfa] p-4">
-        <p className="text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">
-          Placeholder - Invite teammates
-        </p>
+        <p className="text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">Team invites</p>
         <p className="mt-2 text-sm leading-6 text-[#787774]">
-          Use Clerk&apos;s organization invites once your team is set up. Admins can invite from the org dashboard.
+          Finish setup now. Team invites can be added from settings once your brand workspace is live.
         </p>
       </div>
 

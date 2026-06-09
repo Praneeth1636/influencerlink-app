@@ -464,7 +464,7 @@ function PlaceholderBlock({
     <div className="rounded-2xl border border-dashed border-[#d8dee8] bg-[#fbfbfa] p-4">
       <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">
         {icon}
-        Placeholder · {title}
+        Next step · {title}
       </p>
       <p className="mt-2 text-sm leading-6 text-[#787774]">{children}</p>
     </div>

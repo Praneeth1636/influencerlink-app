@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar";
+import { resolveAppRole } from "@/lib/auth/role";
 import { buildSeedData } from "@/lib/db/seed";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 
@@ -15,6 +16,8 @@ type CreatorProfileData = Awaited<ReturnType<Awaited<ReturnType<typeof createTRP
 
 export default async function CreatorPublicProfilePage({ params }: ProfilePageProps) {
   const { handle } = await params;
+  const role = await resolveAppRole();
+  const brandView = role === "brand";
   const profile = await getCreatorProfile(handle);
 
   if (!profile) {
@@ -43,7 +46,7 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
               className="rounded-[11px] border border-[#dedfe3] bg-[#fbfbfc] px-2.5 py-1.5 text-xs font-semibold text-[#1d1d1f] transition hover:bg-white sm:rounded-[14px] sm:px-4 sm:py-2 sm:text-sm"
               href="/saved"
             >
-              Save
+              {brandView ? "Save" : "Follow"}
             </Link>
             <Link
               className="rounded-[11px] bg-[#1d1d1f] px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-[#333336] sm:rounded-[14px] sm:px-4 sm:py-2 sm:text-sm"
@@ -121,7 +124,7 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
                 className="terrace-secondary-action h-9 px-4 text-[13px] sm:h-10 sm:min-w-36 sm:px-5 sm:text-sm"
                 href="/saved"
               >
-                Save
+                {brandView ? "Save" : "Follow"}
               </Link>
             </div>
           </div>
@@ -160,19 +163,31 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
 
         <section className="terrace-panel mx-4 my-5 grid gap-3 rounded-[22px] p-4 sm:mx-0 sm:my-7 sm:grid-cols-[1fr_auto] sm:items-center sm:p-5">
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">Brand snapshot</p>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">
+              {brandView ? "Brand snapshot" : "Creator snapshot"}
+            </p>
             <p className="mt-2 text-sm leading-6 text-[#4b5563]">
-              {profileAudienceInsight(profile.creator.niches, profile.creator.location)}
+              {brandView
+                ? profileAudienceInsight(profile.creator.niches, profile.creator.location)
+                : "Follow their posts, check connected socials, and start a conversation when their work resonates."}
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center sm:min-w-[320px]">
             <CompactBrandMetric label="Eng" value={`${engagement.toFixed(1)}%`} />
-            <CompactBrandMetric label="Rate" value={baseRate ? `$${formatNumber(baseRate)}` : "Private"} />
+            <CompactBrandMetric
+              label={brandView ? "Rate" : "Posts"}
+              value={
+                brandView ? (baseRate ? `$${formatNumber(baseRate)}` : "Private") : formatNumber(profile.posts.length)
+              }
+            />
             <CompactBrandMetric label="Views" value={formatNumber(profile.creator.profileViews)} />
           </div>
           <div className="sm:col-span-2">
-            <Link className="terrace-secondary-action h-10 w-full px-5 text-sm sm:w-auto" href="/jobs/new">
-              Add to campaign
+            <Link
+              className="terrace-secondary-action h-10 w-full px-5 text-sm sm:w-auto"
+              href={brandView ? "/jobs/new" : "/messages"}
+            >
+              {brandView ? "Add to campaign" : "Message creator"}
             </Link>
           </div>
         </section>

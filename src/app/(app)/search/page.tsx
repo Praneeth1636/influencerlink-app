@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Users
 } from "lucide-react";
+import { resolveAppRole } from "@/lib/auth/role";
 import {
   buildSeedCreatorSearchResults,
   mapCreatorRows,
@@ -38,6 +39,8 @@ const reachOptions = [
 
 export default async function CreatorSearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
+  const role = await resolveAppRole();
+  const brandView = role === "brand";
   const filters = parseFilters(params);
   const creators = prioritizeDefaultScoutResults(await getSearchResults(filters), filters);
   const topCreator = creators[0];
@@ -47,8 +50,12 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
       <header className="terrace-topbar sticky top-0 z-40 hidden border-b md:block">
         <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
           <div className="hidden min-w-[220px] lg:block">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">Brand scout</p>
-            <p className="text-sm font-medium text-[#5f6672]">Creator discovery and audience fit</p>
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">
+              {brandView ? "Brand scout" : "Explore"}
+            </p>
+            <p className="text-sm font-medium text-[#5f6672]">
+              {brandView ? "Creator discovery and audience fit" : "Find creators to follow and message"}
+            </p>
           </div>
           <form action="/search" className="relative mx-auto w-full max-w-[580px]">
             <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-[#8a94a5]" />
@@ -63,12 +70,14 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
             {filters.minReach ? <input name="minReach" type="hidden" value={String(filters.minReach)} /> : null}
             {filters.openToCollabs ? <input name="open" type="hidden" value="1" /> : null}
           </form>
-          <Link
-            className="hidden rounded-[14px] border border-[#dedfe3] bg-[#fbfbfc] px-4 py-2.5 text-sm font-semibold text-[#1d1d1f] transition hover:bg-white md:inline-flex"
-            href="/jobs/new"
-          >
-            New brief
-          </Link>
+          {brandView ? (
+            <Link
+              className="hidden rounded-[14px] border border-[#dedfe3] bg-[#fbfbfc] px-4 py-2.5 text-sm font-semibold text-[#1d1d1f] transition hover:bg-white md:inline-flex"
+              href="/jobs/new"
+            >
+              New brief
+            </Link>
+          ) : null}
         </div>
       </header>
 
@@ -77,12 +86,16 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
           <section className="terrace-shell-card rounded-none border-x-0 border-t-0 p-3.5 sm:rounded-[24px] sm:border sm:p-4">
             <div className="flex flex-col gap-3 sm:gap-4">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Brand search</p>
+                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">
+                  {brandView ? "Brand search" : "Creator search"}
+                </p>
                 <h1 className="mt-1 text-xl leading-tight font-semibold tracking-[-0.045em] text-[#1d1d1f] sm:text-2xl">
-                  Scout creators by audience fit.
+                  {brandView ? "Scout creators by audience fit." : "Find creators you want in your feed."}
                 </h1>
                 <p className="mt-1.5 max-w-xl text-[13px] leading-5 text-[#667085] sm:mt-2 sm:text-sm sm:leading-6">
-                  Built for brands, search by niche, audience, location, platform, or campaign idea.
+                  {brandView
+                    ? "Built for brands, search by niche, audience, location, platform, or campaign idea."
+                    : "Search by name, niche, location, or platform, then follow or start a conversation."}
                 </p>
               </div>
               <form className="grid gap-2.5 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_160px_150px_auto]" action="/search">
@@ -154,7 +167,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
                 <div className="p-3.5 sm:p-5">
                   <span className="inline-flex items-center rounded-full border border-[#f3d5c4] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#D86B3D] sm:px-3 sm:text-xs">
                     <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                    Top match · {topCreator.matchScore}%
+                    {brandView ? `Top match · ${topCreator.matchScore}%` : "Creator spotlight"}
                   </span>
                   <h2 className="mt-3 text-xl font-semibold tracking-[-0.045em] sm:mt-4 sm:text-2xl">
                     {topCreator.displayName}
@@ -171,11 +184,17 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
                   <div className="mt-3 grid gap-1.5 sm:mt-4 sm:grid-cols-3 sm:gap-2">
                     <MiniStat label="Reach" value={formatNumber(topCreator.totalReach)} icon={Users} />
                     <MiniStat label="Eng" value={`${topCreator.weightedEngagement.toFixed(1)}%`} icon={TrendingUp} />
-                    <MiniStat
-                      label="Rate"
-                      value={topCreator.baseRateCents ? `$${formatNumber(topCreator.baseRateCents / 100)}` : "Private"}
-                      icon={DollarSign}
-                    />
+                    {brandView ? (
+                      <MiniStat
+                        label="Rate"
+                        value={
+                          topCreator.baseRateCents ? `$${formatNumber(topCreator.baseRateCents / 100)}` : "Private"
+                        }
+                        icon={DollarSign}
+                      />
+                    ) : (
+                      <MiniStat label="Open" value={topCreator.openToCollabs ? "Collabs" : "Follow"} icon={Sparkles} />
+                    )}
                   </div>
                 </div>
                 <div className="hidden min-h-56 bg-[linear-gradient(135deg,rgba(159,201,228,0.34),rgba(226,138,119,0.24))] md:block">
@@ -197,7 +216,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
           ) : (
             <div className="mt-4 grid gap-3">
               {creators.map((creator) => (
-                <CreatorResultCard creator={creator} key={creator.id} />
+                <CreatorResultCard creator={creator} key={creator.id} role={role} />
               ))}
             </div>
           )}
@@ -232,7 +251,9 @@ function NichePill({ href, active, label }: { href: string; active: boolean; lab
   );
 }
 
-function CreatorResultCard({ creator }: { creator: CreatorSearchResult }) {
+function CreatorResultCard({ creator, role }: { creator: CreatorSearchResult; role: "creator" | "brand" }) {
+  const brandView = role === "brand";
+
   return (
     <article className="terrace-panel rounded-[22px] p-4 transition hover:border-[#cfd5dc] hover:bg-white">
       <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-center">
@@ -269,7 +290,11 @@ function CreatorResultCard({ creator }: { creator: CreatorSearchResult }) {
           <div className="grid min-w-0 grid-cols-3 gap-1.5 sm:gap-2">
             <CompactStat label="Reach" value={formatNumber(creator.totalReach)} />
             <CompactStat label="Eng" value={`${creator.weightedEngagement.toFixed(1)}%`} />
-            <CompactStat label="Fit" value={`${creator.matchScore}%`} highlight />
+            <CompactStat
+              label={brandView ? "Fit" : "Open"}
+              value={brandView ? `${creator.matchScore}%` : creator.openToCollabs ? "Yes" : "Follow"}
+              highlight={brandView}
+            />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="inline-flex min-w-0 items-center gap-1.5 truncate text-xs font-medium text-[#787774]">
