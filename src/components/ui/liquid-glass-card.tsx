@@ -147,7 +147,7 @@ function VolumeBars({ isPlaying }: { isPlaying: boolean }) {
           key={index}
           style={{
             animationDelay: `${index * 0.1}s`,
-            background: "linear-gradient(to top, #D86B3D, #8CC9E8)",
+            background: "linear-gradient(to top, #e08550, #8CC9E8)",
             height: isPlaying ? undefined : "6px"
           }}
         />
@@ -198,7 +198,7 @@ function ProgressBar({
         tabIndex={0}
       >
         <div
-          className="h-full bg-gradient-to-r from-[#D86B3D] to-[#8CC9E8] transition-all duration-200"
+          className="h-full bg-gradient-to-r from-[#e08550] to-[#8CC9E8] transition-all duration-200"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -237,7 +237,7 @@ export function LiquidSignalCard() {
     <div className="w-full max-w-sm">
       <LiquidGlassCard className="gap-3.5 rounded-3xl border border-zinc-200/60 bg-gradient-to-br from-zinc-50 to-zinc-100 p-4 shadow-xl dark:border-zinc-700/60 dark:from-zinc-900 dark:to-black">
         <div className="flex items-center gap-3">
-          <div className="relative mr-2 mb-4 grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#D86B3D] via-[#F0B08D] to-[#8CC9E8] shadow-lg ring-1 ring-black/5 dark:shadow-xl">
+          <div className="relative mr-2 mb-4 grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#e08550] via-[#F0B08D] to-[#8CC9E8] shadow-lg ring-1 ring-black/5 dark:shadow-xl">
             <span className="text-sm font-black tracking-tight text-[#141414]">TR</span>
           </div>
           <div className="flex-1 overflow-hidden">
@@ -277,7 +277,7 @@ export function LiquidSignalCard() {
                 <ArrowRight className="size-4" />
               </LiquidButton>
             </div>
-            <span className="rounded-full border border-[#D86B3D]/20 bg-[#D86B3D]/10 px-3 py-1 text-xs font-semibold text-[#D86B3D]">
+            <span className="rounded-full border border-[#e08550]/20 bg-[#e08550]/10 px-3 py-1 text-xs font-semibold text-[#e08550]">
               94% fit
             </span>
           </div>

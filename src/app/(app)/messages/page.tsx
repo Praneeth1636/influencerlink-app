@@ -22,7 +22,7 @@ export default async function MessagesPage() {
       <section className="relative z-10 mx-auto grid max-w-[1120px] gap-6 px-5 py-8 lg:grid-cols-[320px_minmax(0,1fr)]">
         <aside className="rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D] ring-1 ring-[#f3d5c4]">
+            <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550] ring-1 ring-[#f3d5c4]">
               <Inbox className="h-5 w-5" />
             </div>
             <div>
@@ -41,7 +41,7 @@ export default async function MessagesPage() {
         </aside>
 
         <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
             <Radio className="mr-2 h-3.5 w-3.5" />
             Messaging MVP
           </Badge>
@@ -94,7 +94,7 @@ function ThreadPreviewCard({ thread }: { thread: InboxThreadPreview }) {
           <p className="mt-1 text-xs font-medium text-[#787774]">{thread.subtitle}</p>
         </div>
         {thread.unreadCount > 0 && (
-          <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#D86B3D] px-2 text-xs font-semibold text-white">
+          <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#e08550] px-2 text-xs font-semibold text-white">
             {thread.unreadCount}
           </span>
         )}

@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
-import { ArrowLeft, BadgeCheck, BriefcaseBusiness, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, BadgeCheck, BriefcaseBusiness, Check, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,7 +52,7 @@ export function OnboardingFlow() {
               <span />
             </span>
             <span className="flex items-baseline text-2xl font-semibold tracking-[-0.04em]">
-              Terrace<span className="text-[#D86B3D]">.</span>
+              Terrace<span className="text-[#e08550]">.</span>
             </span>
           </Link>
           <button
@@ -69,11 +69,8 @@ export function OnboardingFlow() {
         <section className="creatorlink-animate-in rounded-[32px] border border-[#e9e9e7] bg-white/78 p-5 shadow-[0_28px_72px_rgba(17,24,39,0.08)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,1fr)]">
             <div className="max-w-2xl text-left">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#e9e9e7] bg-white/80 px-4 py-2 text-sm font-bold text-[#657082] shadow-sm">
-                <Sparkles className="h-4 w-4 text-[#D86B3D]" />
-                First, shape your Terrace
-              </div>
-              <h1 className="text-[clamp(42px,7vw,74px)] leading-[0.94] font-semibold tracking-[-0.075em]">
+              <p className="mb-4 text-sm font-semibold text-[#e08550]">First, shape your Terrace</p>
+              <h1 className="text-[clamp(42px,7vw,74px)] leading-[0.94] font-semibold tracking-[-0.06em]">
                 Pick your side. See the network come alive.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-[#787774]">
@@ -94,59 +91,65 @@ export function OnboardingFlow() {
   );
 }
 
+const previewPlatforms = [
+  { label: "Instagram", dot: "bg-[#ED9568]" },
+  { label: "TikTok", dot: "bg-[#37352f]" },
+  { label: "YouTube", dot: "bg-[#8CC9E8]" }
+];
+
 function OnboardingProductPreview() {
   return (
-    <div className="creatorlink-float-slow relative hidden min-h-[410px] overflow-hidden rounded-[30px] border border-[#151922]/10 bg-[#0d1016] p-5 text-white shadow-[0_28px_76px_rgba(17,24,39,0.18)] lg:block">
+    <div className="creatorlink-float-slow relative hidden min-h-[410px] overflow-hidden rounded-[30px] border border-[#f1f1ef] bg-white p-5 shadow-[0_28px_76px_rgba(17,24,39,0.1)] lg:block">
       <div
         aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(140,201,232,0.26),transparent_32%),radial-gradient(circle_at_88%_85%,rgba(216,107,61,0.24),transparent_34%)]"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(140,201,232,0.16),transparent_36%),radial-gradient(circle_at_88%_85%,rgba(237,149,104,0.14),transparent_38%)]"
       />
-      <div className="absolute top-5 right-5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white/62">
+      <div className="absolute top-5 right-5 rounded-full border border-[#e9e9e7] bg-white px-3 py-1 text-xs font-semibold text-[#9b9a97]">
         live setup
       </div>
 
       <div className="relative z-10 grid gap-4">
-        <div className="w-[78%] rounded-3xl border border-white/10 bg-white/[0.07] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.22)]">
+        <div className="w-[78%] rounded-3xl border border-[#f1f1ef] bg-white p-4 shadow-[0_18px_48px_rgba(17,24,39,0.08)]">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f5b38e] text-sm font-black text-[#37352f]">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff3ec] text-sm font-black text-[#e08550]">
               SR
             </div>
             <div>
-              <p className="text-sm font-semibold">Sara Rivera</p>
-              <p className="text-xs text-white/48">Beauty creator · LA</p>
+              <p className="text-sm font-semibold text-[#37352f]">Sara Rivera</p>
+              <p className="text-xs text-[#9b9a97]">Beauty creator · LA</p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            {[
-              ["2.4M", "Reach"],
-              ["5.8%", "Eng"],
-              ["$3.2K", "Avg"]
-            ].map(([value, label]) => (
-              <div className="rounded-2xl bg-white/[0.07] p-3" key={label}>
-                <p className="text-lg font-semibold tracking-[-0.04em]">{value}</p>
-                <p className="text-[11px] text-white/42">{label}</p>
+          <div className="mt-4 grid gap-1.5">
+            {previewPlatforms.map((platform) => (
+              <div
+                className="flex items-center gap-2 rounded-xl border border-[#f1f1ef] px-3 py-2 text-xs font-medium text-[#787774]"
+                key={platform.label}
+              >
+                <span className={`h-1.5 w-1.5 rounded-full ${platform.dot}`} />
+                {platform.label}
+                <Check className="ml-auto h-3 w-3 text-[#1e9e55]" />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="creatorlink-float-card ml-auto w-[78%] rounded-3xl border border-white/10 bg-white/[0.08] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.2)]">
-          <p className="text-xs font-semibold tracking-[0.16em] text-[#f5b38e] uppercase">Brand search</p>
+        <div className="creatorlink-float-card ml-auto w-[78%] rounded-3xl border border-[#ddeefa] bg-[#fbfdff] p-4 shadow-[0_18px_48px_rgba(43,143,196,0.1)]">
+          <p className="text-xs font-semibold tracking-[0.16em] text-[#2b8fc4] uppercase">Brand search</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {["Women 18-30", "Skincare", "$1K-$4K", "TikTok"].map((item) => (
               <span
-                className="rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs text-white/66"
+                className="rounded-full border border-[#e9e9e7] bg-white px-3 py-1.5 text-xs text-[#787774]"
                 key={item}
               >
                 {item}
               </span>
             ))}
           </div>
-          <div className="mt-4 rounded-2xl bg-white p-3 text-[#37352f]">
+          <div className="mt-4 rounded-2xl border border-[#f1f1ef] bg-white p-3 text-[#37352f]">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold">94% match</p>
-              <span className="rounded-full bg-[#fff0e8] px-2.5 py-1 text-[11px] font-bold text-[#D86B3D]">
-                top fit
+              <p className="text-sm font-semibold">Strong fit</p>
+              <span className="rounded-full bg-[#fff0e8] px-2.5 py-1 text-[11px] font-bold text-[#e08550]">
+                open to collabs
               </span>
             </div>
             <p className="mt-1 text-xs leading-5 text-[#787774]">
@@ -155,12 +158,12 @@ function OnboardingProductPreview() {
           </div>
         </div>
 
-        <div className="w-[62%] rounded-3xl border border-white/10 bg-white/[0.07] p-4">
-          <p className="text-sm font-semibold">Campaign brief</p>
-          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+        <div className="w-[62%] rounded-3xl border border-[#f1f1ef] bg-white p-4 shadow-[0_14px_36px_rgba(17,24,39,0.06)]">
+          <p className="text-sm font-semibold text-[#37352f]">Campaign brief</p>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#eaf7fd]">
             <div className="creatorlink-progress h-full w-[82%] rounded-full bg-[#8CC9E8]" />
           </div>
-          <p className="mt-2 text-xs text-white/46">Building shortlist...</p>
+          <p className="mt-2 text-xs text-[#9b9a97]">Building shortlist...</p>
         </div>
       </div>
     </div>
@@ -176,19 +179,21 @@ function AccountTypeStep({ onPick }: { onPick: (path: Path) => void }) {
     <div className="grid gap-4 lg:grid-cols-2">
       <BackgroundGradient containerClassName="transition duration-300 hover:-translate-y-1">
         <button
-          className="group relative h-full w-full overflow-hidden rounded-[28px] bg-[#0b0d12] p-6 text-left text-white transition duration-300 sm:p-7"
+          className="group relative h-full w-full overflow-hidden rounded-[28px] bg-white p-6 text-left transition duration-300 sm:p-7"
           onClick={() => onPick("creator")}
           type="button"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(140,201,232,0.22),transparent_34%),radial-gradient(circle_at_90%_90%,rgba(216,107,61,0.22),transparent_30%)]" />
-          <div className="pointer-events-none absolute -right-10 bottom-6 h-32 w-48 rotate-[-12deg] rounded-[32px] border border-white/10 bg-white/[0.04] transition duration-500 group-hover:rotate-[-7deg]" />
+          <div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-full bg-[#fff0e8]" />
+          <div className="pointer-events-none absolute -right-8 bottom-7 h-28 w-44 rotate-[-12deg] rounded-[32px] border border-[#e9d8cf] bg-[#fff8f3] transition duration-500 group-hover:rotate-[-7deg]" />
           <div className="relative z-10">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 text-[#f5b38e]">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0e8] text-[#e08550]">
               <Users className="h-5 w-5" />
             </span>
-            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-white/52 uppercase">For creators</p>
-            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em]">Build your media kit</p>
-            <p className="mt-4 text-sm leading-6 text-white/58">
+            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-[#e08550] uppercase">For creators</p>
+            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em] text-[#37352f]">
+              Build your media kit
+            </p>
+            <p className="mt-4 text-sm leading-6 text-[#787774]">
               Connect your platforms, set rates, and surface to brands looking for your niche.
             </p>
           </div>
@@ -200,14 +205,14 @@ function AccountTypeStep({ onPick }: { onPick: (path: Path) => void }) {
           onClick={() => onPick("brand")}
           type="button"
         >
-          <div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-full bg-[#fff0e8]" />
-          <div className="pointer-events-none absolute -right-8 bottom-7 h-28 w-44 rotate-[-12deg] rounded-[32px] border border-[#e9d8cf] bg-[#fff8f3] transition duration-500 group-hover:rotate-[-7deg]" />
+          <div className="pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-full bg-[#eaf7fd]" />
+          <div className="pointer-events-none absolute -right-8 bottom-7 h-28 w-44 rotate-[-12deg] rounded-[32px] border border-[#cfe8f6] bg-[#f5fbfe] transition duration-500 group-hover:rotate-[-7deg]" />
           <div className="relative z-10">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff0e8] text-[#D86B3D]">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#eaf7fd] text-[#2b8fc4]">
               <BriefcaseBusiness className="h-5 w-5" />
             </span>
-            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-[#8a94a5] uppercase">For brands</p>
-            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em]">Run a campaign</p>
+            <p className="mt-8 text-xs font-semibold tracking-[0.18em] text-[#2b8fc4] uppercase">For brands</p>
+            <p className="mt-2 text-4xl leading-[1] font-semibold tracking-[-0.06em] text-[#37352f]">Run a campaign</p>
             <p className="mt-4 text-sm leading-6 text-[#787774]">
               Spin up a team, search creators, and brief campaigns end to end.
             </p>
@@ -282,7 +287,7 @@ function CreatorPath({ onBack }: { onBack: () => void }) {
       <BackLink onClick={onBack} />
 
       <div>
-        <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Creator setup</p>
+        <p className="text-xs font-semibold tracking-[0.18em] text-[#e08550] uppercase">Creator setup</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Build your public proof.</h2>
       </div>
 

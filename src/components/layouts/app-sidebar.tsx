@@ -68,7 +68,7 @@ export function AppSidebar({ role }: { role: AppRole }) {
             <span />
           </span>
           <span className="flex items-baseline text-xl font-semibold tracking-[-0.04em] text-[#37352f] transition duration-200 group-data-[collapsible=icon]:hidden">
-            Terrace<span className="text-[#D86B3D]">.</span>
+            Terrace<span className="text-[#e08550]">.</span>
           </span>
         </Link>
       </SidebarHeader>
@@ -91,7 +91,7 @@ export function AppSidebar({ role }: { role: AppRole }) {
                   tooltip={item.title}
                 >
                   <Link href={item.url}>
-                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#667085] transition duration-200 group-hover/nav:text-[#1d1d1f] group-data-[active=true]/nav:bg-[#fff3ec] group-data-[active=true]/nav:text-[#D86B3D] group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#667085] transition duration-200 group-hover/nav:text-[#1d1d1f] group-data-[active=true]/nav:bg-[#fff3ec] group-data-[active=true]/nav:text-[#e08550] group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
                       <Icon className="h-[18px] w-[18px] stroke-[2.1] transition duration-200 group-hover/nav:scale-105" />
                     </span>
                     <span className="font-medium group-data-[collapsible=icon]:hidden">{item.title}</span>
@@ -108,7 +108,7 @@ export function AppSidebar({ role }: { role: AppRole }) {
         </div>
         <section className="rounded-[18px] border border-[#dedfe3] bg-white p-4 shadow-[0_8px_24px_rgba(17,24,39,0.035)] transition duration-200 group-data-[collapsible=icon]:hidden hover:border-[#dceff8] [@media(max-height:820px)]:hidden">
           <div className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-2xl border border-[#f4d8c8] bg-[#fff3ec] text-[#bf5a30]">
+            <span className="grid h-9 w-9 place-items-center rounded-2xl border border-[#f4d8c8] bg-[#fff3ec] text-[#e08550]">
               <Sparkles className="h-[18px] w-[18px]" />
             </span>
             <h2 className="text-sm font-semibold text-[#37352f]">AI Match</h2>
@@ -119,7 +119,7 @@ export function AppSidebar({ role }: { role: AppRole }) {
               : "Gigs matched to your niche, refreshed weekly."}
           </p>
           <Link
-            className="mt-3 inline-flex text-xs font-semibold text-[#37352f] transition-colors hover:text-[#D86B3D]"
+            className="mt-3 inline-flex text-xs font-semibold text-[#37352f] transition-colors hover:text-[#e08550]"
             href={role === "brand" ? "/search" : "/jobs"}
           >
             {role === "brand" ? "Search creators" : "See gigs"}

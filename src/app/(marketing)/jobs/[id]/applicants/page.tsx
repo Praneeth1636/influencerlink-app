@@ -59,7 +59,7 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
         </div>
 
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
             <BriefcaseBusiness className="mr-2 h-3.5 w-3.5" />
             Applicant pipeline
           </Badge>
@@ -108,12 +108,12 @@ export default async function ApplicantsPage({ params }: ApplicantsPageProps) {
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <Link
-                              className="font-semibold text-[#37352f] hover:text-[#D86B3D]"
+                              className="font-semibold text-[#37352f] hover:text-[#e08550]"
                               href={`/profile/${applicant.handle}`}
                             >
                               {applicant.displayName}
                             </Link>
-                            {applicant.verified && <BadgeCheck className="h-4 w-4 text-[#D86B3D]" />}
+                            {applicant.verified && <BadgeCheck className="h-4 w-4 text-[#e08550]" />}
                           </div>
                           <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#787774]">{applicant.headline}</p>
                         </div>
@@ -218,7 +218,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 function Metric({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-[#e9e9e7] bg-white p-2">
-      <Icon className="h-3.5 w-3.5 text-[#D86B3D]" />
+      <Icon className="h-3.5 w-3.5 text-[#e08550]" />
       <p className="mt-2 text-[9px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">{label}</p>
       <p className="mt-0.5 text-xs font-semibold text-[#37352f]">{value}</p>
     </div>

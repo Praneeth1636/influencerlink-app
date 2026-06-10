@@ -80,12 +80,12 @@ export function AppProfileDropdown({ role, className }: { role: AppProfileRole; 
         <div className="group relative">
           <DropdownMenuTrigger asChild>
             <button
-              className="flex w-full items-center gap-3 rounded-2xl border border-[#e6e8ec] bg-white p-3 text-left shadow-[0_10px_26px_rgba(17,24,39,0.035)] transition duration-200 group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-2xl group-data-[collapsible=icon]:p-0 hover:-translate-y-0.5 hover:bg-[#f7f9fb] focus-visible:ring-2 focus-visible:ring-[#D86B3D]/30 focus-visible:outline-none"
+              className="flex w-full items-center gap-3 rounded-2xl border border-[#e6e8ec] bg-white p-3 text-left shadow-[0_10px_26px_rgba(17,24,39,0.035)] transition duration-200 group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-2xl group-data-[collapsible=icon]:p-0 hover:-translate-y-0.5 hover:bg-[#f7f9fb] focus-visible:ring-2 focus-visible:ring-[#e08550]/30 focus-visible:outline-none"
               type="button"
             >
               <Avatar className="h-10 w-10 border border-[#e9e9e7] bg-white">
                 <AvatarImage src={user?.imageUrl} alt={name} />
-                <AvatarFallback className="bg-white text-xs font-semibold text-[#bf5a30]">{initials}</AvatarFallback>
+                <AvatarFallback className="bg-white text-xs font-semibold text-[#e08550]">{initials}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
                 <div className="truncate text-sm font-semibold text-[#37352f]">
@@ -93,7 +93,7 @@ export function AppProfileDropdown({ role, className }: { role: AppProfileRole; 
                 </div>
                 <div className="truncate text-xs text-[#787774]">{email}</div>
               </div>
-              <div className="rounded-md border border-[#f0e3da] bg-[#faf0ea] px-2 py-1 text-[10px] font-semibold tracking-[0.12em] text-[#bf5a30] uppercase group-data-[collapsible=icon]:hidden">
+              <div className="rounded-md border border-[#f0e3da] bg-[#faf0ea] px-2 py-1 text-[10px] font-semibold tracking-[0.12em] text-[#e08550] uppercase group-data-[collapsible=icon]:hidden">
                 {workspaceLabel}
               </div>
             </button>
@@ -108,13 +108,13 @@ export function AppProfileDropdown({ role, className }: { role: AppProfileRole; 
             <div className="mb-1 flex items-center gap-3 rounded-md bg-white p-3">
               <Avatar className="h-11 w-11 border border-[#e9e9e7] bg-white">
                 <AvatarImage src={user?.imageUrl} alt={name} />
-                <AvatarFallback className="bg-white text-xs font-bold text-[#bf5a30]">{initials}</AvatarFallback>
+                <AvatarFallback className="bg-white text-xs font-bold text-[#e08550]">{initials}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold text-[#37352f]">{name}</div>
                 <div className="truncate text-xs text-[#787774]">{email}</div>
               </div>
-              <BadgeCheck className="h-4 w-4 text-[#D86B3D]" />
+              <BadgeCheck className="h-4 w-4 text-[#e08550]" />
             </div>
 
             <div className="mb-2 px-1">
@@ -146,7 +146,7 @@ export function AppProfileDropdown({ role, className }: { role: AppProfileRole; 
 
             <DropdownMenuItem asChild>
               <button
-                className="group flex w-full cursor-pointer items-center gap-3 rounded-md border border-[#e9e9e7] bg-white p-3 text-sm font-medium text-[#bf5a30] transition-colors duration-150 hover:bg-[#f7f7f5]"
+                className="group flex w-full cursor-pointer items-center gap-3 rounded-md border border-[#e9e9e7] bg-white p-3 text-sm font-medium text-[#e08550] transition-colors duration-150 hover:bg-[#f7f7f5]"
                 onClick={() => {
                   // Land on the public landing page after sign-out, not /login —
                   // /login does an auth() check on the server and the stale

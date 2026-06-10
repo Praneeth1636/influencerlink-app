@@ -141,14 +141,14 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                   key={job.id}
                 >
                   <div>
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#e08550] hover:bg-[#faf0ea]">
                       {job.remote ? "Remote" : "Location-based"}
                     </Badge>
                     <h2 className="mt-4 text-xl font-semibold tracking-[-0.04em]">{job.title}</h2>
                     <p className="mt-2 text-sm leading-6 text-[#787774]">{job.description}</p>
                   </div>
                   <div className="grid gap-2 md:min-w-48">
-                    <span className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-2 text-sm font-semibold text-[#D86B3D]">
+                    <span className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-2 text-sm font-semibold text-[#e08550]">
                       {formatBudget(job.budgetMinCents, job.budgetMaxCents)}
                     </span>
                     <span className="rounded-full border border-[#e9e9e7] bg-[#f8f9fb] px-3 py-2 text-sm text-[#787774]">
@@ -172,7 +172,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
                   key={post.id}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#e08550] hover:bg-[#faf0ea]">
                       {post.type.replace("_", " ")}
                     </Badge>
                     <span className="text-xs font-semibold text-[#9b9a97]">{formatDate(post.createdAt)}</span>
@@ -205,7 +205,7 @@ export default async function CompanyPublicPage({ params }: CompanyPageProps) {
 
           <article className="rounded-[22px] border border-[#f3d5c4] bg-[#faf0ea] p-5">
             <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-[#D86B3D]" />
+              <MessageCircle className="h-5 w-5 text-[#e08550]" />
               <SectionHeader eyebrow="Brand action" title="Pitch this team" />
             </div>
             <p className="mt-4 text-sm leading-6 text-[#7a513f]">
@@ -334,7 +334,7 @@ function CompanyMetric({
     >
       <div className="flex items-center justify-between gap-3">
         <span className="text-[11px] font-semibold tracking-[0.16em] text-[#9b9a97] uppercase">{label}</span>
-        <Icon className={`h-4 w-4 ${highlighted ? "text-[#D86B3D]" : "text-[#9b9a97]"}`} />
+        <Icon className={`h-4 w-4 ${highlighted ? "text-[#e08550]" : "text-[#9b9a97]"}`} />
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-[-0.05em]">{value}</p>
     </div>

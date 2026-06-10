@@ -19,7 +19,7 @@ export default async function NotificationsPage() {
       <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
         <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
           <div>
-            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
               <Bell className="mr-2 h-3.5 w-3.5" />
               Workspace alerts
             </Badge>
@@ -73,14 +73,14 @@ function NotificationCard({ notification }: { notification: NotificationItem }) 
       }
       href={notification.href}
     >
-      <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-[#D86B3D] ring-1 ring-[#e9e9e7]">
+      <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-[#e08550] ring-1 ring-[#e9e9e7]">
         <BriefcaseBusiness className="h-5 w-5" />
       </div>
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-lg font-semibold tracking-[-0.035em]">{notification.title}</h2>
           {isUnread ? (
-            <span className="inline-flex items-center rounded-full bg-[#D86B3D] px-2 py-0.5 text-[11px] font-semibold text-white">
+            <span className="inline-flex items-center rounded-full bg-[#e08550] px-2 py-0.5 text-[11px] font-semibold text-white">
               New
             </span>
           ) : null}
@@ -91,7 +91,7 @@ function NotificationCard({ notification }: { notification: NotificationItem }) 
         </p>
       </div>
       <div className="flex items-center gap-2 text-xs font-semibold text-[#9b9a97]">
-        {isUnread ? <Circle className="h-3 w-3 fill-[#D86B3D] text-[#D86B3D]" /> : <CheckCircle2 className="h-4 w-4" />}
+        {isUnread ? <Circle className="h-3 w-3 fill-[#e08550] text-[#e08550]" /> : <CheckCircle2 className="h-4 w-4" />}
         {isUnread ? "Unread" : "Read"}
       </div>
     </Link>

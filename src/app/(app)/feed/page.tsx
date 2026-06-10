@@ -50,7 +50,7 @@ const initialCreator = seedInfluencers.find((creator) => creator.id === "sara") 
 const initialCampaign = seedCampaigns.find((campaign) => campaign.id === "glossier-summer") ?? seedCampaigns[0];
 
 const platformTone: Record<Platform, string> = {
-  Instagram: "border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D]",
+  Instagram: "border-[#f3d5c4] bg-[#faf0ea] text-[#e08550]",
   TikTok: "border-[#d6eaf8] bg-[#edf8ff] text-[#2f83b7]",
   YouTube: "border-[#e9e9e7] bg-[#ffffff] text-[#787774]",
   LinkedIn: "border-[#e9e9e7] bg-[#ffffff] text-[#787774]"
@@ -86,7 +86,7 @@ const seededPosts: VisualPost[] = [
     body: "Heyy, just dropped a collab with Glossier on Instagram. The reel is live now, please check it out and tell me what you think.",
     metric: "8.4% engagement",
     visual: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80",
-    accent: "#D86B3D",
+    accent: "#e08550",
     mediaLabel: "Instagram",
     social: {
       source: "instagram",
@@ -126,7 +126,7 @@ const seededPosts: VisualPost[] = [
     body: "Opening two May slots for food and wellness brands. Strongest audience: young professionals who buy after seeing simple recipe demos.",
     metric: "$1.8K avg rate",
     visual: "https://images.unsplash.com/photo-1556228724-4c6c1b305c35?auto=format&fit=crop&w=1200&q=80",
-    accent: "#D86B3D",
+    accent: "#e08550",
     mediaLabel: "Open"
   }
 ];
@@ -248,7 +248,7 @@ export default function FeedPage() {
         body: post.body,
         metric: social ? metricForSocial(social) : metricForPost(post.type, matchedCreator),
         visual: externalUrl ?? undefined,
-        accent: index % 3 === 1 ? "#8CC9E8" : index % 3 === 2 ? "#F5B38E" : "#D86B3D",
+        accent: index % 3 === 1 ? "#8CC9E8" : index % 3 === 2 ? "#F5B38E" : "#e08550",
         mediaLabel: social ? sourceLabel(social.source) : labelForPost(post.type),
         social
       };
@@ -297,7 +297,7 @@ export default function FeedPage() {
               setLocalPosts((current) => [
                 {
                   accent:
-                    draft.type === "content_drop" ? "#8CC9E8" : draft.type === "open_to_work" ? "#F5B38E" : "#D86B3D",
+                    draft.type === "content_drop" ? "#8CC9E8" : draft.type === "open_to_work" ? "#F5B38E" : "#e08550",
                   authorType: "creator",
                   body: draft.body,
                   brandName: null,
@@ -593,7 +593,7 @@ function SuggestedCreatorRow({
         className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-150 active:scale-95 ${
           following
             ? "border-[#d6eaf8] bg-[#edf8ff] text-[#2f83b7]"
-            : "border-[#e9e9e7] bg-white text-[#37352f] hover:border-[#f3d5c4] hover:text-[#D86B3D]"
+            : "border-[#e9e9e7] bg-white text-[#37352f] hover:border-[#f3d5c4] hover:text-[#e08550]"
         }`}
         onClick={() => setFollowing((current) => !current)}
         type="button"
@@ -820,7 +820,7 @@ function ComposerTypeButton({
     <button
       className={`inline-flex items-center gap-1.5 rounded-[11px] border px-2 py-1.5 transition sm:gap-2 sm:rounded-[12px] sm:px-2.5 ${
         active
-          ? "border-[#f5d5c3] bg-[#fff3ec] text-[#D86B3D]"
+          ? "border-[#f5d5c3] bg-[#fff3ec] text-[#e08550]"
           : "border-transparent hover:border-[#e6e8ec] hover:bg-[#f6f8fa] hover:text-[#37352f]"
       }`}
       onClick={onClick}
@@ -900,7 +900,7 @@ function CreatorProfileSheet({
 
         {brandView ? (
           <section className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-4">
-            <p className="text-xs font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Suggested range</p>
+            <p className="text-xs font-semibold tracking-[0.16em] text-[#e08550] uppercase">Suggested range</p>
             <p className="mt-2 text-2xl font-semibold tracking-[-0.045em]">{rate.range}</p>
             <p className="mt-2 text-sm leading-6 text-[#7a513f]">{rate.reason}</p>
           </section>
@@ -945,7 +945,7 @@ function Panel({ children, className = "" }: { children: React.ReactNode; classN
 function ProfileStat({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string }) {
   return (
     <div className="rounded-lg border border-[#e9e9e7] bg-[#ffffff] p-3">
-      <Icon className="h-4 w-4 text-[#D86B3D]" />
+      <Icon className="h-4 w-4 text-[#e08550]" />
       <span className="mt-3 block text-[10px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">{label}</span>
       <strong className="mt-1 block text-lg font-semibold tracking-[-0.04em]">{value}</strong>
     </div>
@@ -954,7 +954,7 @@ function ProfileStat({ icon: Icon, label, value }: { icon: typeof Users; label: 
 
 function MatchPill({ score }: { score: number }) {
   return (
-    <div className="grid h-12 w-14 shrink-0 place-items-center rounded-lg border border-[#e9e9e7] bg-white text-center text-[#D86B3D]">
+    <div className="grid h-12 w-14 shrink-0 place-items-center rounded-lg border border-[#e9e9e7] bg-white text-center text-[#e08550]">
       <strong className="text-base font-semibold tracking-[-0.04em]">{score}%</strong>
       <span className="-mt-2 text-[9px] font-bold tracking-[0.12em] uppercase opacity-70">match</span>
     </div>

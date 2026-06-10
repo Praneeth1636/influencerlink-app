@@ -100,7 +100,7 @@ export function JobApplyForm({ jobId }: JobApplyFormProps) {
 
       {status && <p className="text-sm leading-6 text-[#787774]">{status}</p>}
       {threadId && (
-        <Link className="text-sm font-semibold text-[#D86B3D] hover:text-[#37352f]" href={`/messages/${threadId}`}>
+        <Link className="text-sm font-semibold text-[#e08550] hover:text-[#37352f]" href={`/messages/${threadId}`}>
           Open job conversation
         </Link>
       )}

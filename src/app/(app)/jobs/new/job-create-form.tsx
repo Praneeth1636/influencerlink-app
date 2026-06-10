@@ -105,7 +105,7 @@ export function JobCreateForm() {
       }}
     >
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D] ring-1 ring-[#f3d5c4]">
+        <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550] ring-1 ring-[#f3d5c4]">
           <BriefcaseBusiness className="h-5 w-5" />
         </div>
         <div>
@@ -277,7 +277,7 @@ export function JobCreateForm() {
       <label className="flex items-center gap-3 rounded-lg border border-[#e9e9e7] bg-[#fbfbfa] p-3 text-sm font-medium text-[#787774]">
         <input
           checked={values.remote}
-          className="h-4 w-4 accent-[#D86B3D]"
+          className="h-4 w-4 accent-[#e08550]"
           onChange={(event) => updateValue("remote", event.target.checked)}
           type="checkbox"
         />

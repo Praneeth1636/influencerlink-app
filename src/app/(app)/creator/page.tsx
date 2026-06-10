@@ -123,13 +123,13 @@ export default function CreatorPortalPage() {
                   key={post.title}
                 >
                   <div className="flex items-center justify-between">
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#e08550] hover:bg-[#faf0ea]">
                       {post.type}
                     </Badge>
                     <Play className="h-4 w-4 text-[#9b9a97]" />
                   </div>
                   <h2 className="mt-5 text-xl font-semibold tracking-[-0.04em]">{post.title}</h2>
-                  <p className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-[#D86B3D]">{post.metric}</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-[#e08550]">{post.metric}</p>
                   <p className="mt-3 text-sm leading-6 text-[#787774]">{post.body}</p>
                 </article>
               ))}
@@ -152,7 +152,7 @@ export default function CreatorPortalPage() {
                     <p className="mt-2 text-sm leading-6 text-[#787774]">{campaign.goal}</p>
                   </div>
                   <div className="grid gap-2 md:min-w-48">
-                    <span className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-2 text-sm font-semibold text-[#D86B3D]">
+                    <span className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-2 text-sm font-semibold text-[#e08550]">
                       {campaign.budgetRange}
                     </span>
                     <span className="rounded-full border border-[#e9e9e7] bg-[#f8f9fb] px-3 py-2 text-sm text-[#787774]">
@@ -185,7 +185,7 @@ export default function CreatorPortalPage() {
 
           <article className="rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5 text-[#D86B3D]" />
+              <Sparkles className="h-5 w-5 text-[#e08550]" />
               <SectionHeader eyebrow="AI agent" title="Profile coach" />
             </div>
             <p className="mt-4 text-sm leading-6 text-[#787774]">{buildCreatorPitch(creator)}</p>
@@ -205,7 +205,7 @@ export default function CreatorPortalPage() {
                   </div>
                   <div className="mt-3 flex items-center justify-between text-sm">
                     <span className="text-[#787774]">{formatNumber(account.followers)} followers</span>
-                    <span className="font-semibold text-[#D86B3D]">{account.engagementRate}%</span>
+                    <span className="font-semibold text-[#e08550]">{account.engagementRate}%</span>
                   </div>
                 </div>
               ))}
@@ -234,7 +234,7 @@ function CreatorMetric({
     >
       <div className="flex items-center justify-between gap-3">
         <span className="text-[11px] font-semibold tracking-[0.16em] text-[#9b9a97] uppercase">{label}</span>
-        <Icon className={`h-4 w-4 ${highlighted ? "text-[#D86B3D]" : "text-[#9b9a97]"}`} />
+        <Icon className={`h-4 w-4 ${highlighted ? "text-[#e08550]" : "text-[#9b9a97]"}`} />
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-[-0.05em]">{value}</p>
     </div>

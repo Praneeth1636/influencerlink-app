@@ -74,7 +74,7 @@ export function AttractButton({
   return (
     <Button
       className={cn(
-        "relative isolate touch-none overflow-visible border-[#e7a27c] bg-[#e78a61] text-[#37352f] shadow-[0_14px_32px_rgba(216,107,61,0.2)] transition-all duration-300 hover:bg-[#ee9a74] hover:shadow-[0_18px_42px_rgba(216,107,61,0.25)]",
+        "relative isolate touch-none overflow-visible border-[#e7a27c] bg-[#e78a61] text-[#37352f] shadow-[0_14px_32px_rgba(224,133,80,0.2)] transition-all duration-300 hover:bg-[#ee9a74] hover:shadow-[0_18px_42px_rgba(224,133,80,0.25)]",
         className
       )}
       onMouseEnter={handleInteractionStart}

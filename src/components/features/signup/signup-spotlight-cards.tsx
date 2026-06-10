@@ -22,7 +22,7 @@ const SIGNUP_SPOTLIGHT_ITEMS: SpotlightItem[] = [
     icon: BadgeCheck,
     title: "Verified proof",
     description: "Show real reach, engagement, platforms, and past brand work without asking brands to guess.",
-    color: "#D86B3D"
+    color: "#e08550"
   },
   {
     icon: Search,
@@ -52,7 +52,7 @@ const SIGNUP_SPOTLIGHT_ITEMS: SpotlightItem[] = [
     icon: Sparkles,
     title: "AI matching",
     description: "Paste the campaign idea and get creator matches with plain-English reasons.",
-    color: "#D86B3D"
+    color: "#e08550"
   }
 ];
 
@@ -75,7 +75,7 @@ export function SignupSpotlightCards() {
       />
 
       <div className="relative mb-6">
-        <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Why creators and brands join</p>
+        <p className="text-xs font-semibold tracking-[0.18em] text-[#e08550] uppercase">Why creators and brands join</p>
         <h2 className="mt-2 max-w-2xl text-[clamp(30px,4vw,48px)] leading-[1] font-semibold tracking-[-0.06em]">
           Familiar like a social network. Built for deals.
         </h2>

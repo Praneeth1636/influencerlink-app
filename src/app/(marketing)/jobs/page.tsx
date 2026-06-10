@@ -54,7 +54,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
           <form action="/jobs" className="terrace-panel rounded-[20px] p-4 sm:rounded-[24px] sm:p-5">
             <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff4ee] text-[#D86B3D]">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff4ee] text-[#e08550]">
                 <BriefcaseBusiness className="h-4 w-4" />
               </div>
               <h2 className="text-base font-semibold tracking-[-0.02em]">Filters</h2>
@@ -93,7 +93,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 
             <label className="mt-4 flex items-center gap-3 rounded-xl border border-[#e9e9e7] bg-[#fbfbfa] p-3">
               <input
-                className="h-4 w-4 accent-[#D86B3D]"
+                className="h-4 w-4 accent-[#e08550]"
                 defaultChecked={filters.remote}
                 name="remote"
                 type="checkbox"
@@ -178,7 +178,7 @@ function JobCard({ job }: { job: JobBoardItem }) {
           </p>
         </div>
 
-        <div className="grid h-14 w-16 shrink-0 place-items-center rounded-2xl border border-[#f3d5c4] bg-[#faf0ea] text-center text-[#D86B3D] sm:h-16 sm:w-20">
+        <div className="grid h-14 w-16 shrink-0 place-items-center rounded-2xl border border-[#f3d5c4] bg-[#faf0ea] text-center text-[#e08550] sm:h-16 sm:w-20">
           <strong className="text-lg font-semibold tracking-[-0.04em] sm:text-xl">{job.fitScore}%</strong>
           <span className="-mt-2 text-[10px] font-semibold tracking-[0.12em] uppercase opacity-70">fit</span>
         </div>

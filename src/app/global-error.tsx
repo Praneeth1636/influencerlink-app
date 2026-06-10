@@ -16,7 +16,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
           <div style={{ maxWidth: 560 }}>
             <p
               style={{
-                color: "#D86B3D",
+                color: "#e08550",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.18em",

@@ -35,7 +35,7 @@ export default function AnalyticsPage() {
 
       <section className="mx-auto grid max-w-[1180px] gap-6 px-5 py-7">
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
             <Radio className="mr-2 h-3.5 w-3.5" />
             Creator proof dashboard
           </Badge>
@@ -57,7 +57,7 @@ export default function AnalyticsPage() {
                 key={item.label}
               >
                 <div className="flex items-center justify-between">
-                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D]">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550]">
                     <Icon className="h-5 w-5" />
                   </span>
                   <span className="rounded-full border border-[#bfe8d0] bg-[#e8f8ef] px-3 py-1 text-xs font-semibold text-[#147a3b]">
@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
 
         <article className="rounded-[26px] border border-[#e9e9e7] bg-white p-5 shadow-[0_14px_40px_rgba(17,24,39,0.035)]">
           <div className="flex items-center gap-3">
-            <BarChart3 className="h-5 w-5 text-[#D86B3D]" />
+            <BarChart3 className="h-5 w-5 text-[#e08550]" />
             <h2 className="text-xl font-semibold tracking-[-0.04em]">Best performing proof</h2>
           </div>
           <div className="mt-5 grid gap-3">
@@ -87,7 +87,7 @@ export default function AnalyticsPage() {
                 <p className="font-semibold">{post.title}</p>
                 <span className="text-sm text-[#787774]">{post.reach} reach</span>
                 <span className="text-sm text-[#787774]">{post.engagement} eng</span>
-                <span className="text-sm font-semibold text-[#D86B3D]">{post.status}</span>
+                <span className="text-sm font-semibold text-[#e08550]">{post.status}</span>
               </div>
             ))}
           </div>

@@ -40,13 +40,13 @@ export default async function LoginPage() {
             <span />
           </span>
           <span className="flex items-baseline text-2xl font-semibold tracking-[-0.04em]">
-            Terrace<span className="text-[#D86B3D]">.</span>
+            Terrace<span className="text-[#e08550]">.</span>
           </span>
         </Link>
 
         <div className="mb-6 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#e9e9e7] bg-white px-4 py-1.5 text-xs font-semibold text-[#657082] shadow-sm">
-            <Sparkles className="h-3.5 w-3.5 text-[#D86B3D]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#e08550]" />
             Welcome back
           </div>
           <h1 className="text-[32px] leading-[1.05] font-semibold tracking-[-0.045em] sm:text-[36px]">

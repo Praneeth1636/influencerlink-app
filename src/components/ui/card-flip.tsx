@@ -71,8 +71,8 @@ export function CardFlip({
                 </p>
               </div>
               <div className="group/icon relative">
-                <div className="absolute inset-[-8px] rounded-lg bg-gradient-to-br from-[#D86B3D]/20 via-[#D86B3D]/10 to-transparent transition-opacity duration-300" />
-                <Repeat2 className="relative z-10 h-4 w-4 text-[#D86B3D] transition-transform duration-300 group-hover/icon:scale-110 group-hover/icon:-rotate-12" />
+                <div className="absolute inset-[-8px] rounded-lg bg-gradient-to-br from-[#e08550]/20 via-[#e08550]/10 to-transparent transition-opacity duration-300" />
+                <Repeat2 className="relative z-10 h-4 w-4 text-[#e08550] transition-transform duration-300 group-hover/icon:scale-110 group-hover/icon:-rotate-12" />
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@ export function CardFlip({
                     transitionDelay: `${index * 100 + 200}ms`
                   }}
                 >
-                  <ArrowRight className="h-3 w-3 text-[#D86B3D]" />
+                  <ArrowRight className="h-3 w-3 text-[#e08550]" />
                   <span>{feature}</span>
                 </div>
               ))}
@@ -117,15 +117,15 @@ export function CardFlip({
             <div
               className={cn(
                 "group/start -m-3 flex items-center justify-between rounded-xl bg-gradient-to-r from-zinc-100 via-zinc-100 to-zinc-100 p-3 transition-all duration-300 hover:scale-[1.02] hover:cursor-pointer dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800",
-                "hover:from-[#D86B3D]/10 hover:via-[#D86B3D]/5 hover:to-transparent dark:hover:from-[#D86B3D]/20 dark:hover:via-[#D86B3D]/10 dark:hover:to-transparent"
+                "hover:from-[#e08550]/10 hover:via-[#e08550]/5 hover:to-transparent dark:hover:from-[#e08550]/20 dark:hover:via-[#e08550]/10 dark:hover:to-transparent"
               )}
             >
-              <span className="text-sm font-medium text-zinc-900 transition-colors duration-300 group-hover/start:text-[#D86B3D] dark:text-white">
+              <span className="text-sm font-medium text-zinc-900 transition-colors duration-300 group-hover/start:text-[#e08550] dark:text-white">
                 {actionLabel}
               </span>
               <div className="group/icon relative">
-                <div className="absolute inset-[-6px] scale-90 rounded-lg bg-gradient-to-br from-[#D86B3D]/20 via-[#D86B3D]/10 to-transparent opacity-0 transition-all duration-300 group-hover/start:scale-100 group-hover/start:opacity-100" />
-                <ArrowRight className="relative z-10 h-4 w-4 text-[#D86B3D] transition-all duration-300 group-hover/start:translate-x-0.5 group-hover/start:scale-110" />
+                <div className="absolute inset-[-6px] scale-90 rounded-lg bg-gradient-to-br from-[#e08550]/20 via-[#e08550]/10 to-transparent opacity-0 transition-all duration-300 group-hover/start:scale-100 group-hover/start:opacity-100" />
+                <ArrowRight className="relative z-10 h-4 w-4 text-[#e08550] transition-all duration-300 group-hover/start:translate-x-0.5 group-hover/start:scale-110" />
               </div>
             </div>
           </div>

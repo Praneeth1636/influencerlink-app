@@ -31,7 +31,7 @@ export default function ContactPage() {
           </Link>
 
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Contact</p>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#e08550] uppercase">Contact</p>
             <h1 className="mt-4 max-w-xl text-[clamp(44px,8vw,92px)] leading-[0.92] font-semibold tracking-[-0.08em]">
               Tell us what you are building.
             </h1>

@@ -137,7 +137,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
                 </button>
                 <label className="inline-flex items-center gap-2 text-[13px] font-medium text-[#667085] sm:text-sm lg:col-span-4">
                   <input
-                    className="h-4 w-4 accent-[#D86B3D]"
+                    className="h-4 w-4 accent-[#e08550]"
                     defaultChecked={filters.openToCollabs}
                     name="open"
                     type="checkbox"
@@ -165,7 +165,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
             <article className="terrace-shell-card mt-3 overflow-hidden rounded-[18px] sm:mt-4 sm:rounded-[24px]">
               <div className="grid md:grid-cols-[minmax(0,1fr)_260px]">
                 <div className="p-3.5 sm:p-5">
-                  <span className="inline-flex items-center rounded-full border border-[#f3d5c4] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#D86B3D] sm:px-3 sm:text-xs">
+                  <span className="inline-flex items-center rounded-full border border-[#f3d5c4] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#e08550] sm:px-3 sm:text-xs">
                     <Sparkles className="mr-1.5 h-3.5 w-3.5" />
                     {brandView ? `Top match · ${topCreator.matchScore}%` : "Creator spotlight"}
                   </span>
@@ -333,7 +333,7 @@ function CreatorResultCard({ creator, role }: { creator: CreatorSearchResult; ro
 function CompactStat({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div
-      className={`min-w-0 rounded-[14px] border px-2.5 py-2 ${highlight ? "border-[#f3d5c4] bg-[#fff3ec] text-[#D86B3D]" : "border-[#dedfe3] bg-white/72 text-[#1d1d1f]"}`}
+      className={`min-w-0 rounded-[14px] border px-2.5 py-2 ${highlight ? "border-[#f3d5c4] bg-[#fff3ec] text-[#e08550]" : "border-[#dedfe3] bg-white/72 text-[#1d1d1f]"}`}
     >
       <span className="block truncate text-[9px] font-semibold tracking-[0.13em] text-[#98a2b3] uppercase">
         {label}

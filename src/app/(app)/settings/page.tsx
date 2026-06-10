@@ -50,7 +50,7 @@ export default async function SettingsPage() {
 
       <section className="mx-auto grid max-w-[980px] gap-6 px-5 py-7">
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <span className="grid h-12 w-12 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D]">
+          <span className="grid h-12 w-12 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550]">
             <SlidersHorizontal className="h-6 w-6" />
           </span>
           <h1 className="mt-5 max-w-2xl text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.06em]">
@@ -71,7 +71,7 @@ export default async function SettingsPage() {
                 href={section.href}
                 key={section.title}
               >
-                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#fbfbfa] text-[#D86B3D] ring-1 ring-[#e9e9e7]">
+                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#fbfbfa] text-[#e08550] ring-1 ring-[#e9e9e7]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <h2 className="mt-5 text-xl font-semibold tracking-[-0.035em]">{section.title}</h2>

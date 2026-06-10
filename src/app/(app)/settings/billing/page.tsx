@@ -16,7 +16,7 @@ export default async function BillingSettingsPage() {
       <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
           <div>
-            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
               <BadgeDollarSign className="mr-2 h-3.5 w-3.5" />
               Billing MVP
             </Badge>
@@ -30,7 +30,7 @@ export default async function BillingSettingsPage() {
           </div>
 
           <div className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Paywall levers</p>
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Paywall levers</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Creator apps" value="5 free" />
               <Metric label="Brand DMs" value="5 free" />
@@ -63,7 +63,7 @@ export default async function BillingSettingsPage() {
             <h2 className="mt-2 text-2xl font-semibold tracking-[-0.045em]">Upgrade paths</h2>
           </div>
           <Link
-            className="hidden rounded-full border border-[#e9e9e7] px-4 py-2 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#D86B3D] sm:inline-flex"
+            className="hidden rounded-full border border-[#e9e9e7] px-4 py-2 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#e08550] sm:inline-flex"
             href="/contact"
           >
             Talk to sales
@@ -90,7 +90,7 @@ export default async function BillingSettingsPage() {
               <ul className="mt-4 grid gap-2 border-t border-[#e9e9e7] pt-4">
                 {plan.features.slice(0, 4).map((feature) => (
                   <li className="flex items-center gap-2 text-sm text-[#787774]" key={feature}>
-                    <Sparkles className="h-3.5 w-3.5 text-[#D86B3D]" />
+                    <Sparkles className="h-3.5 w-3.5 text-[#e08550]" />
                     {feature}
                   </li>
                 ))}
@@ -169,7 +169,7 @@ function AccountUsageCard({ account }: { account: BillingAccountSummary }) {
           <h2 className="mt-2 text-2xl font-semibold tracking-[-0.045em]">{account.ownerLabel}</h2>
         </div>
         <div className="rounded-lg border border-[#f3d5c4] bg-[#faf0ea] px-4 py-3 text-right">
-          <p className="text-sm font-semibold text-[#D86B3D]">{account.plan.name}</p>
+          <p className="text-sm font-semibold text-[#e08550]">{account.plan.name}</p>
           <p className="mt-1 text-xs font-medium text-[#7a513f]">{account.priceLabel}</p>
         </div>
       </div>
@@ -194,7 +194,7 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Gauge className="h-4 w-4 text-[#D86B3D]" />
+          <Gauge className="h-4 w-4 text-[#e08550]" />
           <p className="text-sm font-semibold text-[#252932]">{label}</p>
         </div>
         <p className="text-xs font-medium text-[#787774]">
@@ -202,10 +202,10 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
         </p>
       </div>
       <div className="h-2 rounded-full bg-[#eef0f3]">
-        <div className="h-full rounded-full bg-[#D86B3D]" style={{ width: `${percent}%` }} />
+        <div className="h-full rounded-full bg-[#e08550]" style={{ width: `${percent}%` }} />
       </div>
       {limit !== null && used >= limit ? (
-        <p className="flex items-center gap-2 text-xs font-medium text-[#D86B3D]">
+        <p className="flex items-center gap-2 text-xs font-medium text-[#e08550]">
           <LockKeyhole className="h-3.5 w-3.5" />
           Limit reached. Upgrade to continue.
         </p>

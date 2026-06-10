@@ -139,7 +139,7 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  <span className="grid h-12 w-12 place-items-center rounded-full border border-[#dedfe3] bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[10px] text-[#D86B3D] uppercase shadow-[inset_0_0_0_3px_#fbfbfc] sm:h-14 sm:w-14 sm:text-[11px]">
+                  <span className="grid h-12 w-12 place-items-center rounded-full border border-[#dedfe3] bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[10px] text-[#e08550] uppercase shadow-[inset_0_0_0_3px_#fbfbfc] sm:h-14 sm:w-14 sm:text-[11px]">
                     {platform.platform.slice(0, 2)}
                   </span>
                   <span>{platform.platform}</span>
@@ -388,7 +388,7 @@ const PLATFORM_META: Record<string, { label: string; tag: string; bg: string; te
     label: "Instagram",
     tag: "IG",
     bg: "bg-[#fff0e8]",
-    text: "text-[#D86B3D]",
+    text: "text-[#e08550]",
     followerLabel: "Followers"
   },
   tiktok: {

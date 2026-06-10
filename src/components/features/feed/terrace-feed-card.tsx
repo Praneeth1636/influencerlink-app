@@ -58,7 +58,7 @@ export function TerraceFeedCard({
   timestamp,
   label,
   metric,
-  accent = "#D86B3D",
+  accent = "#e08550",
   imageUrl,
   brief,
   reply,
@@ -89,18 +89,18 @@ export function TerraceFeedCard({
       <div className="relative p-3 sm:p-5">
         <div className="flex items-start justify-between gap-3 sm:gap-4">
           <div className="flex min-w-0 gap-3">
-            <Avatar className="h-9 w-9 shrink-0 border border-[#dedfe3] bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[11px] font-semibold text-[#bf5a30] ring-2 ring-white sm:h-11 sm:w-11 sm:text-xs sm:ring-4">
-              <AvatarFallback className="bg-transparent text-[#bf5a30]">{avatarFallback}</AvatarFallback>
+            <Avatar className="h-9 w-9 shrink-0 border border-[#dedfe3] bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[11px] font-semibold text-[#e08550] ring-2 ring-white sm:h-11 sm:w-11 sm:text-xs sm:ring-4">
+              <AvatarFallback className="bg-transparent text-[#e08550]">{avatarFallback}</AvatarFallback>
               <AvatarBadge className="bg-emerald-400" />
             </Avatar>
             <div className="min-w-0">
               <button
-                className="inline-flex max-w-full items-center gap-1.5 text-left text-sm font-semibold tracking-[-0.02em] text-[#1d1d1f] hover:text-[#D86B3D] sm:text-[15px]"
+                className="inline-flex max-w-full items-center gap-1.5 text-left text-sm font-semibold tracking-[-0.02em] text-[#1d1d1f] hover:text-[#e08550] sm:text-[15px]"
                 onClick={onAuthorClick}
                 type="button"
               >
                 <span className="truncate">{authorName}</span>
-                {verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[#D86B3D]" />}
+                {verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[#e08550]" />}
               </button>
               <p className="mt-0.5 truncate text-xs text-[#6b7280]">
                 @{authorHandle} · {authorMeta} · {timestamp}
@@ -145,7 +145,7 @@ export function TerraceFeedCard({
 
         {brief && (
           <div className="mt-3 rounded-[14px] border border-[#dedfe3] bg-white/72 p-3 sm:mt-4 sm:rounded-[18px] sm:p-4">
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Hiring brief</p>
+            <p className="text-[11px] font-semibold tracking-[0.16em] text-[#e08550] uppercase">Hiring brief</p>
             <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em] text-[#37352f]">{brief.title}</h3>
             <p className="mt-2 text-sm leading-6 text-[#787774]">{brief.description}</p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -170,7 +170,7 @@ export function TerraceFeedCard({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1 text-sm">
                   <span className="font-semibold text-[#37352f]">{reply.authorName}</span>
-                  {reply.verified && <BadgeCheck className="h-3.5 w-3.5 text-[#D86B3D]" />}
+                  {reply.verified && <BadgeCheck className="h-3.5 w-3.5 text-[#e08550]" />}
                   <span className="text-[#787774]">@{reply.authorHandle}</span>
                   <span className="text-[#787774]">·</span>
                   <span className="text-[#787774]">{reply.timestamp}</span>
@@ -219,7 +219,7 @@ export function TerraceFeedCard({
             />
             <IconAction
               active={saved}
-              activeClassName="bg-[#faf0ea] text-[#D86B3D]"
+              activeClassName="bg-[#faf0ea] text-[#e08550]"
               fillWhenActive
               icon={Bookmark}
               label={saved ? "Saved" : "Save"}
@@ -452,7 +452,7 @@ function LikeAction({ liked, onClick }: { liked: boolean; onClick: () => void })
       <Heart
         className={cn(
           "h-[18px] w-[18px] transition-colors duration-150",
-          liked ? "creatorlink-pop fill-[#D86B3D] text-[#D86B3D]" : "text-[#787774] group-hover/like:text-[#D86B3D]"
+          liked ? "creatorlink-pop fill-[#e08550] text-[#e08550]" : "text-[#787774] group-hover/like:text-[#e08550]"
         )}
       />
     </button>

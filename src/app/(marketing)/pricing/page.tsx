@@ -50,7 +50,7 @@ export default function PricingPage() {
     <main className="min-h-screen bg-white font-sans text-[#37352f]">
       <section className="mx-auto max-w-[1440px] px-4 py-20 text-center sm:px-6 lg:py-28">
         <div className="mx-auto max-w-3xl">
-          <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Pricing</p>
+          <p className="text-[11px] font-semibold tracking-[0.18em] text-[#e08550] uppercase">Pricing</p>
           <h1 className="mt-4 text-[clamp(44px,7vw,86px)] leading-[0.94] font-semibold tracking-[-0.08em]">
             Simple plans for both sides of the marketplace.
           </h1>
@@ -63,12 +63,12 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <article
               className={`relative rounded-[30px] border bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.045)] ${
-                plan.featured ? "border-[#D86B3D]" : "border-[#e9e9e7]"
+                plan.featured ? "border-[#e08550]" : "border-[#e9e9e7]"
               }`}
               key={plan.name}
             >
               {plan.featured && (
-                <span className="absolute top-5 right-5 rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-xs font-semibold text-[#D86B3D]">
+                <span className="absolute top-5 right-5 rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-xs font-semibold text-[#e08550]">
                   Recommended
                 </span>
               )}
@@ -91,7 +91,7 @@ export default function PricingPage() {
               <ul className="mt-7 grid gap-3">
                 {plan.features.map((feature) => (
                   <li className="flex items-start gap-2 text-sm text-[#4b5563]" key={feature}>
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#D86B3D]" />
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#e08550]" />
                     {feature}
                   </li>
                 ))}
@@ -104,7 +104,7 @@ export default function PricingPage() {
       <section className="mx-auto max-w-4xl px-4 pb-24 sm:px-6">
         <div className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
           <div className="mb-6 flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff4ee] text-[#D86B3D]">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff4ee] text-[#e08550]">
               <Sparkles className="h-4 w-4" />
             </span>
             <h2 className="text-2xl font-semibold tracking-[-0.045em]">Questions</h2>

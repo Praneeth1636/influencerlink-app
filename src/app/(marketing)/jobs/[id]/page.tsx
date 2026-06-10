@@ -53,7 +53,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
       <section className="relative z-10 mx-auto grid max-w-[1120px] gap-6 px-5 py-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
               <BriefcaseBusiness className="mr-2 h-3.5 w-3.5" />
               Open brief
             </Badge>
@@ -99,7 +99,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     className="flex items-center gap-3 rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-3"
                     key={deliverable}
                   >
-                    <CheckCircle2 className="h-4 w-4 text-[#D86B3D]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#e08550]" />
                     <span className="text-sm font-semibold text-[#4b5563]">{deliverable}</span>
                   </div>
                 ))}
@@ -122,7 +122,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
           <article className="rounded-[26px] border border-[#f3d5c4] bg-[#faf0ea] p-5" id="apply">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Creator action</p>
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Creator action</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">Apply with a tight pitch.</h2>
             <p className="mt-3 text-sm leading-6 text-[#787774]">
               Submit a short, specific pitch. Terrace creates the application and opens a job conversation with the
@@ -173,7 +173,7 @@ async function getJob(id: string) {
 function Metric({ icon: Icon, label, value }: { icon: typeof DollarSign; label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-[#e9e9e7] bg-[#fbfbfa] p-4">
-      <Icon className="h-4 w-4 text-[#D86B3D]" />
+      <Icon className="h-4 w-4 text-[#e08550]" />
       <p className="mt-3 text-[10px] font-semibold tracking-[0.14em] text-[#9b9a97] uppercase">{label}</p>
       <p className="mt-1 text-sm font-semibold text-[#37352f]">{value}</p>
     </div>

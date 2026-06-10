@@ -37,7 +37,7 @@ export default async function RanksPage() {
           <section className="rounded-[28px] border border-[#e6e8ec] bg-[#fbfcfd] p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Creator ranks</p>
+                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Creator ranks</p>
                 <h1 className="mt-3 max-w-2xl text-5xl leading-[0.95] font-semibold tracking-[-0.065em] text-[#23272f]">
                   Top creators by industry.
                 </h1>
@@ -140,7 +140,7 @@ function RankCategoryCard({ category }: { category: RankCategory }) {
               </span>
               <span className="mt-0.5 block truncate text-xs text-[#667085]">{creator.rankLabel}</span>
             </span>
-            <ArrowUpRight className="h-4 w-4 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#D86B3D]" />
+            <ArrowUpRight className="h-4 w-4 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#e08550]" />
           </Link>
         ))}
       </div>
@@ -155,7 +155,7 @@ function buildRankCategories(creators: CreatorSearchResult[]): RankCategory[] {
       label: "Overall",
       description: "Top 5 creators across every industry.",
       icon: TerraceRanksIcon,
-      tone: "border-[#f5d5c3] bg-[#fff3ec] text-[#D86B3D]",
+      tone: "border-[#f5d5c3] bg-[#fff3ec] text-[#e08550]",
       creators: rankCreators(
         creators,
         (creator) => creator.matchScore,
@@ -242,7 +242,7 @@ function RankStat({ label, value, icon: Icon }: { label: string; value: string; 
     <div className="rounded-2xl border border-[#e6e8ec] bg-white p-4">
       <div className="flex items-center justify-between gap-3">
         <span className="text-[10px] font-semibold tracking-[0.16em] text-[#98a2b3] uppercase">{label}</span>
-        <Icon accent="#D86B3D" className="h-5 w-5 text-[#D86B3D]" />
+        <Icon accent="#e08550" className="h-5 w-5 text-[#e08550]" />
       </div>
       <strong className="mt-2 block text-2xl font-semibold tracking-[-0.055em] text-[#23272f]">{value}</strong>
     </div>

@@ -26,7 +26,7 @@ export default async function MessageThreadPage({ params }: MessageThreadPagePro
       <section className="relative z-10 mx-auto grid max-w-[980px] gap-6 px-5 py-8">
         <header className="flex flex-wrap items-center gap-3">
           <Link
-            className="inline-flex h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-3 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#D86B3D]"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-[#e9e9e7] px-3 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#e08550]"
             href="/messages"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -41,7 +41,7 @@ export default async function MessageThreadPage({ params }: MessageThreadPagePro
         <article className="overflow-hidden rounded-[28px] border border-[#e9e9e7] bg-white shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
           <div className="border-b border-[#e9e9e7] p-5">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#D86B3D] hover:bg-[#faf0ea]">
+              <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#e08550] hover:bg-[#faf0ea]">
                 <MessageCircle className="mr-2 h-3.5 w-3.5" />
                 {thread.type}
               </Badge>

@@ -37,7 +37,7 @@ export function AppShell({ role, children }: { role: AppRole; children: React.Re
                 <span />
               </span>
               <span className="flex items-baseline text-lg font-semibold tracking-[-0.04em]">
-                Terrace<span className="text-[#D86B3D]">.</span>
+                Terrace<span className="text-[#e08550]">.</span>
               </span>
               <Search className="ml-auto h-4 w-4 text-[#787774]" />
               <div>

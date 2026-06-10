@@ -8,7 +8,7 @@
  *
  * HSL var system imported from the Replit prototype, retuned to the
  * Terrace palette:
- *   primary = muted coral #D85A30
+ *   primary = muted coral #e08550
  *   accent  = quiet mauve for tiny secondary cues
  *
  * Default theme is dark to match every existing inline Tailwind page;
@@ -91,8 +91,8 @@
   --popover: 24 7% 11%;
   --popover-foreground: 34 18% 94%;
 
-  --primary: 15 68% 52%; /* #D85A30 coral */
-  --primary-foreground: 34 25% 98%;
+  --primary: 22 70% 60%; /* #e08550 coral */
+  --primary-foreground: 42 9% 15%;
 
   --secondary: 24 6% 15%;
   --secondary-foreground: 34 18% 94%;
@@ -111,18 +111,18 @@
 
   --border: 24 8% 19%;
   --input: 24 6% 16%;
-  --ring: 15 70% 52%;
+  --ring: 22 70% 60%;
 
   --sidebar: 24 8% 9%;
   --sidebar-foreground: 30 10% 78%;
   --sidebar-border: 24 8% 18%;
-  --sidebar-primary: 15 70% 52%;
+  --sidebar-primary: 22 70% 60%;
   --sidebar-primary-foreground: 34 25% 98%;
   --sidebar-accent: 24 6% 15%;
   --sidebar-accent-foreground: 34 18% 94%;
-  --sidebar-ring: 15 70% 52%;
+  --sidebar-ring: 22 70% 60%;
 
-  --chart-1: 15 68% 52%; /* coral */
+  --chart-1: 22 70% 60%; /* coral */
   --chart-2: 338 18% 54%; /* mauve */
   --chart-3: 158 64% 52%; /* emerald */
   --chart-4: 31 18% 62%; /* clay */
@@ -155,8 +155,8 @@
   --popover: 0 0% 100%;
   --popover-foreground: 42 9% 20%;
 
-  --primary: 18 66% 54%; /* #D86B3D brand orange */
-  --primary-foreground: 36 25% 98%;
+  --primary: 22 70% 60%; /* #e08550 brand orange */
+  --primary-foreground: 42 9% 15%;
 
   --secondary: 48 9% 96%; /* #f7f7f5 */
   --secondary-foreground: 42 9% 22%;
@@ -175,16 +175,16 @@
 
   --border: 60 5% 91%; /* #e9e9e7 hairline */
   --input: 60 5% 91%;
-  --ring: 18 66% 54%;
+  --ring: 22 70% 60%;
 
   --sidebar: 48 9% 96%; /* #f7f7f5 two-tone */
   --sidebar-foreground: 42 8% 28%;
   --sidebar-border: 60 5% 91%;
-  --sidebar-primary: 18 66% 54%;
+  --sidebar-primary: 22 70% 60%;
   --sidebar-primary-foreground: 36 25% 98%;
   --sidebar-accent: 48 9% 94%;
   --sidebar-accent-foreground: 42 9% 22%;
-  --sidebar-ring: 18 66% 54%;
+  --sidebar-ring: 22 70% 60%;
 }
 
 @layer base {
@@ -508,7 +508,7 @@
   .creatorlink-signup-form .cl-otpCodeFieldInput:focus {
     background: #fff !important;
     border-color: #d86b3d !important;
-    box-shadow: 0 0 0 3px rgba(216, 107, 61, 0.18) !important;
+    box-shadow: 0 0 0 3px rgba(224, 133, 80, 0.18) !important;
     outline: none !important;
   }
   .creatorlink-signup-form .cl-formFieldInput[name="code"] {
@@ -638,10 +638,10 @@
       ),
       radial-gradient(
         circle at calc(100% - var(--gradient-x, 20%)) calc(100% - var(--gradient-y, 16%)),
-        rgba(216, 107, 61, 0.45),
+        rgba(224, 133, 80, 0.45),
         transparent 28%
       ),
-      linear-gradient(135deg, rgba(140, 201, 232, 0.38), rgba(255, 255, 255, 0.12), rgba(216, 107, 61, 0.32));
+      linear-gradient(135deg, rgba(140, 201, 232, 0.38), rgba(255, 255, 255, 0.12), rgba(224, 133, 80, 0.32));
     box-shadow:
       0 24px 66px rgba(17, 24, 39, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
@@ -964,7 +964,7 @@ html {
   background: #d86b3d;
   border-radius: 999px;
   bottom: 10%;
-  box-shadow: 0 0 0 3px rgba(216, 107, 61, 0.16);
+  box-shadow: 0 0 0 3px rgba(224, 133, 80, 0.16);
   content: "";
   height: 5px;
   position: absolute;

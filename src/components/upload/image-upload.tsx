@@ -72,7 +72,7 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
     <div className="grid gap-2">
       <p className="text-sm font-semibold text-[#37352f]">{label}</p>
       <div
-        className={`group relative overflow-hidden rounded-xl border border-dashed border-[#d8dee8] bg-white transition hover:border-[#bf5a30] ${ASPECT_CLASSES[aspect]}`}
+        className={`group relative overflow-hidden rounded-xl border border-dashed border-[#d8dee8] bg-white transition hover:border-[#e08550] ${ASPECT_CLASSES[aspect]}`}
       >
         {value ? (
           // Plain img keeps remotePatterns config out of scope until the
@@ -112,7 +112,7 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
         <span className="text-[#787774]">{hint}</span>
         {value && !isWorking && (
           <button
-            className="inline-flex items-center gap-1 text-[#787774] transition hover:text-[#bf5a30]"
+            className="inline-flex items-center gap-1 text-[#787774] transition hover:text-[#e08550]"
             onClick={clear}
             type="button"
           >
@@ -122,7 +122,7 @@ export function ImageUpload({ kind, value, onChange, label, hint, aspect = "squa
         )}
       </div>
 
-      {error && <p className="text-xs text-[#bf5a30]">{error}</p>}
+      {error && <p className="text-xs text-[#e08550]">{error}</p>}
     </div>
   );
 }

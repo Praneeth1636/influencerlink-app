@@ -44,7 +44,7 @@ export function BrandPath({ onBack }: { onBack: () => void }) {
       <BackLink onClick={onBack} />
 
       <div>
-        <p className="text-xs font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">Company profile</p>
+        <p className="text-xs font-semibold tracking-[0.18em] text-[#e08550] uppercase">Company profile</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-[-0.055em]">Make your brand discoverable.</h2>
         <p className="mt-3 text-sm leading-6 text-[#787774]">
           This becomes your public Terrace page for jobs, posts, and creator outreach.

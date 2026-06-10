@@ -28,7 +28,7 @@ function wrapInLayout({ preheader = "", body }: LayoutOptions): string {
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;background:#ffffff;border:1px solid #ececec;border-radius:20px;overflow:hidden;">
         <tr><td style="padding:24px 32px;border-bottom:1px solid #ececec;">
           <a href="${APP_URL}" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;color:#111318;">
-            <span style="display:inline-block;width:24px;height:24px;background:#D85A30;border-radius:6px;"></span>
+            <span style="display:inline-block;width:24px;height:24px;background:#e08550;border-radius:6px;"></span>
             <span style="font-weight:700;font-size:16px;letter-spacing:-0.01em;">Terrace</span>
           </a>
         </td></tr>

@@ -131,7 +131,7 @@ export default async function DashboardPage() {
                   <ol className="relative space-y-4 border-l border-[#ededec] pl-4">
                     {recentActivity.map((event, idx) => (
                       <li key={`${event.title}-${idx}`} className="relative">
-                        <span className="absolute top-1.5 left-[-21px] h-2 w-2 rounded-full bg-[#D86B3D] ring-4 ring-white" />
+                        <span className="absolute top-1.5 left-[-21px] h-2 w-2 rounded-full bg-[#e08550] ring-4 ring-white" />
                         <div className="flex items-baseline justify-between gap-2">
                           <h4 className="text-sm font-medium text-[#37352f]">{event.title}</h4>
                           <span className="shrink-0 text-xs text-[#9b9a97]">{event.timeAgo}</span>
@@ -156,7 +156,7 @@ function StatCell({ label, value, accent = false }: { label: string; value: stri
   return (
     <div className="px-5 py-4">
       <p
-        className={`text-[24px] font-semibold tracking-[-0.02em] tabular-nums ${accent ? "text-[#D86B3D]" : "text-[#37352f]"}`}
+        className={`text-[24px] font-semibold tracking-[-0.02em] tabular-nums ${accent ? "text-[#e08550]" : "text-[#37352f]"}`}
       >
         {value}
       </p>
@@ -206,7 +206,7 @@ function Avatar({ name }: { name: string }) {
     .slice(0, 2)
     .toUpperCase();
   return (
-    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[#faf0ea] text-xs font-bold text-[#bf5a30]">
+    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[#faf0ea] text-xs font-bold text-[#e08550]">
       {initials}
     </span>
   );
@@ -241,7 +241,7 @@ function CampaignPanel({ campaign }: { campaign: CampaignRow }) {
   return (
     <article className="group rounded-lg border border-[#e9e9e7] bg-white p-4 transition-colors hover:bg-[#fbfbfa]">
       <div className="flex items-center justify-between gap-3">
-        <span className="rounded bg-[#faf0ea] px-2 py-0.5 text-xs font-medium text-[#bf5a30]">{campaign.platform}</span>
+        <span className="rounded bg-[#faf0ea] px-2 py-0.5 text-xs font-medium text-[#e08550]">{campaign.platform}</span>
         <span className="text-xs font-medium text-[#9b9a97]">
           {campaign.applicantsCount} {campaign.applicantsCount === 1 ? "applicant" : "applicants"}
         </span>

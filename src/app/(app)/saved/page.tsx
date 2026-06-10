@@ -40,7 +40,7 @@ export default function SavedPage() {
 
       <section className="mx-auto grid max-w-[980px] gap-6 px-5 py-7">
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#D86B3D] hover:bg-[#faf0ea]">
+          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
             <Bookmark className="mr-2 h-3.5 w-3.5" />
             Saved workspace
           </Badge>
@@ -62,7 +62,7 @@ export default function SavedPage() {
                 href={item.href}
                 key={item.title}
               >
-                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D]">
+                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <span>
@@ -82,7 +82,7 @@ export default function SavedPage() {
 
         <article className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
           <div className="flex items-center gap-3">
-            <Sparkles className="h-5 w-5 text-[#D86B3D]" />
+            <Sparkles className="h-5 w-5 text-[#e08550]" />
             <p className="font-semibold">Next MVP step</p>
           </div>
           <p className="mt-2 text-sm leading-6 text-[#7a513f]">

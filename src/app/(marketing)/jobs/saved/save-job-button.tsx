@@ -17,7 +17,7 @@ export function SaveJobButton({ jobId }: { jobId: string }) {
       <Button
         className={
           saved
-            ? "h-11 rounded-full border border-[#f3d5c4] bg-[#faf0ea] font-semibold text-[#D86B3D] hover:bg-[#faf0ea]"
+            ? "h-11 rounded-full border border-[#f3d5c4] bg-[#faf0ea] font-semibold text-[#e08550] hover:bg-[#faf0ea]"
             : "h-11 rounded-full border border-[#e9e9e7] bg-white font-semibold text-[#787774] hover:border-[#dce3ea] hover:text-[#37352f]"
         }
         disabled={isPending}

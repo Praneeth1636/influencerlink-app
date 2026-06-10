@@ -25,7 +25,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:py-28">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[520px] max-w-6xl bg-[radial-gradient(circle_at_24%_20%,rgba(140,201,232,0.22),transparent_34%),radial-gradient(circle_at_76%_18%,rgba(216,107,61,0.13),transparent_32%)] blur-3xl"
+          className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[520px] max-w-6xl bg-[radial-gradient(circle_at_24%_20%,rgba(140,201,232,0.22),transparent_34%),radial-gradient(circle_at_76%_18%,rgba(224,133,80,0.13),transparent_32%)] blur-3xl"
         />
         <div className="relative mx-auto grid max-w-6xl gap-10 text-center">
           <Link className="logoMark authLogo mx-auto bg-[#37352f]" href="/" aria-label="Terrace">
@@ -34,7 +34,7 @@ export default function AboutPage() {
             <span />
           </Link>
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#D86B3D] uppercase">About Terrace</p>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-[#e08550] uppercase">About Terrace</p>
             <h1 className="mx-auto mt-4 max-w-5xl text-[clamp(44px,8vw,96px)] leading-[0.93] font-semibold tracking-[-0.08em]">
               A professional network for creator-brand work.
             </h1>
@@ -55,7 +55,7 @@ export default function AboutPage() {
                 className="rounded-[28px] border border-[#e9e9e7] bg-white p-7 shadow-[0_18px_46px_rgba(17,24,39,0.04)]"
                 key={item.title}
               >
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff4ee] text-[#D86B3D]">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff4ee] text-[#e08550]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <h2 className="mt-7 text-2xl font-semibold tracking-[-0.045em]">{item.title}</h2>
