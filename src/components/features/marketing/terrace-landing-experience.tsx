@@ -23,8 +23,8 @@ export type LandingCreatorRow = {
   status: string;
 };
 
-/* Warm palette: golden-hour terrace. Cream canvas (#faf5ef), terracotta
- * carry (#c75b2e), deep warm ink (#221c16). Sky blue only as counterpoint. */
+/* Terrace palette: pure white canvas, warm ink #37352f, light orange
+ * #D86B3D and light blue #8CC9E8 as the two accents. */
 const easeOutQuint = [0.22, 1, 0.36, 1] as const;
 
 const rise: Variants = {
@@ -33,6 +33,15 @@ const rise: Variants = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.7, ease: easeOutQuint }
+  }
+};
+
+/* Masked line reveal: the line slides up from behind its own baseline. */
+const lineReveal: Variants = {
+  hidden: { y: "112%" },
+  visible: {
+    y: 0,
+    transition: { duration: 0.85, ease: easeOutQuint }
   }
 };
 
@@ -69,16 +78,16 @@ const heroPhotos = [
 ];
 
 const platformTint: Record<string, string> = {
-  Instagram: "bg-[#fdeee4] text-[#b4490f]",
-  TikTok: "bg-[#221c16] text-[#faf5ef]",
-  YouTube: "bg-[#fdeaea] text-[#a52a2a]"
+  Instagram: "bg-[#fff3ec] text-[#bf5a30]",
+  TikTok: "bg-[#37352f] text-white",
+  YouTube: "bg-[#f1faff] text-[#2b8fc4]"
 };
 
 export function TerraceLandingExperience({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <div className="min-h-screen bg-[#faf5ef] font-sans text-[#221c16]">
+    <div className="min-h-screen bg-white font-sans text-[#37352f]">
       <Hero reducedMotion={prefersReducedMotion} />
       <LiveRow creatorRows={creatorRows} />
       <CreatorStory />
@@ -114,46 +123,61 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
       }}
       onMouseMove={handleMove}
     >
-      {/* Late-afternoon wash: one warm light source, top right. */}
+      {/* Soft orange + blue wash with the diagonal-line texture. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(1100px 620px at 78% -10%, rgba(199,91,46,0.14), transparent 62%), radial-gradient(700px 420px at 8% 108%, rgba(140,201,232,0.12), transparent 60%)"
+            "radial-gradient(1100px 620px at 78% -10%, rgba(216,107,61,0.13), transparent 62%), radial-gradient(700px 420px at 8% 108%, rgba(140,201,232,0.18), transparent 60%)"
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -inset-x-28 -top-24 h-[680px] opacity-50"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(48deg, transparent 0 92px, rgba(143,154,169,0.14) 92px 93px, transparent 93px 186px)"
         }}
       />
 
       <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-14 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-24">
         <motion.div animate="visible" initial="hidden" variants={heroStagger}>
-          <motion.p className="text-sm font-semibold text-[#9a6a4b]" variants={rise}>
+          <motion.p className="text-sm font-semibold text-[#bf5a30]" variants={rise}>
             The creator and brand network
           </motion.p>
 
           <motion.h1
-            className="mt-5 font-serif text-[clamp(46px,7.2vw,104px)] leading-[0.94] font-bold tracking-[-0.035em] text-[#221c16]"
-            variants={rise}
+            className="mt-5 text-[clamp(46px,7.2vw,104px)] leading-[0.96] font-semibold tracking-[-0.06em] text-[#37352f]"
+            variants={heroStagger}
           >
-            Your feed is
-            <br />
-            your résumé.
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" variants={lineReveal}>
+                Your feed is
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.08em]">
+              <motion.span className="block" variants={lineReveal}>
+                your résumé.
+              </motion.span>
+            </span>
           </motion.h1>
 
-          <motion.p className="mt-7 max-w-[36rem] text-lg leading-8 text-[#6b5d4f]" variants={rise}>
+          <motion.p className="mt-6 max-w-[36rem] text-lg leading-8 text-[#787774]" variants={rise}>
             Terrace syncs your Instagram, TikTok, and YouTube into one verified profile. Brands browse the work itself,
             post gigs, and book you in the same conversation.
           </motion.p>
 
           <motion.div className="mt-9 flex flex-wrap items-center gap-4" variants={rise}>
             <Link
-              className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#221c16] px-8 text-[15px] font-semibold text-[#faf5ef] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+              className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#37352f] px-8 text-[15px] font-semibold text-white shadow-[0_14px_36px_rgba(17,24,39,0.14)] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
               href="/signup"
             >
               Claim your handle
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
-              className="inline-flex h-13 items-center rounded-full px-5 text-[15px] font-semibold text-[#221c16] underline decoration-[#c75b2e]/40 decoration-2 underline-offset-8 transition-colors hover:decoration-[#c75b2e]"
+              className="inline-flex h-13 items-center rounded-full px-5 text-[15px] font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-8 transition-colors hover:decoration-[#2b8fc4]"
               href="/search"
               prefetch={false}
             >
@@ -200,7 +224,7 @@ function HeroPhotoCard({
     <motion.figure
       animate={{ opacity: 1, y: 0, rotate: photo.rotate, scale: 1 }}
       className={cn(
-        "absolute overflow-hidden rounded-[22px] bg-[#fffdfa] p-2.5 pb-4 shadow-[0_24px_70px_rgba(60,38,20,0.18)]",
+        "absolute overflow-hidden rounded-[22px] border border-[#f1f1ef] bg-white p-2.5 pb-4 shadow-[0_24px_70px_rgba(17,24,39,0.14)]",
         index === 0 && "top-2 left-0 z-10 w-[58%]",
         index === 1 && "top-[26%] right-0 z-20 w-[62%]",
         index === 2 && "bottom-0 left-[8%] z-30 w-[56%]"
@@ -208,6 +232,7 @@ function HeroPhotoCard({
       initial={reducedMotion ? false : { opacity: 0, y: 80, rotate: photo.rotate * 3, scale: 0.94 }}
       style={reducedMotion ? undefined : { x, y }}
       transition={{ delay: 0.25 + index * 0.16, duration: 0.9, ease: easeOutQuint }}
+      whileHover={reducedMotion ? undefined : { rotate: 0, scale: 1.02 }}
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
         <Image
@@ -220,7 +245,7 @@ function HeroPhotoCard({
         />
       </div>
       <figcaption className="flex items-center justify-between px-1.5 pt-2.5">
-        <span className="text-[13px] font-semibold text-[#221c16]">{photo.handle}</span>
+        <span className="text-[13px] font-semibold text-[#37352f]">{photo.handle}</span>
         <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[photo.platform])}>
           {photo.platform}
         </span>
@@ -233,13 +258,13 @@ function HeroPhotoCard({
 
 function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   return (
-    <section className="border-y border-[#eadfd2] bg-[#fffdfa]">
+    <section className="border-y border-[#e9e9e7] bg-white">
       <div className="mx-auto flex max-w-[1320px] flex-col gap-5 px-5 py-8 sm:px-8 md:flex-row md:items-center md:gap-10">
-        <p className="shrink-0 text-sm font-semibold text-[#9a6a4b]">
+        <p className="shrink-0 text-sm font-semibold text-[#bf5a30]">
           On the terrace
           <span className="relative mx-2 inline-flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c75b2e] opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c75b2e]" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#D86B3D] opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#D86B3D]" />
           </span>
           right now
         </p>
@@ -254,8 +279,8 @@ function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
               whileInView={{ opacity: 1, y: 0 }}
             >
               <Initials name={creator.name} />
-              <span className="font-semibold text-[#221c16]">{creator.name}</span>
-              <span className="text-[#8a7a69]">
+              <span className="font-semibold text-[#37352f]">{creator.name}</span>
+              <span className="text-[#9b9a97]">
                 {creator.niche} · {creator.reach}
               </span>
             </motion.span>
@@ -284,29 +309,29 @@ function CreatorStory() {
           </div>
           {/* The one product chip this section needs: a post arriving from a platform. */}
           <motion.div
-            className="absolute -right-4 bottom-10 flex items-center gap-3 rounded-2xl bg-[#fffdfa] py-3 pr-5 pl-4 shadow-[0_18px_50px_rgba(60,38,20,0.2)] sm:-right-8"
+            className="absolute -right-4 bottom-10 flex items-center gap-3 rounded-2xl border border-[#f1f1ef] bg-white py-3 pr-5 pl-4 shadow-[0_18px_50px_rgba(17,24,39,0.16)] sm:-right-8"
             initial={{ opacity: 0, x: 32 }}
             transition={{ delay: 0.3, duration: 0.7, ease: easeOutQuint }}
             viewport={{ once: true, margin: "-120px" }}
             whileInView={{ opacity: 1, x: 0 }}
           >
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fdeee4] text-[13px] font-bold text-[#b4490f]">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff3ec] text-[13px] font-bold text-[#bf5a30]">
               IG
             </span>
             <span className="text-sm">
-              <span className="block font-semibold text-[#221c16]">New post synced</span>
-              <span className="text-[#8a7a69]">added to your proof</span>
+              <span className="block font-semibold text-[#37352f]">New post synced</span>
+              <span className="text-[#9b9a97]">added to your proof</span>
             </span>
           </motion.div>
         </div>
       </Reveal>
 
       <Reveal delay={0.12}>
-        <p className="text-sm font-semibold text-[#9a6a4b]">For creators</p>
-        <h2 className="mt-4 max-w-[18ch] font-serif text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-bold tracking-[-0.03em]">
+        <p className="text-sm font-semibold text-[#bf5a30]">For creators</p>
+        <h2 className="mt-4 max-w-[18ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em]">
           Publish once. It counts everywhere.
         </h2>
-        <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6b5d4f]">
+        <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#787774]">
           Every post you publish flows into one profile with your niche, your audience, and your rates. No media kit to
           keep alive; the work speaks while you shoot the next thing.
         </p>
@@ -317,9 +342,9 @@ function CreatorStory() {
             ["Ranks", "Climb your niche leaderboard as your work compounds."]
           ].map(([title, body]) => (
             <li className="flex gap-4" key={title}>
-              <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#c75b2e]" />
-              <p className="text-[15px] leading-7 text-[#6b5d4f]">
-                <strong className="font-semibold text-[#221c16]">{title}.</strong> {body}
+              <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#D86B3D]" />
+              <p className="text-[15px] leading-7 text-[#787774]">
+                <strong className="font-semibold text-[#37352f]">{title}.</strong> {body}
               </p>
             </li>
           ))}
@@ -339,37 +364,37 @@ const brandResults = [
 
 function BrandStory() {
   return (
-    <section className="bg-[#f3eadf]">
+    <section className="bg-[#f0f8fd]">
       <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
         <Reveal className="order-2 lg:order-1">
-          <p className="text-sm font-semibold text-[#9a6a4b]">For brands</p>
-          <h2 className="mt-4 max-w-[16ch] font-serif text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-bold tracking-[-0.03em]">
+          <p className="text-sm font-semibold text-[#2b8fc4]">For brands</p>
+          <h2 className="mt-4 max-w-[16ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em]">
             Hire from the work itself.
           </h2>
-          <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6b5d4f]">
+          <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6e7b85]">
             Describe the campaign in plain language. Terrace reads niche, audience, growth, and past brand work, then
             puts real creators in front of you with their proof attached. Shortlist, message, book: one thread from
             brief to deal.
           </p>
           <Link
-            className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#221c16]"
+            className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#37352f]"
             href="/jobs/new"
             prefetch={false}
           >
             Post your first gig
-            <ArrowUpRight className="h-4 w-4 text-[#c75b2e] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="h-4 w-4 text-[#2b8fc4] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </Reveal>
 
         <Reveal className="order-1 lg:order-2" delay={0.12}>
-          <div className="rounded-[26px] bg-[#fffdfa] p-5 shadow-[0_30px_80px_rgba(60,38,20,0.12)] sm:p-6">
-            <p className="rounded-2xl bg-[#f6efe6] px-4 py-3 text-[15px] text-[#6b5d4f]">
+          <div className="rounded-[26px] border border-[#ddeefa] bg-white p-5 shadow-[0_30px_80px_rgba(43,143,196,0.1)] sm:p-6">
+            <p className="rounded-2xl bg-[#f7f7f5] px-4 py-3 text-[15px] text-[#787774]">
               “Beauty creators in LA with strong routine videos”
             </p>
             <div className="mt-4 grid gap-2.5">
               {brandResults.map((row, index) => (
                 <motion.div
-                  className="flex items-center gap-3 rounded-2xl border border-[#f0e7da] px-4 py-3"
+                  className="flex items-center gap-3 rounded-2xl border border-[#f1f1ef] px-4 py-3"
                   initial={{ opacity: 0, y: 14 }}
                   key={row.name}
                   transition={{ delay: 0.25 + index * 0.12, duration: 0.55, ease: easeOutQuint }}
@@ -378,14 +403,14 @@ function BrandStory() {
                 >
                   <Initials name={row.name} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-[#221c16]">{row.name}</p>
-                    <p className="truncate text-[13px] text-[#8a7a69]">{row.niche}</p>
+                    <p className="truncate text-sm font-semibold text-[#37352f]">{row.name}</p>
+                    <p className="truncate text-[13px] text-[#9b9a97]">{row.niche}</p>
                   </div>
-                  <span className="text-sm font-semibold text-[#221c16] tabular-nums">{row.reach}</span>
+                  <span className="text-sm font-semibold text-[#37352f] tabular-nums">{row.reach}</span>
                   <span
                     className={cn(
                       "rounded-full px-2.5 py-1 text-[11px] font-semibold",
-                      row.open ? "bg-[#e7f3ea] text-[#22663a]" : "bg-[#f1ece5] text-[#8a7a69]"
+                      row.open ? "bg-[#f1faff] text-[#2b8fc4]" : "bg-[#f7f7f5] text-[#9b9a97]"
                     )}
                   >
                     {row.open ? "Open" : "Booked"}
@@ -400,7 +425,7 @@ function BrandStory() {
   );
 }
 
-/* ── Proof section: dark, warm, the brand's quiet flex ─────────────────── */
+/* ── Proof section: dark contrast, orange + blue glow ──────────────────── */
 
 function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -408,27 +433,27 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   const glowY = useTransform(scrollYProgress, [0, 1], ["-12%", "16%"]);
 
   return (
-    <section className="relative overflow-hidden bg-[#1d1813] text-[#faf5ef]" ref={sectionRef}>
+    <section className="relative overflow-hidden bg-[#15171c] text-white" ref={sectionRef}>
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 h-[120%]"
         style={{
           background:
-            "radial-gradient(900px 520px at 24% 30%, rgba(199,91,46,0.22), transparent 60%), radial-gradient(640px 420px at 86% 70%, rgba(140,201,232,0.1), transparent 55%)",
+            "radial-gradient(900px 520px at 24% 30%, rgba(216,107,61,0.2), transparent 60%), radial-gradient(640px 420px at 86% 70%, rgba(140,201,232,0.14), transparent 55%)",
           y: glowY
         }}
       />
       <div className="relative mx-auto grid max-w-[1320px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-36">
         <Reveal>
-          <h2 className="max-w-[14ch] font-serif text-[clamp(38px,5vw,72px)] leading-[1] font-bold tracking-[-0.03em]">
+          <h2 className="max-w-[14ch] text-[clamp(38px,5vw,72px)] leading-[1] font-semibold tracking-[-0.05em]">
             Proof travels with you.
           </h2>
-          <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#cdbfae]">
+          <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#d5d9df]/75">
             Campaign wins, brand replies, and finished work attach to your profile, not to a thread that dies when the
             deal closes. The next negotiation starts from everything you have already done.
           </p>
           <Link
-            className="mt-9 inline-flex h-13 items-center gap-2 rounded-full bg-[#faf5ef] px-8 text-[15px] font-semibold text-[#221c16] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+            className="mt-9 inline-flex h-13 items-center gap-2 rounded-full bg-white px-8 text-[15px] font-semibold text-[#37352f] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
             href="/signup"
           >
             Start your profile
@@ -440,24 +465,26 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
           <div className="grid gap-3">
             {creatorRows.map((creator, index) => (
               <motion.div
-                className="flex items-center gap-4 rounded-2xl border border-[#faf5ef]/[0.09] bg-[#faf5ef]/[0.05] p-4"
+                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4"
                 initial={{ opacity: 0, x: 36 }}
                 key={creator.name}
                 transition={{ delay: index * 0.12, duration: 0.6, ease: easeOutQuint }}
                 viewport={{ once: true, margin: "-100px" }}
                 whileInView={{ opacity: 1, x: 0 }}
               >
-                <Initials className="bg-[#3a2d21] text-[#e8b18f]" name={creator.name} />
+                <Initials className="bg-[#cfeffc] text-[#1c4458]" name={creator.name} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{creator.name}</p>
-                  <p className="truncate text-sm text-[#a8967f]">
+                  <p className="truncate text-sm text-[#d5d9df]/68">
                     {creator.niche} · {creator.reach}
                   </p>
                 </div>
                 <span
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-semibold",
-                    creator.status === "Open" ? "bg-[#2a4232]/80 text-[#a4d8b4]" : "bg-[#faf5ef]/10 text-[#cdbfae]"
+                    creator.status === "Open"
+                      ? "border border-[#94d4f3]/20 bg-[#94d4f3]/10 text-[#cfeffc]"
+                      : "bg-white/10 text-[#d5d9df]"
                   )}
                 >
                   {creator.status}
@@ -471,27 +498,34 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   );
 }
 
-/* ── Closing: terracotta drench ────────────────────────────────────────── */
+/* ── Closing: brand orange, full bleed ─────────────────────────────────── */
 
 function ClosingCta() {
   return (
-    <section className="bg-[#c75b2e]">
-      <div className="mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
+    <section className="relative overflow-hidden bg-[#D86B3D]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "radial-gradient(820px 460px at 84% 0%, rgba(255,243,236,0.22), transparent 58%)"
+        }}
+      />
+      <div className="relative mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
         <Reveal>
-          <h2 className="max-w-[12ch] font-serif text-[clamp(52px,9vw,128px)] leading-[0.95] font-bold tracking-[-0.035em] text-[#faf5ef]">
+          <h2 className="max-w-[12ch] text-[clamp(52px,9vw,128px)] leading-[0.95] font-semibold tracking-[-0.06em] text-white">
             Pull up a chair.
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
           <div className="flex flex-wrap items-center gap-5">
             <Link
-              className="inline-flex h-14 items-center gap-2 rounded-full bg-[#221c16] px-9 text-base font-semibold text-[#faf5ef] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+              className="inline-flex h-14 items-center gap-2 rounded-full bg-[#37352f] px-9 text-base font-semibold text-white transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
               href="/signup"
             >
               Start free
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <p className="text-[15px] font-medium text-[#f6d9c8]">Free for creators. Brands pay when they book.</p>
+            <p className="text-[15px] font-medium text-[#ffe4d4]">Free for creators. Brands pay when they book.</p>
           </div>
         </Reveal>
       </div>
@@ -519,7 +553,7 @@ function Initials({ name, className }: { name: string; className?: string }) {
   return (
     <span
       className={cn(
-        "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#f3d9c6] text-xs font-bold text-[#8a4317]",
+        "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#fdf3ec] text-xs font-bold text-[#bf5a30]",
         className
       )}
     >

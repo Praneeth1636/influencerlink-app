@@ -21,7 +21,7 @@ export function MarketingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[#eadfd2] bg-[#fffdfa]">
+    <footer className="border-t border-[#e9e9e7] bg-white">
       <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 sm:py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Link href="/" aria-label="Terrace" className="inline-flex items-center gap-3">
@@ -30,11 +30,11 @@ export function MarketingFooter() {
               <span />
               <span />
             </span>
-            <span className="flex items-baseline font-serif text-2xl font-bold tracking-[-0.03em] text-[#221c16]">
-              Terrace<span className="text-[#c75b2e]">.</span>
+            <span className="flex items-baseline text-2xl font-semibold tracking-[-0.04em] text-[#37352f]">
+              Terrace<span className="text-[#D86B3D]">.</span>
             </span>
           </Link>
-          <p className="mt-4 max-w-sm text-sm leading-6 text-[#6b5d4f]">
+          <p className="mt-4 max-w-sm text-sm leading-6 text-[#787774]">
             The professional network for creator deals. Verified reach, brand gigs, and payouts in one workspace.
           </p>
         </div>
@@ -44,12 +44,12 @@ export function MarketingFooter() {
         <FooterColumn title="Legal" links={legalLinks} />
       </div>
 
-      <div className="border-t border-[#eadfd2]">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-5 py-5 text-xs text-[#a08e7b] sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-t border-[#e9e9e7]">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-5 py-5 text-xs text-[#9b9a97] sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} Terrace. All rights reserved.</p>
           <p>
             Built for creators &amp; brands who want{" "}
-            <span className="font-semibold text-[#6b5d4f]">honest, proof-led collaboration.</span>
+            <span className="font-semibold text-[#787774]">honest, proof-led collaboration.</span>
           </p>
         </div>
       </div>
@@ -66,12 +66,12 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold tracking-[0.18em] text-[#a08e7b] uppercase">{title}</p>
+      <p className="text-xs font-semibold tracking-[0.18em] text-[#9b9a97] uppercase">{title}</p>
       <ul className="mt-4 grid gap-2.5">
         {links.map((link) => (
           <li key={link.href}>
             <Link
-              className="text-sm font-medium text-[#6b5d4f] transition hover:text-[#221c16]"
+              className="text-sm font-medium text-[#787774] transition hover:text-[#37352f]"
               href={link.href}
               prefetch={link.prefetch}
             >

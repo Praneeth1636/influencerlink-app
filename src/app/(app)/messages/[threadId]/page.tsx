@@ -51,7 +51,7 @@ export default async function MessageThreadPage({ params }: MessageThreadPagePro
                 </Badge>
               )}
             </div>
-            <h1 className="mt-4 font-serif text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.03em]">
+            <h1 className="mt-4 text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
               {thread.title}
             </h1>
             <p className="mt-2 text-sm font-medium text-[#787774]">{thread.subtitle}</p>

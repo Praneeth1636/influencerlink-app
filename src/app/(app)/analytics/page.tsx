@@ -39,7 +39,7 @@ export default function AnalyticsPage() {
             <Radio className="mr-2 h-3.5 w-3.5" />
             Creator proof dashboard
           </Badge>
-          <h1 className="mt-5 max-w-3xl font-serif text-[clamp(32px,5vw,58px)] leading-[0.98] font-semibold tracking-[-0.03em]">
+          <h1 className="mt-5 max-w-3xl text-[clamp(32px,5vw,58px)] leading-[0.98] font-semibold tracking-[-0.06em]">
             Understand which proof turns into brand demand.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">

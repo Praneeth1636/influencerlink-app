@@ -44,7 +44,7 @@ export default function SavedPage() {
             <Bookmark className="mr-2 h-3.5 w-3.5" />
             Saved workspace
           </Badge>
-          <h1 className="mt-5 max-w-2xl font-serif text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.03em]">
+          <h1 className="mt-5 max-w-2xl text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.06em]">
             Keep the best opportunities close.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">

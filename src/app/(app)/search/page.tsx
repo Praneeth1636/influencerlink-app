@@ -89,7 +89,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
                 <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">
                   {brandView ? "Brand search" : "Creator search"}
                 </p>
-                <h1 className="mt-1 font-serif text-xl leading-tight font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-2xl">
+                <h1 className="mt-1 text-xl leading-tight font-semibold tracking-[-0.045em] text-[#1d1d1f] sm:text-2xl">
                   {brandView ? "Scout creators by audience fit." : "Find creators you want in your feed."}
                 </h1>
                 <p className="mt-1.5 max-w-xl text-[13px] leading-5 text-[#667085] sm:mt-2 sm:text-sm sm:leading-6">

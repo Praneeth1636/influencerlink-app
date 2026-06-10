@@ -38,7 +38,7 @@ export default async function RanksPage() {
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Creator ranks</p>
-                <h1 className="mt-3 max-w-2xl font-serif text-5xl leading-[0.95] font-semibold tracking-[-0.03em] text-[#23272f]">
+                <h1 className="mt-3 max-w-2xl text-5xl leading-[0.95] font-semibold tracking-[-0.065em] text-[#23272f]">
                   Top creators by industry.
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-6 text-[#667085]">

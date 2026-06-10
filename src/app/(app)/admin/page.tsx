@@ -33,7 +33,7 @@ export default async function AdminPage() {
       <section className="mx-auto max-w-[1280px] space-y-8">
         <header className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
           <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Admin</p>
-          <h1 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.03em]">Moderation surface</h1>
+          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.05em]">Moderation surface</h1>
           <p className="mt-1 text-sm text-[#787774]">
             Reports, users, and audit log. Be deliberate — every action here writes to the audit trail.
           </p>

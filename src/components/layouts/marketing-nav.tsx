@@ -41,21 +41,21 @@ export function MarketingNav() {
 
   return (
     <header className="sticky top-0 z-50 w-full px-3 pt-3 sm:px-6 sm:pt-4">
-      <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-[#eadfd2] bg-[#faf5ef]/90 px-3 shadow-[0_14px_42px_rgba(60,38,20,0.08)] backdrop-blur-xl sm:px-4 lg:px-5">
+      <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-[#e6e8ec] bg-[#fbfcfd]/92 px-3 shadow-[0_14px_42px_rgba(17,24,39,0.09)] backdrop-blur-xl sm:px-4 lg:px-5">
         <Link href="/" className="flex items-center gap-3" aria-label="Terrace">
           <span className="logoMark miniLogo" aria-hidden>
             <span />
             <span />
             <span />
           </span>
-          <span className="flex items-baseline font-serif text-lg font-bold tracking-[-0.03em] text-[#221c16]">
-            Terrace<span className="text-[#c75b2e]">.</span>
+          <span className="flex items-baseline text-lg font-semibold tracking-[-0.04em] text-[#37352f]">
+            Terrace<span className="text-[#D86B3D]">.</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-[#6b5d4f] md:flex lg:gap-9">
+        <nav className="hidden items-center gap-7 text-sm font-semibold text-[#787774] md:flex lg:gap-9">
           {navItems.map((item) => (
-            <Link className="transition hover:text-[#221c16]" href={item.href} key={item.href} prefetch={item.prefetch}>
+            <Link className="transition hover:text-[#37352f]" href={item.href} key={item.href} prefetch={item.prefetch}>
               {item.label}
             </Link>
           ))}
@@ -66,7 +66,7 @@ export function MarketingNav() {
             <>
               <Button
                 asChild
-                className="h-9 rounded-full bg-[#221c16] px-5 text-sm font-semibold text-[#faf5ef] shadow-[0_10px_28px_rgba(60,38,20,0.14)] hover:bg-[#39302a]"
+                className="h-9 rounded-full bg-[#37352f] px-5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(17,24,39,0.12)] hover:bg-[#1d222b]"
               >
                 <Link href={dashboardHref}>Open app</Link>
               </Button>
@@ -152,13 +152,13 @@ export function MarketingNav() {
             <>
               <Link
                 href="/login"
-                className="hidden h-9 items-center justify-center rounded-full px-5 text-sm font-semibold text-[#221c16] transition hover:bg-[#f3eadf] sm:inline-flex"
+                className="hidden h-9 items-center justify-center rounded-full px-5 text-sm font-semibold text-[#37352f] transition hover:bg-[#f0f4f8] sm:inline-flex"
               >
                 Sign In
               </Link>
               <Link
                 href="/signup"
-                className="inline-flex h-9 items-center justify-center rounded-full bg-[#221c16] px-5 text-sm font-semibold text-[#faf5ef] shadow-[0_10px_28px_rgba(60,38,20,0.14)] transition-transform duration-300 hover:scale-[1.04] active:scale-[0.97]"
+                className="inline-flex h-9 items-center justify-center rounded-full bg-[#37352f] px-5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(17,24,39,0.12)] transition hover:-translate-y-0.5 hover:bg-[#1d222b]"
               >
                 Get Started
               </Link>

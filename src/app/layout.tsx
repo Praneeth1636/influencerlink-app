@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { clerkAppearance } from "@/components/auth/clerk-appearance";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
@@ -7,15 +7,15 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TRPCProvider } from "@/lib/trpc/client";
 import "./globals.css";
 
-// Bricolage Grotesque — variable display grotesk with optical sizing; carries
-// headlines and brand moments. Hanken Grotesk — humanist sans for body/UI.
-// JetBrains Mono — numbers + code.
-const fontDisplay = Bricolage_Grotesque({
+// Fraunces — variable serif with optical sizes, used for display/headlines.
+// Inter — body / UI. JetBrains Mono — numbers + code.
+const fontSerif = Fraunces({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-serif-app"
+  variable: "--font-serif-app",
+  axes: ["SOFT", "WONK", "opsz"]
 });
-const fontSans = Hanken_Grotesk({
+const fontSans = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans-app"
@@ -42,7 +42,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
     >
       <body>
         <ThemeProvider>

@@ -53,7 +53,7 @@ export default async function SettingsPage() {
           <span className="grid h-12 w-12 place-items-center rounded-lg bg-[#faf0ea] text-[#D86B3D]">
             <SlidersHorizontal className="h-6 w-6" />
           </span>
-          <h1 className="mt-5 max-w-2xl font-serif text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.03em]">
+          <h1 className="mt-5 max-w-2xl text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.06em]">
             Tune Terrace around how you work.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
