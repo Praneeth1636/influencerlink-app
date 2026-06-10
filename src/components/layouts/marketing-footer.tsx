@@ -31,7 +31,7 @@ export function MarketingFooter() {
               <span />
             </span>
             <span className="flex items-baseline text-2xl font-semibold tracking-[-0.04em] text-[#37352f]">
-              Terrace<span className="text-[#D86B3D]">.</span>
+              Terrace<span className="text-[#ED9568]">.</span>
             </span>
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-6 text-[#787774]">

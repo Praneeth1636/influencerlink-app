@@ -49,7 +49,7 @@ export function MarketingNav() {
             <span />
           </span>
           <span className="flex items-baseline text-lg font-semibold tracking-[-0.04em] text-[#37352f]">
-            Terrace<span className="text-[#D86B3D]">.</span>
+            Terrace<span className="text-[#ED9568]">.</span>
           </span>
         </Link>
 
@@ -79,7 +79,7 @@ export function MarketingNav() {
                   >
                     <Avatar className="h-9 w-9">
                       <AvatarImage src={user?.imageUrl} alt={name || "Account"} />
-                      <AvatarFallback className="bg-[#fdf3ec] text-xs font-semibold text-[#bf5a30]">
+                      <AvatarFallback className="bg-[#fdf3ec] text-xs font-semibold text-[#e08550]">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
@@ -93,7 +93,7 @@ export function MarketingNav() {
                   <div className="mb-1 flex items-center gap-3 rounded-xl p-3">
                     <Avatar className="h-11 w-11 border border-[#e9e9e7]">
                       <AvatarImage src={user?.imageUrl} alt={name || "Account"} />
-                      <AvatarFallback className="bg-[#fdf3ec] text-sm font-bold text-[#bf5a30]">
+                      <AvatarFallback className="bg-[#fdf3ec] text-sm font-bold text-[#e08550]">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
@@ -139,7 +139,7 @@ export function MarketingNav() {
                       onClick={() => {
                         void signOut({ redirectUrl: "/" });
                       }}
-                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-sm font-semibold text-[#bf5a30] transition hover:bg-[#fdf3ec]"
+                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 text-sm font-semibold text-[#e08550] transition hover:bg-[#fdf3ec]"
                     >
                       <LogOut className="h-4 w-4" />
                       Sign out

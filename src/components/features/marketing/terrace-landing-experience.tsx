@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Check, Heart, MessageCircle, Send } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type Variants } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 import { Magnetic } from "@/components/features/marketing/landing-motion";
 import { AttractButton } from "@/components/ui/attract-button";
 import { TextFlippingBoard } from "@/components/ui/text-flipping-board";
@@ -18,7 +18,7 @@ export type LandingCreatorRow = {
 };
 
 /* Terrace palette: pure white canvas, warm ink #37352f, light orange
- * #D86B3D and light blue #8CC9E8 as the two accents. */
+ * #ED9568 and light blue #8CC9E8 as the two accents. */
 const easeOutQuint = [0.22, 1, 0.36, 1] as const;
 
 const rise: Variants = {
@@ -76,7 +76,7 @@ const heroCards: HeroCard[] = [
 ];
 
 const platformTint: Record<string, string> = {
-  Instagram: "bg-[#fff3ec] text-[#bf5a30]",
+  Instagram: "bg-[#fff3ec] text-[#e08550]",
   TikTok: "bg-[#37352f] text-white",
   YouTube: "bg-[#f1faff] text-[#2b8fc4]"
 };
@@ -109,7 +109,7 @@ function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(1100px 620px at 78% -10%, rgba(216,107,61,0.13), transparent 62%), radial-gradient(700px 420px at 8% 108%, rgba(140,201,232,0.18), transparent 60%)"
+            "radial-gradient(1100px 620px at 78% -10%, rgba(237,149,104,0.13), transparent 62%), radial-gradient(700px 420px at 8% 108%, rgba(140,201,232,0.18), transparent 60%)"
         }}
       />
       <div
@@ -123,7 +123,7 @@ function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]
 
       <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-16 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-28">
         <motion.div animate="visible" initial="hidden" variants={heroStagger}>
-          <motion.p className="text-sm font-semibold text-[#bf5a30]" variants={rise}>
+          <motion.p className="text-sm font-semibold text-[#e08550]" variants={rise}>
             The creator and brand network
           </motion.p>
 
@@ -185,7 +185,7 @@ function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]
             go on, move one
             <svg
               aria-hidden
-              className="h-7 w-9 translate-y-4 text-[#D86B3D]"
+              className="h-7 w-9 translate-y-4 text-[#ED9568]"
               fill="none"
               stroke="currentColor"
               strokeLinecap="round"
@@ -265,7 +265,7 @@ function PostCardBody({ card }: { card: Extract<HeroCard, { kind: "post" }> }) {
         <Heart className="h-4 w-4" />
         <MessageCircle className="h-4 w-4" />
         <Send className="h-4 w-4" />
-        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-[#fff3ec] px-2.5 py-1 text-[11px] font-semibold text-[#bf5a30]">
+        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-[#fff3ec] px-2.5 py-1 text-[11px] font-semibold text-[#e08550]">
           <Check className="h-3 w-3" />
           Synced to profile
         </span>
@@ -275,7 +275,7 @@ function PostCardBody({ card }: { card: Extract<HeroCard, { kind: "post" }> }) {
 }
 
 const profilePlatforms = [
-  { label: "Instagram", tint: "bg-[#D86B3D]" },
+  { label: "Instagram", tint: "bg-[#ED9568]" },
   { label: "TikTok", tint: "bg-[#37352f]" },
   { label: "YouTube", tint: "bg-[#8CC9E8]" }
 ];
@@ -331,7 +331,7 @@ function ClaimHandle({ reducedMotion }: { reducedMotion: boolean | null }) {
 
   return (
     <form
-      className="flex h-14 w-full max-w-[26rem] items-center gap-1 rounded-full border border-[#e9e9e7] bg-white pr-2 pl-5 shadow-[0_14px_40px_rgba(17,24,39,0.08)] transition-all duration-300 focus-within:border-[#e7a27c] focus-within:shadow-[0_14px_40px_rgba(216,107,61,0.14),0_0_0_4px_rgba(216,107,61,0.1)]"
+      className="flex h-14 w-full max-w-[26rem] items-center gap-1 rounded-full border border-[#e9e9e7] bg-white pr-2 pl-5 shadow-[0_14px_40px_rgba(17,24,39,0.08)] transition-all duration-300 focus-within:border-[#e7a27c] focus-within:shadow-[0_14px_40px_rgba(237,149,104,0.14),0_0_0_4px_rgba(237,149,104,0.1)]"
       onSubmit={(event) => {
         event.preventDefault();
         router.push(handle ? `/signup?handle=${encodeURIComponent(handle)}` : "/signup");
@@ -367,7 +367,7 @@ function ClaimHandle({ reducedMotion }: { reducedMotion: boolean | null }) {
       </div>
       <button
         aria-label="Claim your handle"
-        className="group grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-full bg-[#37352f] text-white transition-all duration-300 hover:scale-105 hover:bg-[#D86B3D] active:scale-95"
+        className="group grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-full bg-[#37352f] text-white transition-all duration-300 hover:scale-105 hover:bg-[#ED9568] active:scale-95"
         type="submit"
       >
         <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:-rotate-45" />
@@ -379,7 +379,7 @@ function ClaimHandle({ reducedMotion }: { reducedMotion: boolean | null }) {
 /* ── Creator story ─────────────────────────────────────────────────────── */
 
 const syncLanes = [
-  { label: "Instagram", chip: "IG", tint: "bg-[#fff3ec] text-[#bf5a30]", dot: "bg-[#D86B3D]", delay: 0 },
+  { label: "Instagram", chip: "IG", tint: "bg-[#fff3ec] text-[#e08550]", dot: "bg-[#ED9568]", delay: 0 },
   { label: "TikTok", chip: "TT", tint: "bg-[#37352f] text-white", dot: "bg-[#37352f]", delay: 0.9 },
   { label: "YouTube", chip: "YT", tint: "bg-[#f1faff] text-[#2b8fc4]", dot: "bg-[#8CC9E8]", delay: 1.8 }
 ];
@@ -445,7 +445,7 @@ function CreatorStory({ reducedMotion }: { reducedMotion: boolean | null }) {
       </Reveal>
 
       <Reveal delay={0.12}>
-        <p className="text-sm font-semibold text-[#bf5a30]">For creators</p>
+        <p className="text-sm font-semibold text-[#e08550]">For creators</p>
         <h2 className="mt-4 max-w-[18ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em]">
           Publish once. It counts everywhere.
         </h2>
@@ -467,7 +467,7 @@ function CreatorStory({ reducedMotion }: { reducedMotion: boolean | null }) {
               viewport={{ once: true, margin: "-80px" }}
               whileInView={{ opacity: 1, x: 0 }}
             >
-              <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#D86B3D]" />
+              <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#ED9568]" />
               <p className="text-[15px] leading-7 text-[#787774]">
                 <strong className="font-semibold text-[#37352f]">{title}.</strong> {body}
               </p>
@@ -520,14 +520,14 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
   const scene = brandScenes[sceneIndex];
 
   return (
-    <section className="bg-[#f0f8fd]">
+    <section className="border-t border-[#f1f1ef] bg-white">
       <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
         <Reveal className="order-2 lg:order-1">
           <p className="text-sm font-semibold text-[#2b8fc4]">For brands</p>
           <h2 className="mt-4 max-w-[16ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em]">
             Hire from the work itself.
           </h2>
-          <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6e7b85]">
+          <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#787774]">
             Describe the campaign in plain language. Terrace reads niche, audience, growth, and past brand work, then
             puts real creators in front of you with their proof attached. Shortlist, message, book: one thread from
             brief to deal.
@@ -543,7 +543,7 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
         </Reveal>
 
         <Reveal className="order-1 lg:order-2" delay={0.12}>
-          <div className="rounded-[26px] border border-[#ddeefa] bg-white p-5 shadow-[0_30px_80px_rgba(43,143,196,0.1)] sm:p-6">
+          <div className="rounded-[26px] border border-[#ddeefa] bg-[#fbfdff] p-5 shadow-[0_30px_80px_rgba(43,143,196,0.1)] sm:p-6">
             <div className="flex min-h-[3.1rem] items-center rounded-2xl bg-[#f7f7f5] px-4 py-3 text-[15px] text-[#787774]">
               <AnimatePresence initial={false} mode="wait">
                 <motion.span
@@ -603,7 +603,7 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
   );
 }
 
-/* ── Proof section: dark contrast, orange + blue glow, signal board ────── */
+/* ── Proof section: creator rows + the signal board as an object ───────── */
 
 const boardMessages = ["NEW GIG POSTED\nBEAUTY · LA", "POST SYNCED\n@AMARA.FILMS", "BRIEF MATCHED\nUGC SKINCARE"];
 
@@ -614,9 +614,6 @@ function ProofSection({
   creatorRows: LandingCreatorRow[];
   reducedMotion: boolean | null;
 }) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ offset: ["start end", "end start"], target: sectionRef });
-  const glowY = useTransform(scrollYProgress, [0, 1], ["-12%", "16%"]);
   const [boardIndex, setBoardIndex] = useState(0);
 
   useEffect(() => {
@@ -626,28 +623,20 @@ function ProofSection({
   }, [reducedMotion]);
 
   return (
-    <section className="relative overflow-hidden bg-[#15171c] text-white" ref={sectionRef}>
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 h-[120%]"
-        style={{
-          background:
-            "radial-gradient(900px 520px at 24% 30%, rgba(216,107,61,0.2), transparent 60%), radial-gradient(640px 420px at 86% 70%, rgba(140,201,232,0.14), transparent 55%)",
-          y: glowY
-        }}
-      />
-      <div className="relative mx-auto grid max-w-[1320px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-36">
+    <section className="border-t border-[#f1f1ef] bg-white">
+      <div className="mx-auto grid max-w-[1320px] gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-32">
         <Reveal>
-          <h2 className="max-w-[14ch] text-[clamp(38px,5vw,72px)] leading-[1] font-semibold tracking-[-0.05em]">
+          <p className="text-sm font-semibold text-[#e08550]">Your record</p>
+          <h2 className="mt-4 max-w-[14ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em] text-[#37352f]">
             Proof travels with you.
           </h2>
-          <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#d5d9df]/75">
+          <p className="mt-6 max-w-[32rem] text-lg leading-8 text-[#787774]">
             Campaign wins, brand replies, and finished work attach to your profile, not to a thread that dies when the
             deal closes. The next negotiation starts from everything you have already done.
           </p>
           <Magnetic className="mt-9">
             <Link
-              className="inline-flex h-13 items-center gap-2 rounded-full bg-white px-8 text-[15px] font-semibold text-[#37352f] transition-shadow duration-300 hover:shadow-[0_18px_46px_rgba(255,255,255,0.12)]"
+              className="inline-flex h-13 items-center gap-2 rounded-full bg-[#37352f] px-8 text-[15px] font-semibold text-white shadow-[0_14px_36px_rgba(17,24,39,0.14)] transition-shadow duration-300 hover:shadow-[0_20px_46px_rgba(17,24,39,0.2)]"
               href="/signup"
             >
               Start your profile
@@ -660,36 +649,34 @@ function ProofSection({
           <div className="grid gap-3">
             {creatorRows.map((creator, index) => (
               <motion.div
-                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4"
+                className="flex items-center gap-4 rounded-2xl border border-[#f1f1ef] bg-white p-4 shadow-[0_8px_24px_rgba(17,24,39,0.04)]"
                 initial={{ opacity: 0, x: 36 }}
                 key={creator.name}
                 transition={{ delay: index * 0.12, duration: 0.6, ease: easeOutQuint }}
                 viewport={{ once: true, margin: "-100px" }}
                 whileInView={{ opacity: 1, x: 0 }}
               >
-                <Initials className="bg-[#cfeffc] text-[#1c4458]" name={creator.name} />
+                <Initials name={creator.name} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold">{creator.name}</p>
-                  <p className="truncate text-sm text-[#d5d9df]/68">
+                  <p className="truncate font-semibold text-[#37352f]">{creator.name}</p>
+                  <p className="truncate text-sm text-[#9b9a97]">
                     {creator.niche} · {creator.reach}
                   </p>
                 </div>
                 <span
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-semibold",
-                    creator.status === "Open"
-                      ? "border border-[#94d4f3]/20 bg-[#94d4f3]/10 text-[#cfeffc]"
-                      : "bg-white/10 text-[#d5d9df]"
+                    creator.status === "Open" ? "bg-[#eaf7fd] text-[#2b8fc4]" : "bg-[#f7f7f5] text-[#9b9a97]"
                   )}
                 >
                   {creator.status}
                 </span>
               </motion.div>
             ))}
-            {/* Split-flap signal board: the marketplace, still moving. */}
+            {/* Split-flap signal board: a dark object on the page, not a dark page. */}
             <TextFlippingBoard
-              characterClassName="h-8 min-w-6 rounded-md border-white/10 bg-white/[0.07] px-1.5 text-sm text-white sm:h-9 sm:min-w-7 sm:text-base"
-              className="mt-2 rounded-[22px] border-white/10 bg-[#1b1f26] p-4 shadow-none"
+              characterClassName="h-8 min-w-6 rounded-md border-white/10 bg-white/[0.08] px-1.5 text-sm text-white sm:h-9 sm:min-w-7 sm:text-base"
+              className="mt-2 rounded-[22px] border-transparent bg-[#37352f] p-4 shadow-[0_24px_60px_rgba(17,24,39,0.18)]"
               key={boardIndex}
               text={boardMessages[boardIndex]}
             />
@@ -700,25 +687,26 @@ function ProofSection({
   );
 }
 
-/* ── Closing: brand orange, full bleed ─────────────────────────────────── */
+/* ── Closing: same world, bigger voice ─────────────────────────────────── */
 
 function ClosingCta() {
   const router = useRouter();
 
   return (
-    <section className="relative overflow-hidden bg-[#D86B3D]">
+    <section className="relative overflow-hidden border-t border-[#f1f1ef] bg-white">
       <motion.div
         animate={{ x: ["-4%", "4%", "-4%"], y: ["-3%", "3%", "-3%"] }}
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "radial-gradient(820px 460px at 84% 0%, rgba(255,243,236,0.22), transparent 58%)"
+          background:
+            "radial-gradient(820px 460px at 80% 10%, rgba(237,149,104,0.14), transparent 58%), radial-gradient(640px 420px at 12% 90%, rgba(140,201,232,0.16), transparent 55%)"
         }}
         transition={{ duration: 16, ease: "easeInOut", repeat: Infinity }}
       />
       <div className="relative mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
         <motion.h2
-          className="flex max-w-[12ch] flex-wrap gap-x-[0.24em] text-[clamp(52px,9vw,128px)] leading-[0.98] font-semibold tracking-[-0.06em] text-white"
+          className="flex max-w-[12ch] flex-wrap gap-x-[0.24em] text-[clamp(52px,9vw,128px)] leading-[0.98] font-semibold tracking-[-0.06em] text-[#37352f]"
           initial="hidden"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
           viewport={{ once: true, margin: "-120px" }}
@@ -736,14 +724,14 @@ function ClosingCta() {
           <div className="flex flex-wrap items-center gap-5">
             <AttractButton
               attractRadius={52}
-              className="h-14 rounded-full border-white/25 bg-[#37352f] px-9 text-base font-semibold text-white shadow-[0_16px_40px_rgba(17,24,39,0.25)] hover:bg-[#46403a]"
+              className="h-14 rounded-full px-9 text-base font-semibold"
               onClick={() => router.push("/signup")}
               particleCount={12}
             >
               Start free
               <ArrowRight className="h-4 w-4" />
             </AttractButton>
-            <p className="text-[15px] font-medium text-[#ffe4d4]">Free for creators. Brands pay when they book.</p>
+            <p className="text-[15px] font-medium text-[#9b9a97]">Free for creators. Brands pay when they book.</p>
           </div>
         </Reveal>
       </div>
@@ -771,7 +759,7 @@ function Initials({ name, className }: { name: string; className?: string }) {
   return (
     <span
       className={cn(
-        "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#fdf3ec] text-xs font-bold text-[#bf5a30]",
+        "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#fdf3ec] text-xs font-bold text-[#e08550]",
         className
       )}
     >

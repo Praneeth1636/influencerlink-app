@@ -129,7 +129,7 @@ export function Typewriter({
       <motion.span
         animate={{ opacity: [1, 1, 0, 0] }}
         aria-hidden
-        className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] bg-[#D86B3D]"
+        className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] bg-[#ED9568]"
         transition={{ duration: 0.9, repeat: Infinity, times: [0, 0.5, 0.5, 1] }}
       />
     </span>
