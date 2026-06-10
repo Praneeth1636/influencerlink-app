@@ -43,8 +43,7 @@ export default function AnalyticsPage() {
             Understand which proof turns into brand demand.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
-            This MVP view tracks the metrics creators and brand teams both care about: reach, engagement, saves,
-            replies, and profile intent.
+            The metrics creators and brand teams both care about: reach, engagement, saves, replies, and profile intent.
           </p>
         </article>
 

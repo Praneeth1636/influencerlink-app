@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Inbox, MessageCircle, Radio } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Inbox, MessageCircle } from "lucide-react";
 import { buildSeedThreadPreviews, mapThreadPreviews, type InboxThreadPreview } from "@/lib/messages/inbox";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 
@@ -40,31 +39,45 @@ export default async function MessagesPage() {
           </div>
         </aside>
 
-        <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
-            <Radio className="mr-2 h-3.5 w-3.5" />
-            Messaging MVP
-          </Badge>
-          <h2 className="mt-5 max-w-2xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
-            Keep every creator deal in one clean thread.
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
-            This is the LinkedIn-style inbox layer for Terrace. Job applications and direct brand outreach can now live
-            in threaded conversations with read states and message sends.
-          </p>
-
+        <section className="grid content-center rounded-xl border border-[#e9e9e7] bg-white p-6 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
           {firstThread ? (
-            <Link
-              className="mt-7 inline-flex h-11 items-center justify-center rounded-full bg-[#37352f] px-5 text-sm font-semibold text-white transition hover:bg-[#262420]"
-              href={`/messages/${firstThread.id}`}
-            >
-              Open latest thread
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <div className="text-center">
+              <p className="text-lg font-semibold tracking-[-0.025em]">Pick a conversation</p>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#787774]">
+                Deals, applications, and replies stay in one thread per conversation.
+              </p>
+              <Link
+                className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-[#37352f] px-5 text-sm font-semibold text-white transition hover:bg-[#262420]"
+                href={`/messages/${firstThread.id}`}
+              >
+                Open latest thread
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
           ) : (
-            <div className="mt-7 rounded-xl border border-[#e9e9e7] bg-white p-5">
-              <p className="text-lg font-semibold">No messages yet</p>
-              <p className="mt-2 text-sm leading-6 text-[#787774]">Apply to a job or start a creator conversation.</p>
+            <div className="text-center">
+              <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#faf0ea] text-[#e08550]">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <p className="mt-4 text-lg font-semibold tracking-[-0.025em]">No messages yet</p>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#787774]">
+                Conversations start when you apply to a gig or when a brand reaches out from your profile.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  className="inline-flex h-10 items-center rounded-full bg-[#37352f] px-4 text-sm font-semibold text-white transition hover:bg-[#262420]"
+                  href="/jobs"
+                >
+                  Browse gigs
+                </Link>
+                <Link
+                  className="inline-flex h-10 items-center rounded-full border border-[#e9e9e7] bg-white px-4 text-sm font-semibold text-[#37352f] transition hover:bg-[#fbfbfa]"
+                  href="/search"
+                  prefetch={false}
+                >
+                  Find creators
+                </Link>
+              </div>
             </div>
           )}
         </section>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bell, CreditCard, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { Bell, CreditCard, Shield, UserRound } from "lucide-react";
 import { resolveAppRole } from "@/lib/auth/role";
 
 function getSections(profileHref: string) {
@@ -49,18 +49,7 @@ export default async function SettingsPage() {
       </header>
 
       <section className="mx-auto grid max-w-[980px] gap-6 px-5 py-7">
-        <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <span className="grid h-12 w-12 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550]">
-            <SlidersHorizontal className="h-6 w-6" />
-          </span>
-          <h1 className="mt-5 max-w-2xl text-[clamp(32px,5vw,56px)] leading-[0.98] font-semibold tracking-[-0.06em]">
-            Tune Terrace around how you work.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
-            One shared settings area for creators and brand teams. The MVP keeps this calm and direct, then expands into
-            role-specific controls as subscriptions and teams mature.
-          </p>
-        </article>
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.045em]">Settings</h1>
 
         <div className="grid gap-4 md:grid-cols-2">
           {sections.map((section) => {

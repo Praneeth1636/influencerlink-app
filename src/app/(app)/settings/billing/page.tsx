@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, BadgeDollarSign, Gauge, LockKeyhole, Sparkles } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, Gauge, LockKeyhole, Sparkles } from "lucide-react";
 import { BILLING_PLANS, BRAND_FREE_PLAN, CREATOR_FREE_PLAN, formatPlanPrice } from "@/lib/billing/plans";
 import { createTRPCServerCaller } from "@/lib/trpc/server";
 import type { BillingAccountSummary } from "@/server/services/billing-service";
@@ -16,21 +15,15 @@ export default async function BillingSettingsPage() {
       <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
           <div>
-            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
-              <BadgeDollarSign className="mr-2 h-3.5 w-3.5" />
-              Billing MVP
-            </Badge>
-            <h1 className="mt-5 max-w-3xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
-              Turn Terrace into a paid marketplace.
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
-              Free plans now have real server-side limits for creator applications, brand briefs, DMs, and creator
-              searches. Stripe checkout comes next; this phase makes the product enforce value before payment wiring.
+            <h1 className="text-3xl font-semibold tracking-[-0.045em]">Billing</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#787774]">
+              Your plan, usage, and invoices. Free plans include a monthly allowance of applications, briefs, messages,
+              and searches; upgrade any time to lift the limits.
             </p>
           </div>
 
           <div className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Paywall levers</p>
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Free plan includes</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Creator apps" value="5 free" />
               <Metric label="Brand DMs" value="5 free" />

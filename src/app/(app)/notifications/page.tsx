@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Bell, BriefcaseBusiness, CheckCircle2, Circle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   buildSeedNotifications,
   getUnreadCount,
@@ -16,35 +15,32 @@ export default async function NotificationsPage() {
 
   return (
     <main className="mx-auto grid max-w-[1120px] gap-6 bg-white px-5 py-8 font-sans text-[#37352f]">
-      <section className="rounded-[28px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_50px_rgba(17,24,39,0.05)]">
-        <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
-          <div>
-            <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
-              <Bell className="mr-2 h-3.5 w-3.5" />
-              Workspace alerts
-            </Badge>
-            <h1 className="mt-5 max-w-3xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
-              Track every creator opportunity as it moves.
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">
-              Notifications now sit behind real tRPC procedures. Job applications and recruiter status changes create
-              alerts so creators and brands can react without digging through every page.
-            </p>
-          </div>
-
-          <MarkAllNotificationsReadButton unreadCount={unreadCount} />
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-[-0.045em]">Notifications</h1>
+          <p className="mt-1.5 text-sm leading-6 text-[#787774]">Follows, replies, applications, and deal activity.</p>
         </div>
-      </section>
+        <MarkAllNotificationsReadButton unreadCount={unreadCount} />
+      </header>
 
       <section className="grid gap-3">
         {notifications.length > 0 ? (
           notifications.map((notification) => <NotificationCard key={notification.id} notification={notification} />)
         ) : (
-          <div className="rounded-xl border border-[#e9e9e7] bg-white p-6">
-            <p className="text-lg font-semibold">No notifications yet</p>
-            <p className="mt-2 text-sm leading-6 text-[#787774]">
-              Apply to briefs, publish jobs, or move applicants through the pipeline to create alerts.
+          <div className="rounded-xl border border-[#e9e9e7] bg-white p-8 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#faf0ea] text-[#e08550]">
+              <Bell className="h-5 w-5" />
+            </div>
+            <p className="mt-4 text-lg font-semibold tracking-[-0.025em]">You&apos;re all caught up</p>
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#787774]">
+              Activity lands here: gig applications, replies from brands, and new followers.
             </p>
+            <Link
+              className="mt-6 inline-flex h-10 items-center rounded-full bg-[#37352f] px-4 text-sm font-semibold text-white transition hover:bg-[#262420]"
+              href="/jobs"
+            >
+              Browse gigs
+            </Link>
           </div>
         )}
       </section>

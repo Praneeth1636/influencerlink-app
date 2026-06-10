@@ -83,11 +83,11 @@ export default function SavedPage() {
         <article className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
           <div className="flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-[#e08550]" />
-            <p className="font-semibold">Next MVP step</p>
+            <p className="font-semibold">Tip</p>
           </div>
           <p className="mt-2 text-sm leading-6 text-[#7a513f]">
-            Saved creators and saved searches are ready in the product model. The next backend pass will persist this
-            page against user-specific saves instead of this curated shell.
+            Save creators from search and gigs from the board: everything lands here, ready to compare when you build
+            your next shortlist.
           </p>
         </article>
       </section>
