@@ -121,7 +121,7 @@ function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]
         }}
       />
 
-      <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-16 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-28">
+      <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-14 pb-12 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-20 lg:pb-16">
         <motion.div animate="visible" initial="hidden" variants={heroStagger}>
           <motion.p className="text-sm font-semibold text-[#e08550]" variants={rise}>
             The creator and brand network
@@ -386,7 +386,7 @@ const syncLanes = [
 
 function CreatorStory({ reducedMotion }: { reducedMotion: boolean | null }) {
   return (
-    <section className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:py-32">
+    <section className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:py-16">
       <Reveal>
         {/* Posts flow from every platform into one Terrace profile. */}
         <div className="rounded-[28px] border border-[#f1f1ef] bg-white p-6 shadow-[0_30px_80px_rgba(17,24,39,0.08)] sm:p-8">
@@ -521,7 +521,7 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
 
   return (
     <section className="bg-white">
-      <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-16">
         <Reveal className="order-2 lg:order-1">
           <p className="text-sm font-semibold text-[#2b8fc4]">For brands</p>
           <h2 className="mt-4 max-w-[16ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em]">
@@ -624,7 +624,7 @@ function ProofSection({
 
   return (
     <section className="bg-white">
-      <div className="mx-auto grid max-w-[1320px] gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-32">
+      <div className="mx-auto grid max-w-[1320px] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-16">
         <Reveal>
           <p className="text-sm font-semibold text-[#e08550]">Your record</p>
           <h2 className="mt-4 max-w-[14ch] text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-semibold tracking-[-0.05em] text-[#37352f]">
@@ -704,7 +704,7 @@ function ClosingCta() {
         }}
         transition={{ duration: 16, ease: "easeInOut", repeat: Infinity }}
       />
-      <div className="relative mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
+      <div className="relative mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-16 sm:px-8 lg:py-24">
         <motion.h2
           className="flex max-w-[12ch] flex-wrap gap-x-[0.24em] text-[clamp(52px,9vw,128px)] leading-[0.98] font-semibold tracking-[-0.06em] text-[#37352f]"
           initial="hidden"
