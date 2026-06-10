@@ -27,7 +27,7 @@ export default async function MessagesPage() {
             </div>
             <div>
               <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Inbox</p>
-              <h1 className="text-2xl font-semibold tracking-[-0.04em]">
+              <h1 className="font-serif text-2xl font-semibold tracking-[-0.03em]">
                 {threads.length} {threads.length === 1 ? "thread" : "threads"}
               </h1>
             </div>

@@ -18,7 +18,7 @@ export default function NewJobPage() {
         <aside className="grid content-start gap-5">
           <article className="rounded-[20px] border border-[#f3d5c4] bg-[#faf0ea] p-4 sm:p-5">
             <p className="text-[11px] font-semibold tracking-[0.2em] text-[#D86B3D] uppercase">Brand portal</p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">
+            <h1 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
               Create gigs creators can act on.
             </h1>
             <p className="mt-3 text-sm leading-6 text-[#7a513f]">

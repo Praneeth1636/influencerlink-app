@@ -40,7 +40,9 @@ export default async function DashboardPage() {
         {/* Header — Notion-flat: plain title, hairline rule, no floating card. */}
         <header className="creatorlink-animate-in flex flex-col gap-4 border-b border-[#ededec] pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-[26px] font-semibold tracking-[-0.02em] text-[#37352f] sm:text-[30px]">Dashboard</h1>
+            <h1 className="font-serif text-[26px] font-semibold tracking-[-0.03em] text-[#37352f] sm:text-[30px]">
+              Dashboard
+            </h1>
             <p className="mt-1 text-sm text-[#787774]">Campaigns, applicants, messages, and spend in one view.</p>
           </div>
           <Link

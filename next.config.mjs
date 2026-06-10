@@ -18,6 +18,9 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig = {
   outputFileTracingRoot: projectRoot,
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }]
+  },
   eslint: {
     // ESLint runs in pre-commit (lint-staged) and CI (pnpm lint), not during the build.
     // next build's internal runner can't resolve @next/eslint-plugin-next through pnpm's

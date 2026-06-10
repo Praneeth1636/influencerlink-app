@@ -23,7 +23,7 @@ export default async function NotificationsPage() {
               <Bell className="mr-2 h-3.5 w-3.5" />
               Workspace alerts
             </Badge>
-            <h1 className="mt-5 max-w-3xl text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.055em]">
+            <h1 className="mt-5 max-w-3xl font-serif text-[clamp(30px,5vw,52px)] leading-[1.04] font-semibold tracking-[-0.03em]">
               Track every creator opportunity as it moves.
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-[#787774]">

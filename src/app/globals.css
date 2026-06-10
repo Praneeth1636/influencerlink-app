@@ -129,7 +129,7 @@
   --chart-5: 24 11% 48%; /* smoke */
 
   --app-font-sans: var(--font-sans-app), system-ui, -apple-system, sans-serif;
-  --app-font-serif: var(--font-sans-app), system-ui, -apple-system, sans-serif;
+  --app-font-serif: var(--font-serif-app), system-ui, -apple-system, sans-serif;
   --app-font-mono: var(--font-mono-app), ui-monospace, "Cascadia Code", monospace;
   --radius: 0.5rem;
 }

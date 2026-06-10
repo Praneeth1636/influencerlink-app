@@ -89,7 +89,7 @@ export default function CreatorPortalPage() {
                   <CreatorAvatar creator={creator} className="-mt-12 h-28 w-28 border-4 border-white text-3xl" />
                   <div className="pb-2">
                     <div className="flex items-center gap-2">
-                      <h1 className="text-4xl font-semibold tracking-[-0.05em]">{creator.name}</h1>
+                      <h1 className="font-serif text-4xl font-semibold tracking-[-0.03em]">{creator.name}</h1>
                       <BadgeCheck className="h-6 w-6 text-[#78bde8]" />
                     </div>
                     <p className="mt-2 text-sm text-[#787774]">

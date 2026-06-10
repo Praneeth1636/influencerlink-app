@@ -17,3 +17,5 @@ data/*.sqlite-*
 
 # Local Claude tooling state
 .claude-flow/
+.vercel
+.env*.local

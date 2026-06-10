@@ -1,21 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import {
-  ArrowRight,
-  BadgeCheck,
-  Camera,
-  Check,
-  Command,
-  MessageCircle,
-  Search,
-  Sparkles,
-  TrendingUp
-} from "lucide-react";
-import { motion, useMotionValue, useReducedMotion, useTransform, type Variants } from "motion/react";
-import { TerraceBentoGrid } from "@/components/features/marketing/terrace-bento-grid";
-import { TextFlippingBoard } from "@/components/ui/text-flipping-board";
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+  type Variants
+} from "motion/react";
 import { cn } from "@/lib/utils";
 
 export type LandingCreatorRow = {
@@ -25,482 +23,503 @@ export type LandingCreatorRow = {
   status: string;
 };
 
-const boardMessages = [
-  "BRAND BRIEF LIVE\n18 CREATORS MATCHED\n94% FIT",
-  "CREATOR RATE VERIFIED\nREPLY TIME 2H\nREADY THIS WEEK",
-  "CAMPAIGN PROOF SYNCED\nTIKTOK + IG\nBRAND SAFE"
-];
+/* Warm palette: golden-hour terrace. Cream canvas (#faf5ef), terracotta
+ * carry (#c75b2e), deep warm ink (#221c16). Sky blue only as counterpoint. */
+const easeOutQuint = [0.22, 1, 0.36, 1] as const;
 
-const searchPrompts = [
-  "Beauty creators in LA with strong routine videos",
-  "UGC skincare creators, $2K to $4K, US audience",
-  "Lifestyle creators with verified engagement over 7%"
-];
-
-const heroVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
+const rise: Variants = {
+  hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
-    y: 0
+    y: 0,
+    transition: { duration: 0.7, ease: easeOutQuint }
   }
 };
 
-const staggerVariants: Variants = {
+const heroStagger: Variants = {
   hidden: {},
-  visible: {
-    transition: { delayChildren: 0.08, staggerChildren: 0.09 }
-  }
+  visible: { transition: { delayChildren: 0.05, staggerChildren: 0.11 } }
 };
 
-const proofStats = [
-  ["4.3M", "verified reach tracked"],
-  ["18", "creator matches"],
-  ["94%", "brief fit"],
-  ["2h", "median reply"]
-];
-
-const featureCards = [
+const heroPhotos = [
   {
-    icon: BadgeCheck,
-    title: "Proof-first profiles",
-    text: "Creators carry verified reach, rates, past work, and campaign proof into every brand conversation."
+    src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+    alt: "Creator in a mustard jacket, mid-shoot against a warm wall",
+    platform: "Instagram",
+    handle: "@amara.films",
+    rotate: -5,
+    depth: 28
   },
   {
-    icon: Search,
-    title: "Search that feels alive",
-    text: "Brands describe the campaign, Terrace turns the signal into creator matches, budget fit, and outreach."
+    src: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80",
+    alt: "Creator laughing in golden-hour light",
+    platform: "TikTok",
+    handle: "@goldenhourgrace",
+    rotate: 3.5,
+    depth: 46
   },
   {
-    icon: MessageCircle,
-    title: "Briefs become threads",
-    text: "Discovery, shortlist, pitch, and collaboration messages stay connected to the same creator proof."
-  },
-  {
-    icon: TrendingUp,
-    title: "Signals keep moving",
-    text: "Campaign wins, social metrics, saved jobs, and open-to-work status keep the marketplace fresh."
+    src: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=900&q=80",
+    alt: "Street-style creator checking the frame",
+    platform: "YouTube",
+    handle: "@dispatch.daily",
+    rotate: -2,
+    depth: 64
   }
 ];
+
+const platformTint: Record<string, string> = {
+  Instagram: "bg-[#fdeee4] text-[#b4490f]",
+  TikTok: "bg-[#221c16] text-[#faf5ef]",
+  YouTube: "bg-[#fdeaea] text-[#a52a2a]"
+};
 
 export function TerraceLandingExperience({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
-  const [boardIndex, setBoardIndex] = useState(0);
-  const [promptIndex, setPromptIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (prefersReducedMotion) return undefined;
+  return (
+    <div className="min-h-screen bg-[#faf5ef] font-sans text-[#221c16]">
+      <Hero reducedMotion={prefersReducedMotion} />
+      <LiveRow creatorRows={creatorRows} />
+      <CreatorStory />
+      <BrandStory />
+      <ProofSection creatorRows={creatorRows} />
+      <ClosingCta />
+    </div>
+  );
+}
 
-    const boardTimer = window.setInterval(() => setBoardIndex((index) => (index + 1) % boardMessages.length), 5200);
-    const promptTimer = window.setInterval(() => setPromptIndex((index) => (index + 1) % searchPrompts.length), 3800);
+/* ── Hero ──────────────────────────────────────────────────────────────── */
 
-    return () => {
-      window.clearInterval(boardTimer);
-      window.clearInterval(promptTimer);
-    };
-  }, [prefersReducedMotion]);
+function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
+  const stackRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 60, damping: 18 });
+  const sy = useSpring(my, { stiffness: 60, damping: 18 });
+
+  function handleMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (reducedMotion || !stackRef.current) return;
+    const rect = stackRef.current.getBoundingClientRect();
+    mx.set((event.clientX - rect.left - rect.width / 2) / rect.width);
+    my.set((event.clientY - rect.top - rect.height / 2) / rect.height);
+  }
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[#fbfcfd] font-sans text-[#15171c]">
-      <section className="relative overflow-hidden pt-10 sm:pt-12">
-        <DiagonalLineBackground reducedMotion={prefersReducedMotion} />
-        <motion.div
-          animate="visible"
-          className="relative mx-auto flex max-w-[1680px] flex-col items-center px-4 pb-0 text-center sm:px-6 lg:px-10"
-          initial="hidden"
-          variants={staggerVariants}
-        >
-          <motion.div
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#e6e8ec] bg-[#fbfcfd]/90 px-4 py-2 text-sm font-semibold text-[#667085] shadow-[0_16px_44px_rgba(17,24,39,0.08)] backdrop-blur"
-            variants={heroVariants}
-          >
-            <Sparkles className="h-4 w-4 text-[#D86B3D]" />
-            Creator proof, brand hiring, one Terrace
-          </motion.div>
+    <section
+      className="relative overflow-hidden"
+      onMouseLeave={() => {
+        mx.set(0);
+        my.set(0);
+      }}
+      onMouseMove={handleMove}
+    >
+      {/* Late-afternoon wash: one warm light source, top right. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(1100px 620px at 78% -10%, rgba(199,91,46,0.14), transparent 62%), radial-gradient(700px 420px at 8% 108%, rgba(140,201,232,0.12), transparent 60%)"
+        }}
+      />
 
-          <motion.h1
-            className="max-w-5xl text-[clamp(44px,6.8vw,96px)] leading-[0.9] font-semibold tracking-[-0.07em] text-[#23272f]"
-            variants={heroVariants}
-          >
-            Creator deals,
-            <br />
-            verified.
-          </motion.h1>
-
-          <motion.p className="mt-5 max-w-2xl text-base leading-7 text-[#667085] sm:text-lg" variants={heroVariants}>
-            Terrace turns creator proof, brand briefs, social metrics, and campaign messages into one marketplace that
-            feels calm enough to use every day.
+      <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-14 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-24">
+        <motion.div animate="visible" initial="hidden" variants={heroStagger}>
+          <motion.p className="text-sm font-semibold text-[#9a6a4b]" variants={rise}>
+            The creator and brand network
           </motion.p>
 
-          <motion.div className="mt-6 flex flex-col gap-3 sm:flex-row" variants={heroVariants}>
+          <motion.h1
+            className="mt-5 font-serif text-[clamp(46px,7.2vw,104px)] leading-[0.94] font-bold tracking-[-0.035em] text-[#221c16]"
+            variants={rise}
+          >
+            Your feed is
+            <br />
+            your résumé.
+          </motion.h1>
+
+          <motion.p className="mt-7 max-w-[36rem] text-lg leading-8 text-[#6b5d4f]" variants={rise}>
+            Terrace syncs your Instagram, TikTok, and YouTube into one verified profile. Brands browse the work itself,
+            post gigs, and book you in the same conversation.
+          </motion.p>
+
+          <motion.div className="mt-9 flex flex-wrap items-center gap-4" variants={rise}>
             <Link
-              className="group inline-flex h-12 items-center justify-center rounded-full bg-[#15171c] px-7 text-sm font-semibold text-[#fbfcfd] shadow-[0_18px_46px_rgba(17,24,39,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#282d36]"
+              className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#221c16] px-8 text-[15px] font-semibold text-[#faf5ef] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
               href="/signup"
             >
-              Start free
-              <ArrowRight className="ml-2 h-4 w-4 transition duration-300 group-hover:translate-x-1" />
+              Claim your handle
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
-              className="inline-flex h-12 items-center justify-center rounded-full border border-[#dfe4eb] bg-[#fbfcfd] px-7 text-sm font-semibold text-[#23272f] shadow-[0_12px_30px_rgba(17,24,39,0.05)] transition duration-300 hover:-translate-y-0.5 hover:border-[#cfeffc]"
-              href="/feed"
+              className="inline-flex h-13 items-center rounded-full px-5 text-[15px] font-semibold text-[#221c16] underline decoration-[#c75b2e]/40 decoration-2 underline-offset-8 transition-colors hover:decoration-[#c75b2e]"
+              href="/search"
               prefetch={false}
             >
-              View product
+              Browse creators
             </Link>
-          </motion.div>
-
-          <motion.div
-            className="relative mt-7 w-full max-w-[1120px] overflow-visible xl:max-w-[1240px]"
-            initial={{ opacity: 1, rotateX: 0, y: 0 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <ProductShowcase creatorRows={creatorRows} prompt={searchPrompts[promptIndex]} />
           </motion.div>
         </motion.div>
-      </section>
 
-      <section className="relative mx-auto max-w-[1440px] px-4 pt-10 pb-12 sm:px-6">
-        <div className="grid gap-4 md:grid-cols-[1.05fr_0.95fr]">
-          <SignalBoard message={boardMessages[boardIndex]} />
-          <CreatorMarketsPanel reducedMotion={prefersReducedMotion} />
+        {/* Layered creator photographs settle in like prints on a table. */}
+        <div className="relative mx-auto h-[460px] w-full max-w-[440px] sm:h-[520px]" ref={stackRef}>
+          {heroPhotos.map((photo, index) => (
+            <HeroPhotoCard
+              index={index}
+              key={photo.handle}
+              photo={photo}
+              reducedMotion={reducedMotion}
+              sx={sx}
+              sy={sy}
+            />
+          ))}
         </div>
-      </section>
-
-      <section className="mx-auto max-w-[1440px] px-4 py-12 sm:px-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {featureCards.map((feature, index) => {
-            const Icon = feature.icon;
-
-            return (
-              <motion.article
-                className="group rounded-[26px] border border-[#e8ebef] bg-[#fbfcfd] p-6 shadow-[0_18px_52px_rgba(17,24,39,0.05)] transition duration-300 hover:-translate-y-1 hover:border-[#cfeffc]"
-                initial={{ opacity: 0, y: 20 }}
-                key={feature.title}
-                transition={{ delay: index * 0.06, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                viewport={{ once: true, margin: "-80px" }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
-                <span className="grid h-11 w-11 place-items-center rounded-2xl border border-[#f5d5c3] bg-[#fff3ec] text-[#D86B3D] transition duration-300 group-hover:rotate-3">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <h3 className="mt-5 text-xl font-semibold tracking-[-0.04em] text-[#23272f]">{feature.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.text}</p>
-              </motion.article>
-            );
-          })}
-        </div>
-      </section>
-
-      <TerraceBentoGrid />
-
-      <section className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:py-24">
-        <div className="grid overflow-hidden rounded-[34px] border border-[#e6e8ec] bg-[#15171c] shadow-[0_30px_90px_rgba(17,24,39,0.16)] lg:grid-cols-[0.92fr_1.08fr]">
-          <div className="p-8 text-[#fbfcfd] sm:p-10 lg:p-12">
-            <Camera className="h-6 w-6 text-[#f7a777]" />
-            <h2 className="mt-8 max-w-lg text-5xl leading-[0.96] font-semibold tracking-[-0.065em] sm:text-6xl">
-              Every campaign win becomes reusable proof.
-            </h2>
-            <p className="mt-5 max-w-md text-sm leading-7 text-[#d5d9df]/70">
-              Verified drops, profile views, application history, and brand replies become the layer creators can carry
-              into every deal.
-            </p>
-            <Link
-              className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-[#fbfcfd] px-6 text-sm font-semibold text-[#15171c] transition duration-300 hover:-translate-y-0.5"
-              href="/signup"
-            >
-              Create account
-            </Link>
-          </div>
-          <div className="relative min-h-[520px] overflow-hidden bg-[#1e232b] p-6 sm:p-10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_24%,rgba(216,107,61,0.18),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(140,201,232,0.2),transparent_28%)]" />
-            <div className="relative grid gap-3">
-              {creatorRows.map((creator, index) => (
-                <motion.div
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-3 rounded-[24px] border border-white/10 bg-[#fbfcfd]/[0.06] p-4 text-[#fbfcfd] backdrop-blur"
-                  initial={{ opacity: 0, x: 28 }}
-                  key={creator.name}
-                  transition={{ delay: index * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <InitialsAvatar name={creator.name} className="bg-[#cfeffc] text-[#1c4458]" />
-                  <div className="min-w-0">
-                    <p className="truncate font-semibold">{creator.name}</p>
-                    <p className="text-sm text-[#d5d9df]/68">
-                      {creator.niche} / {creator.reach}
-                    </p>
-                  </div>
-                  <span className="ml-auto rounded-full border border-[#94d4f3]/20 bg-[#94d4f3]/10 px-3 py-1 text-xs font-semibold text-[#cfeffc]">
-                    {creator.status}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-            <div className="absolute right-8 bottom-8 left-8 rounded-[28px] border border-white/10 bg-[#fbfcfd] p-5 text-[#23272f] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
-              <p className="text-xs font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Saved shortlist</p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {["Rate verified", "Brief fit high", "DM ready"].map((item) => (
-                  <span
-                    className="inline-flex items-center gap-2 rounded-2xl border border-[#e6e8ec] bg-[#fbfcfd] px-3 py-2 text-xs font-semibold text-[#475467]"
-                    key={item}
-                  >
-                    <Check className="h-3.5 w-3.5 text-[#D86B3D]" />
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function DiagonalLineBackground({ reducedMotion }: { reducedMotion: boolean | null }) {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(140,201,232,0.26),transparent_30%),radial-gradient(circle_at_82%_12%,rgba(216,107,61,0.18),transparent_28%)]" />
-      <div
-        className="absolute -inset-x-28 -top-24 h-[760px] opacity-60"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(48deg, transparent 0 92px, rgba(143,154,169,0.17) 92px 93px, transparent 93px 186px)"
-        }}
-      />
-      <motion.div
-        className="absolute top-40 right-[16%] h-px w-24 rotate-45 bg-[#D86B3D]"
-        animate={reducedMotion ? { opacity: 0.7 } : { opacity: [0.2, 1, 0.2], x: [0, 18, 0] }}
-        transition={{ duration: 5.4, ease: "easeInOut", repeat: Infinity }}
-      />
-    </div>
-  );
-}
-
-function ProductShowcase({ creatorRows, prompt }: { creatorRows: LandingCreatorRow[]; prompt: string }) {
-  return (
-    <div className="relative mx-auto w-full">
-      <div className="overflow-hidden rounded-t-[34px] border border-[#e6e8ec] bg-[#f3f5f7] p-3 shadow-[0_24px_76px_rgba(17,24,39,0.13)] sm:p-4 lg:p-5">
-        <div className="rounded-t-[26px] border border-[#e0e4ea] bg-[#fbfcfd] p-3 lg:p-4">
-          <div className="mx-auto mb-3 h-1.5 w-20 rounded-full bg-[#d2d8e0]" />
-          <div className="max-h-[360px] overflow-hidden rounded-[20px] border border-[#e6e8ec] bg-[#fbfcfd] text-left xl:max-h-[390px]">
-            <div className="flex items-center justify-between border-b border-[#e6e8ec] p-3 lg:p-4">
-              <div className="flex items-center gap-2">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#15171c] text-xs font-semibold text-[#fbfcfd]">
-                  T
-                </span>
-                <span className="text-sm font-semibold text-[#23272f]">Terrace</span>
-              </div>
-              <div className="hidden w-full max-w-sm items-center gap-3 rounded-full border border-[#e6e8ec] bg-[#f7f9fb] px-4 py-2 text-sm text-[#667085] md:flex lg:max-w-lg">
-                <Search className="h-4 w-4 text-[#D86B3D]" />
-                <motion.span
-                  animate={{ opacity: 1, y: 0 }}
-                  initial={{ opacity: 0, y: 6 }}
-                  key={prompt}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {prompt}
-                </motion.span>
-              </div>
-              <Command className="h-5 w-5 text-[#98a2b3]" />
-            </div>
-
-            <div className="grid min-h-[340px] bg-[#f7f9fb] lg:grid-cols-[220px_1fr] xl:grid-cols-[250px_1fr]">
-              <aside className="hidden border-r border-[#e6e8ec] bg-[#fbfcfd] p-3 lg:block lg:p-4">
-                {["Feed", "Search", "Briefs", "Messages"].map((item, index) => (
-                  <div
-                    className={cn(
-                      "mb-1.5 rounded-2xl px-4 py-2.5 text-sm font-semibold text-[#667085]",
-                      index === 1 && "bg-[#fff3ec] text-[#D86B3D]"
-                    )}
-                    key={item}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </aside>
-
-              <div className="grid gap-3 p-3 sm:p-4 lg:grid-cols-[1fr_292px] lg:gap-4 lg:p-5 xl:grid-cols-[1fr_330px]">
-                <div className="grid gap-3">
-                  {creatorRows.map((creator, index) => (
-                    <motion.div
-                      className="rounded-[18px] border border-[#e6e8ec] bg-[#fbfcfd] p-3 shadow-[0_10px_26px_rgba(17,24,39,0.04)] lg:p-4"
-                      initial={{ opacity: 0, y: 12 }}
-                      key={creator.name}
-                      transition={{ delay: 0.42 + index * 0.08, duration: 0.42 }}
-                      animate={{ opacity: 1, y: 0 }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <InitialsAvatar name={creator.name} />
-                        <div className="min-w-0">
-                          <p className="truncate font-semibold text-[#23272f]">{creator.name}</p>
-                          <p className="text-sm text-[#667085]">
-                            {creator.niche} / {creator.reach}
-                          </p>
-                        </div>
-                        <span className="ml-auto rounded-full border border-[#cfeffc] bg-[#f1faff] px-3 py-1 text-xs font-semibold text-[#2b8fc4]">
-                          {creator.status}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="rounded-[20px] border border-[#e6e8ec] bg-[#15171c] p-4 text-[#fbfcfd] lg:p-5">
-                  <p className="text-xs font-semibold tracking-[0.16em] text-[#f7a777] uppercase">Brief scan</p>
-                  <p className="mt-2 text-lg leading-tight font-semibold tracking-[-0.05em] lg:text-xl">
-                    Beauty creators, women 18-30, strong TikTok demos.
-                  </p>
-                  <div className="mt-3 grid gap-1.5">
-                    {proofStats.map(([value, label]) => (
-                      <div
-                        className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#fbfcfd]/[0.07] px-3 py-2 text-xs"
-                        key={label}
-                      >
-                        <span className="text-[#d5d9df]/70">{label}</span>
-                        <span className="font-semibold text-[#fbfcfd]">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mx-auto h-3 w-[86%] rounded-b-[26px] border-x border-b border-[#e0e4ea] bg-[#e9edf2]" />
       </div>
-    </div>
+    </section>
   );
 }
 
-function SignalBoard({ message }: { message: string }) {
-  return (
-    <div className="grid min-h-[420px] content-between rounded-[30px] border border-[#e6e8ec] bg-[#15171c] p-6 text-[#fbfcfd] shadow-[0_20px_58px_rgba(17,24,39,0.13)] sm:p-8">
-      <div>
-        <p className="text-xs font-semibold tracking-[0.16em] text-[#f7a777] uppercase">Live signal board</p>
-        <h2 className="mt-3 max-w-md text-3xl leading-tight font-semibold tracking-[-0.055em] sm:text-4xl">
-          Live deal signals, not another spreadsheet.
-        </h2>
-        <p className="mt-3 max-w-md text-sm leading-6 text-[#d5d9df]/68">
-          Brief activity, creator readiness, and proof updates stay visible as the marketplace moves.
-        </p>
-      </div>
-      <TextFlippingBoard
-        characterClassName="h-8 min-w-6 rounded-md border-white/10 bg-[#fbfcfd]/[0.07] px-1.5 text-sm text-[#fbfcfd] sm:h-9 sm:min-w-7 sm:text-base"
-        className="mt-7 rounded-[22px] border-white/10 bg-[#20242c] p-3 shadow-none"
-        key={message}
-        text={message}
-      />
-    </div>
-  );
-}
-
-function CreatorMarketsPanel({ reducedMotion }: { reducedMotion: boolean | null }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const shineX = useTransform(x, [-180, 180], ["18%", "82%"]);
-  const shineY = useTransform(y, [-180, 180], ["18%", "72%"]);
-  const marketBackground = useTransform(
-    [shineX, shineY],
-    ([sx, sy]) =>
-      `radial-gradient(circle at ${sx} ${sy}, rgba(140,201,232,0.22), transparent 34%), radial-gradient(circle at 20% 78%, rgba(216,107,61,0.12), transparent 28%)`
-  );
-
-  const markets = [
-    { city: "Los Angeles", niche: "Beauty", fit: "96%", tone: "bg-[#fff3ec] text-[#9d4c27]" },
-    { city: "New York", niche: "Fashion", fit: "91%", tone: "bg-[#eff8ff] text-[#246b92]" },
-    { city: "London", niche: "Lifestyle", fit: "88%", tone: "bg-[#f6f7f9] text-[#475467]" },
-    { city: "Toronto", niche: "Wellness", fit: "84%", tone: "bg-[#fff8e8] text-[#886018]" }
-  ];
+function HeroPhotoCard({
+  photo,
+  index,
+  sx,
+  sy,
+  reducedMotion
+}: {
+  photo: (typeof heroPhotos)[number];
+  index: number;
+  sx: MotionValue<number>;
+  sy: MotionValue<number>;
+  reducedMotion: boolean | null;
+}) {
+  const x = useTransform(sx, (v) => v * photo.depth);
+  const y = useTransform(sy, (v) => v * photo.depth * 0.6);
 
   return (
-    <motion.div
-      className="relative min-h-[420px] overflow-hidden rounded-[30px] border border-[#e6e8ec] bg-[#fbfcfd] p-6 shadow-[0_18px_52px_rgba(17,24,39,0.06)] sm:p-8"
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        x.set(event.clientX - rect.left - rect.width / 2);
-        y.set(event.clientY - rect.top - rect.height / 2);
-      }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
+    <motion.figure
+      animate={{ opacity: 1, y: 0, rotate: photo.rotate, scale: 1 }}
+      className={cn(
+        "absolute overflow-hidden rounded-[22px] bg-[#fffdfa] p-2.5 pb-4 shadow-[0_24px_70px_rgba(60,38,20,0.18)]",
+        index === 0 && "top-2 left-0 z-10 w-[58%]",
+        index === 1 && "top-[26%] right-0 z-20 w-[62%]",
+        index === 2 && "bottom-0 left-[8%] z-30 w-[56%]"
+      )}
+      initial={reducedMotion ? false : { opacity: 0, y: 80, rotate: photo.rotate * 3, scale: 0.94 }}
+      style={reducedMotion ? undefined : { x, y }}
+      transition={{ delay: 0.25 + index * 0.16, duration: 0.9, ease: easeOutQuint }}
     >
-      <motion.div
-        aria-hidden
-        className="absolute inset-0 opacity-80"
-        style={{
-          background: reducedMotion
-            ? "radial-gradient(circle at 70% 22%, rgba(140,201,232,0.18), transparent 34%)"
-            : marketBackground
-        }}
-      />
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
+        <Image
+          alt={photo.alt}
+          className="object-cover"
+          fill
+          priority={index < 2}
+          sizes="(max-width: 1024px) 60vw, 300px"
+          src={photo.src}
+        />
+      </div>
+      <figcaption className="flex items-center justify-between px-1.5 pt-2.5">
+        <span className="text-[13px] font-semibold text-[#221c16]">{photo.handle}</span>
+        <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[photo.platform])}>
+          {photo.platform}
+        </span>
+      </figcaption>
+    </motion.figure>
+  );
+}
 
-      <div className="relative">
-        <p className="text-xs font-semibold tracking-[0.16em] text-[#D86B3D] uppercase">Creator markets</p>
-        <h2 className="mt-3 max-w-md text-3xl leading-tight font-semibold tracking-[-0.055em] text-[#23272f] sm:text-4xl">
-          See where the right creators are active.
-        </h2>
-        <p className="mt-3 max-w-md text-sm leading-6 text-[#667085]">
-          Market signals stay readable: location, niche, match fit, and outreach readiness.
+/* ── Live row: real creators from the marketplace ─────────────────────── */
+
+function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
+  return (
+    <section className="border-y border-[#eadfd2] bg-[#fffdfa]">
+      <div className="mx-auto flex max-w-[1320px] flex-col gap-5 px-5 py-8 sm:px-8 md:flex-row md:items-center md:gap-10">
+        <p className="shrink-0 text-sm font-semibold text-[#9a6a4b]">
+          On the terrace
+          <span className="relative mx-2 inline-flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c75b2e] opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c75b2e]" />
+          </span>
+          right now
         </p>
-      </div>
-
-      <div className="relative mt-7 grid gap-3">
-        {markets.map((market, index) => (
-          <motion.div
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3 rounded-[18px] border border-[#e6e8ec] bg-[#fbfcfd]/90 p-3 shadow-[0_10px_28px_rgba(17,24,39,0.04)]"
-            initial={{ opacity: 0, x: 16 }}
-            key={market.city}
-            transition={{ delay: index * 0.08, duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span
-              className={cn(
-                "grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-xs font-semibold",
-                market.tone
-              )}
-            >
-              {market.fit}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold text-[#23272f]">{market.city}</span>
-              <span className="block truncate text-sm text-[#667085]">{market.niche} creators trending</span>
-            </span>
-            <span className="rounded-full border border-[#cfeffc] bg-[#f1faff] px-3 py-1 text-xs font-semibold text-[#2b8fc4]">
-              Ready
-            </span>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="relative mt-5 rounded-[22px] border border-[#e6e8ec] bg-[#15171c] p-4 text-[#fbfcfd]">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-semibold tracking-[0.16em] text-[#f7a777] uppercase">Search heat</span>
-          <span className="rounded-full bg-[#fbfcfd]/10 px-3 py-1 text-xs font-semibold text-[#d5d9df]">Live</span>
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {["Beauty", "UGC", "Skincare"].map((tag, index) => (
+        <div className="flex flex-1 flex-wrap gap-x-8 gap-y-3">
+          {creatorRows.map((creator, index) => (
             <motion.span
-              animate={reducedMotion ? { opacity: 1 } : { opacity: [0.72, 1, 0.72] }}
-              className="rounded-2xl border border-white/10 bg-[#fbfcfd]/[0.07] px-3 py-2 text-center text-xs font-semibold text-[#d5d9df]"
-              key={tag}
-              transition={{ delay: index * 0.2, duration: 2.6, repeat: Infinity }}
+              className="flex items-center gap-2.5 text-sm"
+              initial={{ opacity: 0, y: 10 }}
+              key={creator.name}
+              transition={{ delay: index * 0.09, duration: 0.5, ease: easeOutQuint }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
-              {tag}
+              <Initials name={creator.name} />
+              <span className="font-semibold text-[#221c16]">{creator.name}</span>
+              <span className="text-[#8a7a69]">
+                {creator.niche} · {creator.reach}
+              </span>
             </motion.span>
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+/* ── Creator story ─────────────────────────────────────────────────────── */
+
+function CreatorStory() {
+  return (
+    <section className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:py-32">
+      <Reveal>
+        <div className="relative">
+          <div className="relative aspect-[5/6] overflow-hidden rounded-[28px]">
+            <Image
+              alt="Hands steadying a camera between takes"
+              className="object-cover"
+              fill
+              sizes="(max-width: 1024px) 90vw, 520px"
+              src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1100&q=80"
+            />
+          </div>
+          {/* The one product chip this section needs: a post arriving from a platform. */}
+          <motion.div
+            className="absolute -right-4 bottom-10 flex items-center gap-3 rounded-2xl bg-[#fffdfa] py-3 pr-5 pl-4 shadow-[0_18px_50px_rgba(60,38,20,0.2)] sm:-right-8"
+            initial={{ opacity: 0, x: 32 }}
+            transition={{ delay: 0.3, duration: 0.7, ease: easeOutQuint }}
+            viewport={{ once: true, margin: "-120px" }}
+            whileInView={{ opacity: 1, x: 0 }}
+          >
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fdeee4] text-[13px] font-bold text-[#b4490f]">
+              IG
+            </span>
+            <span className="text-sm">
+              <span className="block font-semibold text-[#221c16]">New post synced</span>
+              <span className="text-[#8a7a69]">added to your proof</span>
+            </span>
+          </motion.div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.12}>
+        <p className="text-sm font-semibold text-[#9a6a4b]">For creators</p>
+        <h2 className="mt-4 max-w-[18ch] font-serif text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-bold tracking-[-0.03em]">
+          Publish once. It counts everywhere.
+        </h2>
+        <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6b5d4f]">
+          Every post you publish flows into one profile with your niche, your audience, and your rates. No media kit to
+          keep alive; the work speaks while you shoot the next thing.
+        </p>
+        <ul className="mt-8 grid max-w-[34rem] gap-4">
+          {[
+            ["Synced platforms", "Instagram, TikTok, and YouTube posts land in your feed automatically."],
+            ["Gigs that fit", "Apply to brand briefs matched to your niche, audience, and rate."],
+            ["Ranks", "Climb your niche leaderboard as your work compounds."]
+          ].map(([title, body]) => (
+            <li className="flex gap-4" key={title}>
+              <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#c75b2e]" />
+              <p className="text-[15px] leading-7 text-[#6b5d4f]">
+                <strong className="font-semibold text-[#221c16]">{title}.</strong> {body}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ── Brand story ───────────────────────────────────────────────────────── */
+
+const brandResults = [
+  { name: "Amara Cole", niche: "Beauty · routine videos", reach: "412K", open: true },
+  { name: "Jules Ortiz", niche: "Skincare · UGC", reach: "188K", open: true },
+  { name: "Dana Reyes", niche: "Lifestyle · vlogs", reach: "1.1M", open: false }
+];
+
+function BrandStory() {
+  return (
+    <section className="bg-[#f3eadf]">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
+        <Reveal className="order-2 lg:order-1">
+          <p className="text-sm font-semibold text-[#9a6a4b]">For brands</p>
+          <h2 className="mt-4 max-w-[16ch] font-serif text-[clamp(34px,4.4vw,60px)] leading-[1.02] font-bold tracking-[-0.03em]">
+            Hire from the work itself.
+          </h2>
+          <p className="mt-6 max-w-[34rem] text-lg leading-8 text-[#6b5d4f]">
+            Describe the campaign in plain language. Terrace reads niche, audience, growth, and past brand work, then
+            puts real creators in front of you with their proof attached. Shortlist, message, book: one thread from
+            brief to deal.
+          </p>
+          <Link
+            className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#221c16]"
+            href="/jobs/new"
+            prefetch={false}
+          >
+            Post your first gig
+            <ArrowUpRight className="h-4 w-4 text-[#c75b2e] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
+        </Reveal>
+
+        <Reveal className="order-1 lg:order-2" delay={0.12}>
+          <div className="rounded-[26px] bg-[#fffdfa] p-5 shadow-[0_30px_80px_rgba(60,38,20,0.12)] sm:p-6">
+            <p className="rounded-2xl bg-[#f6efe6] px-4 py-3 text-[15px] text-[#6b5d4f]">
+              “Beauty creators in LA with strong routine videos”
+            </p>
+            <div className="mt-4 grid gap-2.5">
+              {brandResults.map((row, index) => (
+                <motion.div
+                  className="flex items-center gap-3 rounded-2xl border border-[#f0e7da] px-4 py-3"
+                  initial={{ opacity: 0, y: 14 }}
+                  key={row.name}
+                  transition={{ delay: 0.25 + index * 0.12, duration: 0.55, ease: easeOutQuint }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                >
+                  <Initials name={row.name} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-[#221c16]">{row.name}</p>
+                    <p className="truncate text-[13px] text-[#8a7a69]">{row.niche}</p>
+                  </div>
+                  <span className="text-sm font-semibold text-[#221c16] tabular-nums">{row.reach}</span>
+                  <span
+                    className={cn(
+                      "rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                      row.open ? "bg-[#e7f3ea] text-[#22663a]" : "bg-[#f1ece5] text-[#8a7a69]"
+                    )}
+                  >
+                    {row.open ? "Open" : "Booked"}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ── Proof section: dark, warm, the brand's quiet flex ─────────────────── */
+
+function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ offset: ["start end", "end start"], target: sectionRef });
+  const glowY = useTransform(scrollYProgress, [0, 1], ["-12%", "16%"]);
+
+  return (
+    <section className="relative overflow-hidden bg-[#1d1813] text-[#faf5ef]" ref={sectionRef}>
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 h-[120%]"
+        style={{
+          background:
+            "radial-gradient(900px 520px at 24% 30%, rgba(199,91,46,0.22), transparent 60%), radial-gradient(640px 420px at 86% 70%, rgba(140,201,232,0.1), transparent 55%)",
+          y: glowY
+        }}
+      />
+      <div className="relative mx-auto grid max-w-[1320px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-36">
+        <Reveal>
+          <h2 className="max-w-[14ch] font-serif text-[clamp(38px,5vw,72px)] leading-[1] font-bold tracking-[-0.03em]">
+            Proof travels with you.
+          </h2>
+          <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#cdbfae]">
+            Campaign wins, brand replies, and finished work attach to your profile, not to a thread that dies when the
+            deal closes. The next negotiation starts from everything you have already done.
+          </p>
+          <Link
+            className="mt-9 inline-flex h-13 items-center gap-2 rounded-full bg-[#faf5ef] px-8 text-[15px] font-semibold text-[#221c16] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+            href="/signup"
+          >
+            Start your profile
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <div className="grid gap-3">
+            {creatorRows.map((creator, index) => (
+              <motion.div
+                className="flex items-center gap-4 rounded-2xl border border-[#faf5ef]/[0.09] bg-[#faf5ef]/[0.05] p-4"
+                initial={{ opacity: 0, x: 36 }}
+                key={creator.name}
+                transition={{ delay: index * 0.12, duration: 0.6, ease: easeOutQuint }}
+                viewport={{ once: true, margin: "-100px" }}
+                whileInView={{ opacity: 1, x: 0 }}
+              >
+                <Initials className="bg-[#3a2d21] text-[#e8b18f]" name={creator.name} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold">{creator.name}</p>
+                  <p className="truncate text-sm text-[#a8967f]">
+                    {creator.niche} · {creator.reach}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-semibold",
+                    creator.status === "Open" ? "bg-[#2a4232]/80 text-[#a4d8b4]" : "bg-[#faf5ef]/10 text-[#cdbfae]"
+                  )}
+                >
+                  {creator.status}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ── Closing: terracotta drench ────────────────────────────────────────── */
+
+function ClosingCta() {
+  return (
+    <section className="bg-[#c75b2e]">
+      <div className="mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
+        <Reveal>
+          <h2 className="max-w-[12ch] font-serif text-[clamp(52px,9vw,128px)] leading-[0.95] font-bold tracking-[-0.035em] text-[#faf5ef]">
+            Pull up a chair.
+          </h2>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div className="flex flex-wrap items-center gap-5">
+            <Link
+              className="inline-flex h-14 items-center gap-2 rounded-full bg-[#221c16] px-9 text-base font-semibold text-[#faf5ef] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
+              href="/signup"
+            >
+              Start free
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <p className="text-[15px] font-medium text-[#f6d9c8]">Free for creators. Brands pay when they book.</p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ── Shared bits ───────────────────────────────────────────────────────── */
+
+function Reveal({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 36 }}
+      transition={{ delay, duration: 0.75, ease: easeOutQuint }}
+      viewport={{ once: true, margin: "-90px" }}
+      whileInView={{ opacity: 1, y: 0 }}
+    >
+      {children}
     </motion.div>
   );
 }
 
-function InitialsAvatar({ name, className }: { name: string; className?: string }) {
+function Initials({ name, className }: { name: string; className?: string }) {
   return (
-    <div
+    <span
       className={cn(
-        "grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#f7c7ad] text-xs font-semibold text-[#7a3419]",
+        "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#f3d9c6] text-xs font-bold text-[#8a4317]",
         className
       )}
     >
@@ -509,6 +528,6 @@ function InitialsAvatar({ name, className }: { name: string; className?: string 
         .map((part) => part[0])
         .join("")
         .slice(0, 2)}
-    </div>
+    </span>
   );
 }
