@@ -2,22 +2,27 @@ import { SignIn } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Sparkles } from "lucide-react";
 import { clerkLightAppearance } from "@/components/auth/clerk-appearance";
+import { isLocalDemoRequest } from "@/lib/auth/local-demo";
 import { db } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 
 export default async function LoginPage() {
   // Same pattern as /signup — short-circuit when there's already a session
   // so signed-in users don't watch the login form flash for a few seconds.
-  const { userId } = await auth();
-  if (userId) {
-    const [row] = await db.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (row?.onboardedAt) {
-      redirect(row.type === "brand_member" ? "/dashboard" : "/feed");
+  // Local-demo / E2E bypass skips Clerk middleware, so auth() would throw.
+  if (!isLocalDemoRequest(await headers())) {
+    const { userId } = await auth();
+    if (userId) {
+      const [row] = await db.select().from(users).where(eq(users.clerkId, userId)).limit(1);
+      if (row?.onboardedAt) {
+        redirect(row.type === "brand_member" ? "/dashboard" : "/feed");
+      }
+      redirect("/onboarding");
     }
-    redirect("/onboarding");
   }
 
   return (
