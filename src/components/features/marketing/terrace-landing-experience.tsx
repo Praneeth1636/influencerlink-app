@@ -520,7 +520,7 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
   const scene = brandScenes[sceneIndex];
 
   return (
-    <section className="border-t border-[#f1f1ef] bg-white">
+    <section className="bg-white">
       <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
         <Reveal className="order-2 lg:order-1">
           <p className="text-sm font-semibold text-[#2b8fc4]">For brands</p>
@@ -623,7 +623,7 @@ function ProofSection({
   }, [reducedMotion]);
 
   return (
-    <section className="border-t border-[#f1f1ef] bg-white">
+    <section className="bg-white">
       <div className="mx-auto grid max-w-[1320px] gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:py-32">
         <Reveal>
           <p className="text-sm font-semibold text-[#e08550]">Your record</p>
@@ -693,7 +693,7 @@ function ClosingCta() {
   const router = useRouter();
 
   return (
-    <section className="relative overflow-hidden border-t border-[#f1f1ef] bg-white">
+    <section className="relative overflow-hidden bg-white">
       <motion.div
         animate={{ x: ["-4%", "4%", "-4%"], y: ["-3%", "3%", "-3%"] }}
         aria-hidden
