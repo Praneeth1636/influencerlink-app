@@ -4,19 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  type MotionValue,
-  type Variants
-} from "motion/react";
-import { Magnetic, Marquee, Typewriter } from "@/components/features/marketing/landing-motion";
+import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type Variants } from "motion/react";
+import { Magnetic } from "@/components/features/marketing/landing-motion";
 import { AttractButton } from "@/components/ui/attract-button";
 import { TextFlippingBoard } from "@/components/ui/text-flipping-board";
 import { cn } from "@/lib/utils";
@@ -54,12 +44,6 @@ const heroStagger: Variants = {
   hidden: {},
   visible: { transition: { delayChildren: 0.05, staggerChildren: 0.11 } }
 };
-
-const searchPrompts = [
-  "Beauty creators in LA with strong routine videos",
-  "UGC skincare creators with a US audience",
-  "Lifestyle vloggers open to collabs this week"
-];
 
 const heroPhotos = [
   {
@@ -100,7 +84,7 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
   return (
     <div className="min-h-screen bg-white font-sans text-[#37352f]">
       <Hero reducedMotion={prefersReducedMotion} />
-      <LiveRow creatorRows={creatorRows} />
+      <TheTable creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
       <CreatorStory reducedMotion={prefersReducedMotion} />
       <BrandStory reducedMotion={prefersReducedMotion} />
       <ProofSection creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
@@ -113,27 +97,9 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
 
 function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
   const stackRef = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 18 });
-  const sy = useSpring(my, { stiffness: 60, damping: 18 });
-
-  function handleMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (reducedMotion || !stackRef.current) return;
-    const rect = stackRef.current.getBoundingClientRect();
-    mx.set((event.clientX - rect.left - rect.width / 2) / rect.width);
-    my.set((event.clientY - rect.top - rect.height / 2) / rect.height);
-  }
 
   return (
-    <section
-      className="relative overflow-hidden"
-      onMouseLeave={() => {
-        mx.set(0);
-        my.set(0);
-      }}
-      onMouseMove={handleMove}
-    >
+    <section className="relative overflow-hidden">
       {/* Soft orange + blue wash with the diagonal-line texture. */}
       <div
         aria-hidden
@@ -179,57 +145,52 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
             post gigs, and book you in the same conversation.
           </motion.p>
 
-          <motion.div className="mt-9 flex flex-wrap items-center gap-4" variants={rise}>
-            <Magnetic>
+          <motion.div className="mt-9" variants={rise}>
+            <ClaimHandle reducedMotion={reducedMotion} />
+            <p className="mt-4 text-sm text-[#9b9a97]">
+              Free for creators.{" "}
               <Link
-                className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#37352f] px-8 text-[15px] font-semibold text-white shadow-[0_14px_36px_rgba(17,24,39,0.14)] transition-shadow duration-300 hover:shadow-[0_20px_46px_rgba(17,24,39,0.2)]"
-                href="/signup"
+                className="font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-4 transition-colors hover:decoration-[#2b8fc4]"
+                href="/search"
+                prefetch={false}
               >
-                Claim your handle
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                Or browse who is already here
               </Link>
-            </Magnetic>
-            <Link
-              className="inline-flex h-13 items-center rounded-full px-5 text-[15px] font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-8 transition-colors hover:decoration-[#2b8fc4]"
-              href="/search"
-              prefetch={false}
-            >
-              Browse creators
-            </Link>
+            </p>
           </motion.div>
         </motion.div>
 
-        {/* Layered creator photographs settle in like prints on a table. */}
+        {/* Loose creator prints: pick one up, throw it, it springs back. */}
         <div className="relative mx-auto h-[460px] w-full max-w-[440px] sm:h-[520px]" ref={stackRef}>
+          <motion.p
+            animate={{ opacity: 1 }}
+            className="absolute -top-9 right-2 z-40 flex items-end gap-1 text-[13px] text-[#9b9a97] italic"
+            initial={{ opacity: 0 }}
+            transition={{ delay: 2, duration: 0.8 }}
+          >
+            go on, move one
+            <svg
+              aria-hidden
+              className="h-7 w-9 translate-y-4 text-[#D86B3D]"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+              viewBox="0 0 48 40"
+            >
+              <path d="M4 4c14 2 28 12 36 28" />
+              <path d="m31 28 9 4 2-10" />
+            </svg>
+          </motion.p>
           {heroPhotos.map((photo, index) => (
             <HeroPhotoCard
+              dragArea={stackRef}
               index={index}
               key={photo.handle}
               photo={photo}
               reducedMotion={reducedMotion}
-              sx={sx}
-              sy={sy}
             />
           ))}
-
-          {/* A brand search pill typing real queries over the prints. */}
-          <motion.div
-            animate={
-              reducedMotion
-                ? { opacity: 1, y: 0 }
-                : {
-                    opacity: 1,
-                    y: [0, -6, 0],
-                    transition: { y: { delay: 2.2, duration: 5.5, ease: "easeInOut", repeat: Infinity } }
-                  }
-            }
-            className="absolute -bottom-7 left-1/2 z-40 flex w-[min(94%,380px)] -translate-x-1/2 items-center gap-2.5 rounded-full border border-[#e9e9e7] bg-white/95 px-4 py-3 text-[13px] text-[#787774] shadow-[0_18px_48px_rgba(17,24,39,0.14)] backdrop-blur"
-            initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-            transition={{ delay: 1.05, duration: 0.7, ease: easeOutQuint }}
-          >
-            <Search className="h-4 w-4 shrink-0 text-[#D86B3D]" />
-            <Typewriter className="truncate" phrases={searchPrompts} />
-          </motion.div>
         </div>
       </div>
     </section>
@@ -239,42 +200,44 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
 function HeroPhotoCard({
   photo,
   index,
-  sx,
-  sy,
+  dragArea,
   reducedMotion
 }: {
   photo: (typeof heroPhotos)[number];
   index: number;
-  sx: MotionValue<number>;
-  sy: MotionValue<number>;
+  dragArea: React.RefObject<HTMLDivElement | null>;
   reducedMotion: boolean | null;
 }) {
-  const x = useTransform(sx, (v) => v * photo.depth);
-  const y = useTransform(sy, (v) => v * photo.depth * 0.6);
-
   return (
     <motion.figure
       animate={{ opacity: 1, y: 0, rotate: photo.rotate, scale: 1 }}
       className={cn(
-        "absolute overflow-hidden rounded-[22px] border border-[#f1f1ef] bg-white p-2.5 pb-4 shadow-[0_24px_70px_rgba(17,24,39,0.14)]",
+        "absolute cursor-grab overflow-hidden rounded-[22px] border border-[#f1f1ef] bg-white p-2.5 pb-4 shadow-[0_24px_70px_rgba(17,24,39,0.14)] select-none active:cursor-grabbing",
         index === 0 && "top-2 left-0 z-10 w-[58%]",
         index === 1 && "top-[26%] right-0 z-20 w-[62%]",
         index === 2 && "bottom-0 left-[8%] z-30 w-[56%]"
       )}
+      drag
+      dragConstraints={dragArea}
+      dragElastic={0.45}
+      dragSnapToOrigin
+      dragTransition={{ bounceDamping: 14, bounceStiffness: 220 }}
       initial={reducedMotion ? false : { opacity: 0, y: 80, rotate: photo.rotate * 3, scale: 0.94 }}
-      style={reducedMotion ? undefined : { x, y }}
       transition={{ delay: 0.25 + index * 0.16, duration: 0.9, ease: easeOutQuint }}
-      whileHover={reducedMotion ? undefined : { rotate: 0, scale: 1.02 }}
+      whileDrag={{ rotate: 0, scale: 1.06, zIndex: 50, boxShadow: "0 36px 90px rgba(17,24,39,0.24)" }}
+      whileHover={reducedMotion ? undefined : { rotate: photo.rotate * 0.4, scale: 1.02 }}
     >
       {/* Idle drift keeps the stack alive after the entrance settles. */}
       <motion.div
         animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
+        className="pointer-events-none"
         transition={{ delay: 1.6 + index * 0.45, duration: 5 + index, ease: "easeInOut", repeat: Infinity }}
       >
         <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
           <Image
             alt={photo.alt}
             className="object-cover"
+            draggable={false}
             fill
             priority={index < 2}
             sizes="(max-width: 1024px) 60vw, 300px"
@@ -292,31 +255,134 @@ function HeroPhotoCard({
   );
 }
 
-/* ── Live row: an infinite marquee of real creators ────────────────────── */
+/* ── Claim your handle: the CTA is the product ─────────────────────────── */
 
-function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
+const placeholderHandles = ["yourname", "amara.films", "goldenhourgrace", "dispatch.daily"];
+
+function ClaimHandle({ reducedMotion }: { reducedMotion: boolean | null }) {
+  const router = useRouter();
+  const [handle, setHandle] = useState("");
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  useEffect(() => {
+    if (reducedMotion || handle) return undefined;
+    const timer = window.setInterval(
+      () => setPlaceholderIndex((index) => (index + 1) % placeholderHandles.length),
+      2400
+    );
+    return () => window.clearInterval(timer);
+  }, [handle, reducedMotion]);
+
   return (
-    <section className="border-y border-[#e9e9e7] bg-white">
-      <div className="mx-auto flex max-w-[1320px] flex-col gap-5 px-5 py-8 sm:px-8 md:flex-row md:items-center md:gap-10">
-        <p className="shrink-0 text-sm font-semibold text-[#bf5a30]">
-          On the terrace
+    <form
+      className="flex h-14 w-full max-w-[26rem] items-center gap-1 rounded-full border border-[#e9e9e7] bg-white pr-2 pl-5 shadow-[0_14px_40px_rgba(17,24,39,0.08)] transition-all duration-300 focus-within:border-[#e7a27c] focus-within:shadow-[0_14px_40px_rgba(216,107,61,0.14),0_0_0_4px_rgba(216,107,61,0.1)]"
+      onSubmit={(event) => {
+        event.preventDefault();
+        router.push(handle ? `/signup?handle=${encodeURIComponent(handle)}` : "/signup");
+      }}
+    >
+      <span className="shrink-0 text-[15px] font-medium text-[#9b9a97]">terrace.app/@</span>
+      <div className="relative min-w-0 flex-1">
+        {!handle && (
+          <AnimatePresence initial={false} mode="wait">
+            <motion.span
+              animate={{ opacity: 1, y: 0 }}
+              className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[15px] text-[#c9c8c5]"
+              exit={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: 10 }}
+              key={placeholderIndex}
+              transition={{ duration: 0.25, ease: easeOutQuint }}
+            >
+              {placeholderHandles[placeholderIndex]}
+            </motion.span>
+          </AnimatePresence>
+        )}
+        <input
+          aria-label="Choose your Terrace handle"
+          autoComplete="off"
+          className="w-full bg-transparent text-[15px] font-semibold text-[#37352f] outline-none"
+          maxLength={30}
+          name="handle"
+          onChange={(event) => setHandle(event.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ""))}
+          spellCheck={false}
+          type="text"
+          value={handle}
+        />
+      </div>
+      <button
+        aria-label="Claim your handle"
+        className="group grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-full bg-[#37352f] text-white transition-all duration-300 hover:scale-105 hover:bg-[#D86B3D] active:scale-95"
+        type="submit"
+      >
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:-rotate-45" />
+      </button>
+    </form>
+  );
+}
+
+/* ── The table: creators seated along one line, one seat open ──────────── */
+
+function TheTable({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]; reducedMotion: boolean | null }) {
+  const seats = creatorRows.slice(0, 4);
+
+  return (
+    <section className="overflow-hidden border-y border-[#e9e9e7] bg-white">
+      <div className="mx-auto max-w-[1320px] px-5 pt-10 pb-14 sm:px-8">
+        <p className="text-sm font-semibold text-[#bf5a30]">
+          At the table
           <span className="relative mx-2 inline-flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#D86B3D] opacity-60" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-[#D86B3D]" />
           </span>
           right now
         </p>
-        <Marquee className="min-w-0 flex-1" duration={26}>
-          {[...creatorRows, ...creatorRows].map((creator, index) => (
-            <span className="flex items-center gap-2.5 text-sm whitespace-nowrap" key={`${creator.name}-${index}`}>
-              <Initials name={creator.name} />
-              <span className="font-semibold text-[#37352f]">{creator.name}</span>
-              <span className="text-[#9b9a97]">
-                {creator.niche} · {creator.reach}
-              </span>
-            </span>
-          ))}
-        </Marquee>
+
+        <div className="relative mt-14">
+          {/* The table edge runs the full bleed. */}
+          <div aria-hidden className="absolute top-7 -right-24 -left-24 h-px bg-[#37352f]/15" />
+          <div className="flex items-start justify-between gap-6 overflow-x-auto pb-1 sm:gap-10">
+            {seats.map((creator, index) => (
+              <motion.div
+                className="flex min-w-[120px] flex-col items-center text-center"
+                initial={{ opacity: 0, y: 22, scale: 0.8 }}
+                key={creator.name}
+                transition={{ delay: index * 0.12, duration: 0.55, ease: easeOutQuint }}
+                viewport={{ once: true, margin: "-60px" }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              >
+                <Initials className="h-14 w-14 text-sm ring-4 ring-white" name={creator.name} />
+                <p className="mt-3 text-sm font-semibold text-[#37352f]">{creator.name}</p>
+                <p className="mt-0.5 text-[13px] text-[#9b9a97]">
+                  {creator.niche} · {creator.reach}
+                </p>
+              </motion.div>
+            ))}
+
+            {/* The open seat. */}
+            <motion.div
+              className="flex min-w-[120px] flex-col items-center text-center"
+              initial={{ opacity: 0, y: 22, scale: 0.8 }}
+              transition={{ delay: seats.length * 0.12, duration: 0.55, ease: easeOutQuint }}
+              viewport={{ once: true, margin: "-60px" }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            >
+              <motion.div
+                animate={reducedMotion ? undefined : { rotate: [0, -5, 5, 0] }}
+                transition={{ delay: 4, duration: 0.6, repeat: Infinity, repeatDelay: 3.6 }}
+              >
+                <Link
+                  aria-label="Take your seat: create your Terrace profile"
+                  className="grid h-14 w-14 place-items-center rounded-full border-2 border-dashed border-[#D86B3D]/50 bg-[#fff3ec]/60 text-[#D86B3D] ring-4 ring-white transition-colors duration-300 hover:border-[#D86B3D] hover:bg-[#fff3ec]"
+                  href="/signup"
+                >
+                  <Plus className="h-5 w-5" />
+                </Link>
+              </motion.div>
+              <p className="mt-3 text-sm font-semibold text-[#D86B3D]">your seat</p>
+              <p className="mt-0.5 text-[13px] text-[#9b9a97]">it&apos;s open</p>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
