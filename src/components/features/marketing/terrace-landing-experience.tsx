@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Heart, MessageCircle, Send } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type Variants } from "motion/react";
 import { Magnetic } from "@/components/features/marketing/landing-motion";
 import { AttractButton } from "@/components/ui/attract-button";
@@ -45,30 +44,34 @@ const heroStagger: Variants = {
   visible: { transition: { delayChildren: 0.05, staggerChildren: 0.11 } }
 };
 
-const heroPhotos = [
+type HeroCard =
+  | {
+      kind: "post";
+      platform: "Instagram" | "TikTok";
+      handle: string;
+      name: string;
+      caption: string;
+      rotate: number;
+    }
+  | { kind: "profile"; rotate: number };
+
+const heroCards: HeroCard[] = [
   {
-    src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
-    alt: "Creator in a mustard jacket, mid-shoot against a warm wall",
+    kind: "post",
     platform: "Instagram",
     handle: "@amara.films",
-    rotate: -5,
-    depth: 28
+    name: "Amara Films",
+    caption: "Golden hour set. Full breakdown in the slides.",
+    rotate: -5
   },
+  { kind: "profile", rotate: 3.5 },
   {
-    src: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80",
-    alt: "Creator laughing in golden-hour light",
+    kind: "post",
     platform: "TikTok",
     handle: "@goldenhourgrace",
-    rotate: 3.5,
-    depth: 46
-  },
-  {
-    src: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=900&q=80",
-    alt: "Street-style creator checking the frame",
-    platform: "YouTube",
-    handle: "@dispatch.daily",
-    rotate: -2,
-    depth: 64
+    name: "Golden Hour Grace",
+    caption: "The three transitions everyone keeps asking about.",
+    rotate: -2
   }
 ];
 
@@ -83,8 +86,7 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
 
   return (
     <div className="min-h-screen bg-white font-sans text-[#37352f]">
-      <Hero reducedMotion={prefersReducedMotion} />
-      <TheTable creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
+      <Hero creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
       <CreatorStory reducedMotion={prefersReducedMotion} />
       <BrandStory reducedMotion={prefersReducedMotion} />
       <ProofSection creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
@@ -95,8 +97,9 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
 
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
-function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
+function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]; reducedMotion: boolean | null }) {
   const stackRef = useRef<HTMLDivElement>(null);
+  const seated = creatorRows.slice(0, 3);
 
   return (
     <section className="relative overflow-hidden">
@@ -147,16 +150,27 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
 
           <motion.div className="mt-9" variants={rise}>
             <ClaimHandle reducedMotion={reducedMotion} />
-            <p className="mt-4 text-sm text-[#9b9a97]">
-              Free for creators.{" "}
-              <Link
-                className="font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-4 transition-colors hover:decoration-[#2b8fc4]"
-                href="/search"
-                prefetch={false}
-              >
-                Or browse who is already here
-              </Link>
-            </p>
+            <div className="mt-5 flex items-center gap-3">
+              <span className="flex -space-x-2">
+                {seated.map((creator) => (
+                  <Initials className="h-8 w-8 text-[10px] ring-2 ring-white" key={creator.name} name={creator.name} />
+                ))}
+              </span>
+              <p className="text-sm text-[#9b9a97]">
+                {seated
+                  .slice(0, 2)
+                  .map((creator) => creator.name.split(" ")[0])
+                  .join(", ")}{" "}
+                &amp; more are already seated.{" "}
+                <Link
+                  className="font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-4 transition-colors hover:decoration-[#2b8fc4]"
+                  href="/search"
+                  prefetch={false}
+                >
+                  Browse them
+                </Link>
+              </p>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -182,14 +196,8 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
               <path d="m31 28 9 4 2-10" />
             </svg>
           </motion.p>
-          {heroPhotos.map((photo, index) => (
-            <HeroPhotoCard
-              dragArea={stackRef}
-              index={index}
-              key={photo.handle}
-              photo={photo}
-              reducedMotion={reducedMotion}
-            />
+          {heroCards.map((card, index) => (
+            <HeroDragCard card={card} dragArea={stackRef} index={index} key={index} reducedMotion={reducedMotion} />
           ))}
         </div>
       </div>
@@ -197,61 +205,109 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
   );
 }
 
-function HeroPhotoCard({
-  photo,
+function HeroDragCard({
+  card,
   index,
   dragArea,
   reducedMotion
 }: {
-  photo: (typeof heroPhotos)[number];
+  card: HeroCard;
   index: number;
   dragArea: React.RefObject<HTMLDivElement | null>;
   reducedMotion: boolean | null;
 }) {
   return (
-    <motion.figure
-      animate={{ opacity: 1, y: 0, rotate: photo.rotate, scale: 1 }}
+    <motion.div
+      animate={{ opacity: 1, y: 0, rotate: card.rotate, scale: 1 }}
       className={cn(
-        "absolute cursor-grab overflow-hidden rounded-[22px] border border-[#f1f1ef] bg-white p-2.5 pb-4 shadow-[0_24px_70px_rgba(17,24,39,0.14)] select-none active:cursor-grabbing",
-        index === 0 && "top-2 left-0 z-10 w-[58%]",
-        index === 1 && "top-[26%] right-0 z-20 w-[62%]",
-        index === 2 && "bottom-0 left-[8%] z-30 w-[56%]"
+        "absolute cursor-grab rounded-[22px] border border-[#f1f1ef] bg-white p-5 shadow-[0_24px_70px_rgba(17,24,39,0.14)] select-none active:cursor-grabbing",
+        index === 0 && "top-4 left-0 z-10 w-[72%]",
+        index === 1 && "top-[31%] right-0 z-20 w-[76%]",
+        index === 2 && "bottom-4 left-[6%] z-30 w-[72%]"
       )}
       drag
       dragConstraints={dragArea}
       dragElastic={0.45}
       dragSnapToOrigin
       dragTransition={{ bounceDamping: 14, bounceStiffness: 220 }}
-      initial={reducedMotion ? false : { opacity: 0, y: 80, rotate: photo.rotate * 3, scale: 0.94 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 80, rotate: card.rotate * 3, scale: 0.94 }}
       transition={{ delay: 0.25 + index * 0.16, duration: 0.9, ease: easeOutQuint }}
       whileDrag={{ rotate: 0, scale: 1.06, zIndex: 50, boxShadow: "0 36px 90px rgba(17,24,39,0.24)" }}
-      whileHover={reducedMotion ? undefined : { rotate: photo.rotate * 0.4, scale: 1.02 }}
+      whileHover={reducedMotion ? undefined : { rotate: card.rotate * 0.4, scale: 1.02 }}
     >
       {/* Idle drift keeps the stack alive after the entrance settles. */}
       <motion.div
-        animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
+        animate={reducedMotion ? undefined : { y: [0, -5, 0] }}
         className="pointer-events-none"
         transition={{ delay: 1.6 + index * 0.45, duration: 5 + index, ease: "easeInOut", repeat: Infinity }}
       >
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
-          <Image
-            alt={photo.alt}
-            className="object-cover"
-            draggable={false}
-            fill
-            priority={index < 2}
-            sizes="(max-width: 1024px) 60vw, 300px"
-            src={photo.src}
-          />
-        </div>
-        <figcaption className="flex items-center justify-between px-1.5 pt-2.5">
-          <span className="text-[13px] font-semibold text-[#37352f]">{photo.handle}</span>
-          <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[photo.platform])}>
-            {photo.platform}
-          </span>
-        </figcaption>
+        {card.kind === "post" ? <PostCardBody card={card} /> : <ProfileCardBody />}
       </motion.div>
-    </motion.figure>
+    </motion.div>
+  );
+}
+
+function PostCardBody({ card }: { card: Extract<HeroCard, { kind: "post" }> }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2.5">
+        <Initials className="h-9 w-9 text-[11px]" name={card.name} />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[13px] font-semibold text-[#37352f]">{card.handle}</p>
+          <p className="text-[11px] text-[#9b9a97]">just posted</p>
+        </div>
+        <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[card.platform])}>
+          {card.platform}
+        </span>
+      </div>
+      <p className="mt-3.5 text-[15px] leading-7 font-medium text-[#37352f]">{card.caption}</p>
+      <div className="mt-4 flex items-center gap-4 border-t border-[#f1f1ef] pt-3.5 text-[#9b9a97]">
+        <Heart className="h-4 w-4" />
+        <MessageCircle className="h-4 w-4" />
+        <Send className="h-4 w-4" />
+        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-[#fff3ec] px-2.5 py-1 text-[11px] font-semibold text-[#bf5a30]">
+          <Check className="h-3 w-3" />
+          Synced to profile
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const profilePlatforms = [
+  { label: "Instagram", tint: "bg-[#D86B3D]" },
+  { label: "TikTok", tint: "bg-[#37352f]" },
+  { label: "YouTube", tint: "bg-[#8CC9E8]" }
+];
+
+function ProfileCardBody() {
+  return (
+    <div>
+      <div className="flex items-center gap-3">
+        <Initials className="h-11 w-11 text-sm" name="Amara Films" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[15px] font-semibold text-[#37352f]">Amara Films</p>
+          <p className="text-[12px] text-[#9b9a97]">Beauty · Los Angeles · open to collabs</p>
+        </div>
+        <span className="rounded-full bg-[#f1faff] px-2.5 py-1 text-[11px] font-semibold text-[#2b8fc4]">Terrace</span>
+      </div>
+      <div className="mt-4 grid gap-2">
+        {profilePlatforms.map((platform) => (
+          <div
+            className="flex items-center gap-2.5 rounded-xl border border-[#f1f1ef] px-3 py-2 text-[13px] font-medium text-[#37352f]"
+            key={platform.label}
+          >
+            <span className={cn("h-2 w-2 rounded-full", platform.tint)} />
+            {platform.label}
+            <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-semibold text-[#1e9e55]">
+              <Check className="h-3 w-3" />
+              synced
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3.5 text-[12px] font-medium text-[#9b9a97]">One profile. All the proof.</p>
+    </div>
   );
 }
 
@@ -320,135 +376,71 @@ function ClaimHandle({ reducedMotion }: { reducedMotion: boolean | null }) {
   );
 }
 
-/* ── The table: creators seated along one line, one seat open ──────────── */
-
-function TheTable({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]; reducedMotion: boolean | null }) {
-  const seats = creatorRows.slice(0, 4);
-
-  return (
-    <section className="overflow-hidden border-y border-[#e9e9e7] bg-white">
-      <div className="mx-auto max-w-[1320px] px-5 pt-10 pb-14 sm:px-8">
-        <p className="text-sm font-semibold text-[#bf5a30]">
-          At the table
-          <span className="relative mx-2 inline-flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#D86B3D] opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#D86B3D]" />
-          </span>
-          right now
-        </p>
-
-        <div className="relative mt-14">
-          {/* The table edge runs the full bleed. */}
-          <div aria-hidden className="absolute top-7 -right-24 -left-24 h-px bg-[#37352f]/15" />
-          <div className="flex items-start justify-between gap-6 overflow-x-auto pb-1 sm:gap-10">
-            {seats.map((creator, index) => (
-              <motion.div
-                className="flex min-w-[120px] flex-col items-center text-center"
-                initial={{ opacity: 0, y: 22, scale: 0.8 }}
-                key={creator.name}
-                transition={{ delay: index * 0.12, duration: 0.55, ease: easeOutQuint }}
-                viewport={{ once: true, margin: "-60px" }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              >
-                <Initials className="h-14 w-14 text-sm ring-4 ring-white" name={creator.name} />
-                <p className="mt-3 text-sm font-semibold text-[#37352f]">{creator.name}</p>
-                <p className="mt-0.5 text-[13px] text-[#9b9a97]">
-                  {creator.niche} · {creator.reach}
-                </p>
-              </motion.div>
-            ))}
-
-            {/* The open seat. */}
-            <motion.div
-              className="flex min-w-[120px] flex-col items-center text-center"
-              initial={{ opacity: 0, y: 22, scale: 0.8 }}
-              transition={{ delay: seats.length * 0.12, duration: 0.55, ease: easeOutQuint }}
-              viewport={{ once: true, margin: "-60px" }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            >
-              <motion.div
-                animate={reducedMotion ? undefined : { rotate: [0, -5, 5, 0] }}
-                transition={{ delay: 4, duration: 0.6, repeat: Infinity, repeatDelay: 3.6 }}
-              >
-                <Link
-                  aria-label="Take your seat: create your Terrace profile"
-                  className="grid h-14 w-14 place-items-center rounded-full border-2 border-dashed border-[#D86B3D]/50 bg-[#fff3ec]/60 text-[#D86B3D] ring-4 ring-white transition-colors duration-300 hover:border-[#D86B3D] hover:bg-[#fff3ec]"
-                  href="/signup"
-                >
-                  <Plus className="h-5 w-5" />
-                </Link>
-              </motion.div>
-              <p className="mt-3 text-sm font-semibold text-[#D86B3D]">your seat</p>
-              <p className="mt-0.5 text-[13px] text-[#9b9a97]">it&apos;s open</p>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── Creator story ─────────────────────────────────────────────────────── */
 
-const syncChips = [
-  { label: "IG", tint: "bg-[#fff3ec] text-[#bf5a30]", title: "New post synced", sub: "added to your proof" },
-  { label: "TT", tint: "bg-[#37352f] text-white", title: "Reel synced", sub: "counted toward your rank" },
-  { label: "YT", tint: "bg-[#f1faff] text-[#2b8fc4]", title: "Video synced", sub: "visible to brands" }
+const syncLanes = [
+  { label: "Instagram", chip: "IG", tint: "bg-[#fff3ec] text-[#bf5a30]", dot: "bg-[#D86B3D]", delay: 0 },
+  { label: "TikTok", chip: "TT", tint: "bg-[#37352f] text-white", dot: "bg-[#37352f]", delay: 0.9 },
+  { label: "YouTube", chip: "YT", tint: "bg-[#f1faff] text-[#2b8fc4]", dot: "bg-[#8CC9E8]", delay: 1.8 }
 ];
 
 function CreatorStory({ reducedMotion }: { reducedMotion: boolean | null }) {
-  const [chipIndex, setChipIndex] = useState(0);
-
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-    const timer = window.setInterval(() => setChipIndex((index) => (index + 1) % syncChips.length), 3000);
-    return () => window.clearInterval(timer);
-  }, [reducedMotion]);
-
-  const chip = syncChips[chipIndex];
-
   return (
     <section className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:py-32">
       <Reveal>
-        <div className="relative">
-          <div className="relative aspect-[5/6] overflow-hidden rounded-[28px]">
-            <Image
-              alt="Hands steadying a camera between takes"
-              className="object-cover"
-              fill
-              sizes="(max-width: 1024px) 90vw, 520px"
-              src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1100&q=80"
-            />
-          </div>
-          {/* Posts keep arriving from every platform. */}
-          <motion.div
-            className="absolute -right-4 bottom-10 w-[230px] overflow-hidden rounded-2xl border border-[#f1f1ef] bg-white py-3 pr-4 pl-4 shadow-[0_18px_50px_rgba(17,24,39,0.16)] sm:-right-8"
-            initial={{ opacity: 0, x: 32 }}
-            transition={{ delay: 0.3, duration: 0.7, ease: easeOutQuint }}
-            viewport={{ once: true, margin: "-120px" }}
-            whileInView={{ opacity: 1, x: 0 }}
-          >
-            <AnimatePresence initial={false} mode="wait">
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-3"
-                exit={{ opacity: 0, y: -14 }}
-                initial={{ opacity: 0, y: 14 }}
-                key={chipIndex}
-                transition={{ duration: 0.32, ease: easeOutQuint }}
-              >
+        {/* Posts flow from every platform into one Terrace profile. */}
+        <div className="rounded-[28px] border border-[#f1f1ef] bg-white p-6 shadow-[0_30px_80px_rgba(17,24,39,0.08)] sm:p-8">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-8 sm:gap-x-4">
+            <motion.div
+              animate={reducedMotion ? undefined : { scale: [1, 1.015, 1] }}
+              className="w-[164px] self-center rounded-2xl border border-[#f1f1ef] bg-white p-4 shadow-[0_18px_50px_rgba(17,24,39,0.12)] sm:w-[190px]"
+              style={{ gridColumn: "3", gridRow: "1 / span 3" }}
+              transition={{ duration: 3.1, ease: "easeInOut", repeat: Infinity }}
+            >
+              <Initials className="h-10 w-10 text-[11px]" name="Amara Films" />
+              <p className="mt-2.5 text-sm font-semibold text-[#37352f]">Amara Films</p>
+              <p className="text-[11px] text-[#9b9a97]">Beauty · Los Angeles</p>
+              <div className="mt-3 grid gap-1.5">
+                {syncLanes.map((row) => (
+                  <div className="flex items-center gap-1.5 text-[11px] font-medium text-[#787774]" key={row.label}>
+                    <span className={cn("h-1.5 w-1.5 rounded-full", row.dot)} />
+                    {row.label}
+                    <Check className="ml-auto h-3 w-3 text-[#1e9e55]" />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            {syncLanes.map((lane) => (
+              <div className="contents" key={lane.label}>
                 <span
-                  className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[13px] font-bold", chip.tint)}
+                  className={cn(
+                    "grid h-10 w-10 place-items-center rounded-xl text-[12px] font-bold sm:h-11 sm:w-11",
+                    lane.tint
+                  )}
                 >
-                  {chip.label}
+                  {lane.chip}
                 </span>
-                <span className="text-sm">
-                  <span className="block font-semibold text-[#37352f]">{chip.title}</span>
-                  <span className="text-[#9b9a97]">{chip.sub}</span>
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
+                <div className="relative h-px border-t border-dashed border-[#e1e1de]">
+                  <motion.span
+                    animate={reducedMotion ? undefined : { left: ["0%", "97%"], opacity: [0, 1, 1, 0] }}
+                    className={cn("absolute top-[-3px] h-1.5 w-1.5 rounded-full", lane.dot)}
+                    style={reducedMotion ? { left: "50%" } : undefined}
+                    transition={{
+                      delay: lane.delay,
+                      duration: 2.2,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                      repeatDelay: 0.7,
+                      times: [0, 0.12, 0.88, 1]
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-7 text-center text-[13px] font-medium text-[#9b9a97]">
+            Every post finds its way home. No uploads, no media kit.
+          </p>
         </div>
       </Reveal>
 
