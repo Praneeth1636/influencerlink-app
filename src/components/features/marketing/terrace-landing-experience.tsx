@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useReducedMotion,
@@ -14,6 +16,9 @@ import {
   type MotionValue,
   type Variants
 } from "motion/react";
+import { Magnetic, Marquee, Typewriter } from "@/components/features/marketing/landing-motion";
+import { AttractButton } from "@/components/ui/attract-button";
+import { TextFlippingBoard } from "@/components/ui/text-flipping-board";
 import { cn } from "@/lib/utils";
 
 export type LandingCreatorRow = {
@@ -49,6 +54,12 @@ const heroStagger: Variants = {
   hidden: {},
   visible: { transition: { delayChildren: 0.05, staggerChildren: 0.11 } }
 };
+
+const searchPrompts = [
+  "Beauty creators in LA with strong routine videos",
+  "UGC skincare creators with a US audience",
+  "Lifestyle vloggers open to collabs this week"
+];
 
 const heroPhotos = [
   {
@@ -90,9 +101,9 @@ export function TerraceLandingExperience({ creatorRows }: { creatorRows: Landing
     <div className="min-h-screen bg-white font-sans text-[#37352f]">
       <Hero reducedMotion={prefersReducedMotion} />
       <LiveRow creatorRows={creatorRows} />
-      <CreatorStory />
-      <BrandStory />
-      <ProofSection creatorRows={creatorRows} />
+      <CreatorStory reducedMotion={prefersReducedMotion} />
+      <BrandStory reducedMotion={prefersReducedMotion} />
+      <ProofSection creatorRows={creatorRows} reducedMotion={prefersReducedMotion} />
       <ClosingCta />
     </div>
   );
@@ -141,7 +152,7 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-14 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-24">
+      <div className="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pt-16 pb-16 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-24 lg:pb-28">
         <motion.div animate="visible" initial="hidden" variants={heroStagger}>
           <motion.p className="text-sm font-semibold text-[#bf5a30]" variants={rise}>
             The creator and brand network
@@ -169,13 +180,15 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
           </motion.p>
 
           <motion.div className="mt-9 flex flex-wrap items-center gap-4" variants={rise}>
-            <Link
-              className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#37352f] px-8 text-[15px] font-semibold text-white shadow-[0_14px_36px_rgba(17,24,39,0.14)] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
-              href="/signup"
-            >
-              Claim your handle
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            <Magnetic>
+              <Link
+                className="group inline-flex h-13 items-center gap-2 rounded-full bg-[#37352f] px-8 text-[15px] font-semibold text-white shadow-[0_14px_36px_rgba(17,24,39,0.14)] transition-shadow duration-300 hover:shadow-[0_20px_46px_rgba(17,24,39,0.2)]"
+                href="/signup"
+              >
+                Claim your handle
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Magnetic>
             <Link
               className="inline-flex h-13 items-center rounded-full px-5 text-[15px] font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-8 transition-colors hover:decoration-[#2b8fc4]"
               href="/search"
@@ -198,6 +211,25 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
               sy={sy}
             />
           ))}
+
+          {/* A brand search pill typing real queries over the prints. */}
+          <motion.div
+            animate={
+              reducedMotion
+                ? { opacity: 1, y: 0 }
+                : {
+                    opacity: 1,
+                    y: [0, -6, 0],
+                    transition: { y: { delay: 2.2, duration: 5.5, ease: "easeInOut", repeat: Infinity } }
+                  }
+            }
+            className="absolute -bottom-7 left-1/2 z-40 flex w-[min(94%,380px)] -translate-x-1/2 items-center gap-2.5 rounded-full border border-[#e9e9e7] bg-white/95 px-4 py-3 text-[13px] text-[#787774] shadow-[0_18px_48px_rgba(17,24,39,0.14)] backdrop-blur"
+            initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+            transition={{ delay: 1.05, duration: 0.7, ease: easeOutQuint }}
+          >
+            <Search className="h-4 w-4 shrink-0 text-[#D86B3D]" />
+            <Typewriter className="truncate" phrases={searchPrompts} />
+          </motion.div>
         </div>
       </div>
     </section>
@@ -234,27 +266,33 @@ function HeroPhotoCard({
       transition={{ delay: 0.25 + index * 0.16, duration: 0.9, ease: easeOutQuint }}
       whileHover={reducedMotion ? undefined : { rotate: 0, scale: 1.02 }}
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
-        <Image
-          alt={photo.alt}
-          className="object-cover"
-          fill
-          priority={index < 2}
-          sizes="(max-width: 1024px) 60vw, 300px"
-          src={photo.src}
-        />
-      </div>
-      <figcaption className="flex items-center justify-between px-1.5 pt-2.5">
-        <span className="text-[13px] font-semibold text-[#37352f]">{photo.handle}</span>
-        <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[photo.platform])}>
-          {photo.platform}
-        </span>
-      </figcaption>
+      {/* Idle drift keeps the stack alive after the entrance settles. */}
+      <motion.div
+        animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
+        transition={{ delay: 1.6 + index * 0.45, duration: 5 + index, ease: "easeInOut", repeat: Infinity }}
+      >
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[14px]">
+          <Image
+            alt={photo.alt}
+            className="object-cover"
+            fill
+            priority={index < 2}
+            sizes="(max-width: 1024px) 60vw, 300px"
+            src={photo.src}
+          />
+        </div>
+        <figcaption className="flex items-center justify-between px-1.5 pt-2.5">
+          <span className="text-[13px] font-semibold text-[#37352f]">{photo.handle}</span>
+          <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-semibold", platformTint[photo.platform])}>
+            {photo.platform}
+          </span>
+        </figcaption>
+      </motion.div>
     </motion.figure>
   );
 }
 
-/* ── Live row: real creators from the marketplace ─────────────────────── */
+/* ── Live row: an infinite marquee of real creators ────────────────────── */
 
 function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
   return (
@@ -268,24 +306,17 @@ function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
           </span>
           right now
         </p>
-        <div className="flex flex-1 flex-wrap gap-x-8 gap-y-3">
-          {creatorRows.map((creator, index) => (
-            <motion.span
-              className="flex items-center gap-2.5 text-sm"
-              initial={{ opacity: 0, y: 10 }}
-              key={creator.name}
-              transition={{ delay: index * 0.09, duration: 0.5, ease: easeOutQuint }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
-            >
+        <Marquee className="min-w-0 flex-1" duration={26}>
+          {[...creatorRows, ...creatorRows].map((creator, index) => (
+            <span className="flex items-center gap-2.5 text-sm whitespace-nowrap" key={`${creator.name}-${index}`}>
               <Initials name={creator.name} />
               <span className="font-semibold text-[#37352f]">{creator.name}</span>
               <span className="text-[#9b9a97]">
                 {creator.niche} · {creator.reach}
               </span>
-            </motion.span>
+            </span>
           ))}
-        </div>
+        </Marquee>
       </div>
     </section>
   );
@@ -293,7 +324,23 @@ function LiveRow({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
 
 /* ── Creator story ─────────────────────────────────────────────────────── */
 
-function CreatorStory() {
+const syncChips = [
+  { label: "IG", tint: "bg-[#fff3ec] text-[#bf5a30]", title: "New post synced", sub: "added to your proof" },
+  { label: "TT", tint: "bg-[#37352f] text-white", title: "Reel synced", sub: "counted toward your rank" },
+  { label: "YT", tint: "bg-[#f1faff] text-[#2b8fc4]", title: "Video synced", sub: "visible to brands" }
+];
+
+function CreatorStory({ reducedMotion }: { reducedMotion: boolean | null }) {
+  const [chipIndex, setChipIndex] = useState(0);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const timer = window.setInterval(() => setChipIndex((index) => (index + 1) % syncChips.length), 3000);
+    return () => window.clearInterval(timer);
+  }, [reducedMotion]);
+
+  const chip = syncChips[chipIndex];
+
   return (
     <section className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:py-32">
       <Reveal>
@@ -307,21 +354,34 @@ function CreatorStory() {
               src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1100&q=80"
             />
           </div>
-          {/* The one product chip this section needs: a post arriving from a platform. */}
+          {/* Posts keep arriving from every platform. */}
           <motion.div
-            className="absolute -right-4 bottom-10 flex items-center gap-3 rounded-2xl border border-[#f1f1ef] bg-white py-3 pr-5 pl-4 shadow-[0_18px_50px_rgba(17,24,39,0.16)] sm:-right-8"
+            className="absolute -right-4 bottom-10 w-[230px] overflow-hidden rounded-2xl border border-[#f1f1ef] bg-white py-3 pr-4 pl-4 shadow-[0_18px_50px_rgba(17,24,39,0.16)] sm:-right-8"
             initial={{ opacity: 0, x: 32 }}
             transition={{ delay: 0.3, duration: 0.7, ease: easeOutQuint }}
             viewport={{ once: true, margin: "-120px" }}
             whileInView={{ opacity: 1, x: 0 }}
           >
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff3ec] text-[13px] font-bold text-[#bf5a30]">
-              IG
-            </span>
-            <span className="text-sm">
-              <span className="block font-semibold text-[#37352f]">New post synced</span>
-              <span className="text-[#9b9a97]">added to your proof</span>
-            </span>
+            <AnimatePresence initial={false} mode="wait">
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-3"
+                exit={{ opacity: 0, y: -14 }}
+                initial={{ opacity: 0, y: 14 }}
+                key={chipIndex}
+                transition={{ duration: 0.32, ease: easeOutQuint }}
+              >
+                <span
+                  className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[13px] font-bold", chip.tint)}
+                >
+                  {chip.label}
+                </span>
+                <span className="text-sm">
+                  <span className="block font-semibold text-[#37352f]">{chip.title}</span>
+                  <span className="text-[#9b9a97]">{chip.sub}</span>
+                </span>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         </div>
       </Reveal>
@@ -340,13 +400,20 @@ function CreatorStory() {
             ["Synced platforms", "Instagram, TikTok, and YouTube posts land in your feed automatically."],
             ["Gigs that fit", "Apply to brand briefs matched to your niche, audience, and rate."],
             ["Ranks", "Climb your niche leaderboard as your work compounds."]
-          ].map(([title, body]) => (
-            <li className="flex gap-4" key={title}>
+          ].map(([title, body], index) => (
+            <motion.li
+              className="flex gap-4"
+              initial={{ opacity: 0, x: -18 }}
+              key={title}
+              transition={{ delay: 0.15 + index * 0.12, duration: 0.55, ease: easeOutQuint }}
+              viewport={{ once: true, margin: "-80px" }}
+              whileInView={{ opacity: 1, x: 0 }}
+            >
               <span aria-hidden className="mt-[11px] h-px w-7 shrink-0 bg-[#D86B3D]" />
               <p className="text-[15px] leading-7 text-[#787774]">
                 <strong className="font-semibold text-[#37352f]">{title}.</strong> {body}
               </p>
-            </li>
+            </motion.li>
           ))}
         </ul>
       </Reveal>
@@ -354,15 +421,46 @@ function CreatorStory() {
   );
 }
 
-/* ── Brand story ───────────────────────────────────────────────────────── */
+/* ── Brand story: queries type themselves, results re-rank live ────────── */
 
-const brandResults = [
-  { name: "Amara Cole", niche: "Beauty · routine videos", reach: "412K", open: true },
-  { name: "Jules Ortiz", niche: "Skincare · UGC", reach: "188K", open: true },
-  { name: "Dana Reyes", niche: "Lifestyle · vlogs", reach: "1.1M", open: false }
+const brandScenes = [
+  {
+    query: "Beauty creators in LA with strong routine videos",
+    results: [
+      { name: "Amara Cole", niche: "Beauty · routine videos", reach: "412K", open: true },
+      { name: "Jules Ortiz", niche: "Skincare · UGC", reach: "188K", open: true },
+      { name: "Dana Reyes", niche: "Lifestyle · vlogs", reach: "1.1M", open: false }
+    ]
+  },
+  {
+    query: "UGC skincare creators with a US audience",
+    results: [
+      { name: "Jules Ortiz", niche: "Skincare · UGC", reach: "188K", open: true },
+      { name: "Dana Reyes", niche: "Lifestyle · vlogs", reach: "1.1M", open: false },
+      { name: "Amara Cole", niche: "Beauty · routine videos", reach: "412K", open: true }
+    ]
+  },
+  {
+    query: "Lifestyle vloggers open to collabs this week",
+    results: [
+      { name: "Dana Reyes", niche: "Lifestyle · vlogs", reach: "1.1M", open: false },
+      { name: "Amara Cole", niche: "Beauty · routine videos", reach: "412K", open: true },
+      { name: "Jules Ortiz", niche: "Skincare · UGC", reach: "188K", open: true }
+    ]
+  }
 ];
 
-function BrandStory() {
+function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
+  const [sceneIndex, setSceneIndex] = useState(0);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const timer = window.setInterval(() => setSceneIndex((index) => (index + 1) % brandScenes.length), 5400);
+    return () => window.clearInterval(timer);
+  }, [reducedMotion]);
+
+  const scene = brandScenes[sceneIndex];
+
   return (
     <section className="bg-[#f0f8fd]">
       <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-32">
@@ -388,18 +486,37 @@ function BrandStory() {
 
         <Reveal className="order-1 lg:order-2" delay={0.12}>
           <div className="rounded-[26px] border border-[#ddeefa] bg-white p-5 shadow-[0_30px_80px_rgba(43,143,196,0.1)] sm:p-6">
-            <p className="rounded-2xl bg-[#f7f7f5] px-4 py-3 text-[15px] text-[#787774]">
-              “Beauty creators in LA with strong routine videos”
-            </p>
+            <div className="flex min-h-[3.1rem] items-center rounded-2xl bg-[#f7f7f5] px-4 py-3 text-[15px] text-[#787774]">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.span
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0 }}
+                  key={sceneIndex}
+                  transition={{ duration: 0.2 }}
+                >
+                  “
+                  {[...scene.query].map((character, index) => (
+                    <motion.span
+                      animate={{ opacity: 1 }}
+                      initial={reducedMotion ? false : { opacity: 0 }}
+                      key={`${sceneIndex}-${index}`}
+                      transition={{ delay: 0.2 + index * 0.022, duration: 0.01 }}
+                    >
+                      {character}
+                    </motion.span>
+                  ))}
+                  ”
+                </motion.span>
+              </AnimatePresence>
+            </div>
             <div className="mt-4 grid gap-2.5">
-              {brandResults.map((row, index) => (
+              {scene.results.map((row, index) => (
                 <motion.div
-                  className="flex items-center gap-3 rounded-2xl border border-[#f1f1ef] px-4 py-3"
-                  initial={{ opacity: 0, y: 14 }}
+                  className="flex items-center gap-3 rounded-2xl border border-[#f1f1ef] bg-white px-4 py-3"
                   key={row.name}
-                  transition={{ delay: 0.25 + index * 0.12, duration: 0.55, ease: easeOutQuint }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  layout
+                  transition={{ duration: 0.55, ease: easeOutQuint }}
                 >
                   <Initials name={row.name} />
                   <div className="min-w-0 flex-1">
@@ -407,14 +524,17 @@ function BrandStory() {
                     <p className="truncate text-[13px] text-[#9b9a97]">{row.niche}</p>
                   </div>
                   <span className="text-sm font-semibold text-[#37352f] tabular-nums">{row.reach}</span>
-                  <span
+                  <motion.span
+                    animate={index === 0 && !reducedMotion ? { scale: [1, 1.08, 1] } : undefined}
                     className={cn(
                       "rounded-full px-2.5 py-1 text-[11px] font-semibold",
                       row.open ? "bg-[#f1faff] text-[#2b8fc4]" : "bg-[#f7f7f5] text-[#9b9a97]"
                     )}
+                    key={`${sceneIndex}-chip`}
+                    transition={{ delay: 0.7, duration: 0.5 }}
                   >
                     {row.open ? "Open" : "Booked"}
-                  </span>
+                  </motion.span>
                 </motion.div>
               ))}
             </div>
@@ -425,12 +545,27 @@ function BrandStory() {
   );
 }
 
-/* ── Proof section: dark contrast, orange + blue glow ──────────────────── */
+/* ── Proof section: dark contrast, orange + blue glow, signal board ────── */
 
-function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
+const boardMessages = ["NEW GIG POSTED\nBEAUTY · LA", "POST SYNCED\n@AMARA.FILMS", "BRIEF MATCHED\nUGC SKINCARE"];
+
+function ProofSection({
+  creatorRows,
+  reducedMotion
+}: {
+  creatorRows: LandingCreatorRow[];
+  reducedMotion: boolean | null;
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ offset: ["start end", "end start"], target: sectionRef });
   const glowY = useTransform(scrollYProgress, [0, 1], ["-12%", "16%"]);
+  const [boardIndex, setBoardIndex] = useState(0);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const timer = window.setInterval(() => setBoardIndex((index) => (index + 1) % boardMessages.length), 5200);
+    return () => window.clearInterval(timer);
+  }, [reducedMotion]);
 
   return (
     <section className="relative overflow-hidden bg-[#15171c] text-white" ref={sectionRef}>
@@ -452,13 +587,15 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
             Campaign wins, brand replies, and finished work attach to your profile, not to a thread that dies when the
             deal closes. The next negotiation starts from everything you have already done.
           </p>
-          <Link
-            className="mt-9 inline-flex h-13 items-center gap-2 rounded-full bg-white px-8 text-[15px] font-semibold text-[#37352f] transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
-            href="/signup"
-          >
-            Start your profile
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <Magnetic className="mt-9">
+            <Link
+              className="inline-flex h-13 items-center gap-2 rounded-full bg-white px-8 text-[15px] font-semibold text-[#37352f] transition-shadow duration-300 hover:shadow-[0_18px_46px_rgba(255,255,255,0.12)]"
+              href="/signup"
+            >
+              Start your profile
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Magnetic>
         </Reveal>
 
         <Reveal delay={0.15}>
@@ -491,6 +628,13 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
                 </span>
               </motion.div>
             ))}
+            {/* Split-flap signal board: the marketplace, still moving. */}
+            <TextFlippingBoard
+              characterClassName="h-8 min-w-6 rounded-md border-white/10 bg-white/[0.07] px-1.5 text-sm text-white sm:h-9 sm:min-w-7 sm:text-base"
+              className="mt-2 rounded-[22px] border-white/10 bg-[#1b1f26] p-4 shadow-none"
+              key={boardIndex}
+              text={boardMessages[boardIndex]}
+            />
           </div>
         </Reveal>
       </div>
@@ -501,30 +645,46 @@ function ProofSection({ creatorRows }: { creatorRows: LandingCreatorRow[] }) {
 /* ── Closing: brand orange, full bleed ─────────────────────────────────── */
 
 function ClosingCta() {
+  const router = useRouter();
+
   return (
     <section className="relative overflow-hidden bg-[#D86B3D]">
-      <div
+      <motion.div
+        animate={{ x: ["-4%", "4%", "-4%"], y: ["-3%", "3%", "-3%"] }}
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background: "radial-gradient(820px 460px at 84% 0%, rgba(255,243,236,0.22), transparent 58%)"
         }}
+        transition={{ duration: 16, ease: "easeInOut", repeat: Infinity }}
       />
       <div className="relative mx-auto flex max-w-[1320px] flex-col items-start gap-9 px-5 py-24 sm:px-8 lg:py-36">
-        <Reveal>
-          <h2 className="max-w-[12ch] text-[clamp(52px,9vw,128px)] leading-[0.95] font-semibold tracking-[-0.06em] text-white">
-            Pull up a chair.
-          </h2>
-        </Reveal>
+        <motion.h2
+          className="flex max-w-[12ch] flex-wrap gap-x-[0.24em] text-[clamp(52px,9vw,128px)] leading-[0.98] font-semibold tracking-[-0.06em] text-white"
+          initial="hidden"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
+          viewport={{ once: true, margin: "-120px" }}
+          whileInView="visible"
+        >
+          {["Pull", "up", "a", "chair."].map((word) => (
+            <span className="overflow-hidden pb-[0.1em]" key={word}>
+              <motion.span className="block" variants={lineReveal}>
+                {word}
+              </motion.span>
+            </span>
+          ))}
+        </motion.h2>
         <Reveal delay={0.1}>
           <div className="flex flex-wrap items-center gap-5">
-            <Link
-              className="inline-flex h-14 items-center gap-2 rounded-full bg-[#37352f] px-9 text-base font-semibold text-white transition-transform duration-300 ease-out hover:scale-[1.03] active:scale-[0.98]"
-              href="/signup"
+            <AttractButton
+              attractRadius={52}
+              className="h-14 rounded-full border-white/25 bg-[#37352f] px-9 text-base font-semibold text-white shadow-[0_16px_40px_rgba(17,24,39,0.25)] hover:bg-[#46403a]"
+              onClick={() => router.push("/signup")}
+              particleCount={12}
             >
               Start free
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </AttractButton>
             <p className="text-[15px] font-medium text-[#ffe4d4]">Free for creators. Brands pay when they book.</p>
           </div>
         </Reveal>
