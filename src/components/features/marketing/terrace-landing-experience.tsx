@@ -164,12 +164,12 @@ function Hero({ reducedMotion }: { reducedMotion: boolean | null }) {
           >
             <span className="block overflow-hidden pb-[0.08em]">
               <motion.span className="block" variants={lineReveal}>
-                Your feed is
+                Proof gets
               </motion.span>
             </span>
             <span className="block overflow-hidden pb-[0.08em]">
               <motion.span className="block" variants={lineReveal}>
-                your résumé.
+                you paid.
               </motion.span>
             </span>
           </motion.h1>
