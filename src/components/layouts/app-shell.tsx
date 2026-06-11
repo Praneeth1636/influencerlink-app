@@ -1,17 +1,17 @@
 "use client";
 
-// Client-side wrapper for (app)/* routes. Owns the SidebarProvider context,
-// the role-aware AppSidebar, and the small mobile header that exposes the
-// sidebar trigger. Server (app)/layout.tsx resolves role on the server and
-// hands it down so we don't need a context fetch.
+// Client-side wrapper for (app)/* routes. The navigation is a floating dock
+// (left on desktop, bottom on mobile) instead of a docked sidebar, so content
+// owns the full canvas. Server (app)/layout.tsx resolves role on the server
+// and hands it down so we don't need a context fetch.
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useContext } from "react";
-import { Search } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { clerkAppearance } from "@/components/auth/clerk-appearance";
-import { AppSidebar, type AppRole } from "@/components/layouts/app-sidebar";
+import { MessageCircle } from "lucide-react";
+import { AppDock } from "@/components/layouts/app-dock";
+import { AppRoleSwitcher } from "@/components/layouts/app-role-switcher";
+import type { AppRole } from "@/components/layouts/app-sidebar";
 
 const AppRoleContext = createContext<AppRole>("creator");
 
@@ -21,37 +21,44 @@ export function useAppRole() {
 
 export function AppShell({ role, children }: { role: AppRole; children: React.ReactNode }) {
   const pathname = usePathname();
+
   return (
     <AppRoleContext.Provider value={role}>
-      <SidebarProvider>
-        <div className="terrace-app-bg relative flex min-h-screen w-full">
-          {/* Shared product atmosphere: warm graphite, not a per-page poster effect. */}
-          <div aria-hidden className="terrace-app-bg pointer-events-none fixed inset-0 z-0" />
-          <AppSidebar role={role} />
-          <main className="relative z-10 flex min-w-0 flex-1 flex-col">
-            <header className="terrace-topbar flex h-14 items-center gap-3 border-b px-4 text-[#37352f] lg:hidden">
-              <SidebarTrigger />
-              <span className="logoMark miniLogo shrink-0" aria-hidden>
-                <span />
-                <span />
-                <span />
-              </span>
-              <span className="flex items-baseline text-lg font-semibold tracking-[-0.04em]">
-                Terrace<span className="text-[#e08550]">.</span>
-              </span>
-              <Search className="ml-auto h-4 w-4 text-[#787774]" />
-              <div>
-                <UserButton appearance={clerkAppearance} />
-              </div>
-            </header>
-            <div className="flex-1 overflow-auto">
-              <div className="creatorlink-fade-in" key={pathname}>
-                {children}
-              </div>
-            </div>
-          </main>
+      <div className="relative min-h-screen w-full bg-white text-[#37352f]">
+        <AppDock role={role} />
+
+        {/* Mobile top bar: wordmark + messages. Primary nav lives in the dock. */}
+        <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-[#f1f1ef] bg-white/90 px-4 backdrop-blur-xl md:hidden">
+          <Link href="/feed" className="flex items-center gap-2.5" aria-label="Terrace">
+            <span className="logoMark miniLogo" aria-hidden>
+              <span />
+              <span />
+              <span />
+            </span>
+            <span className="flex items-baseline text-lg font-semibold tracking-[-0.04em]">
+              Terrace<span className="text-[#e08550]">.</span>
+            </span>
+          </Link>
+          <Link
+            aria-label="Messages"
+            className="ml-auto grid h-9 w-9 place-items-center rounded-full text-[#37352f] transition hover:bg-[#f7f7f5]"
+            href="/messages"
+          >
+            <MessageCircle className="h-5 w-5" />
+          </Link>
+        </header>
+
+        <main className="min-w-0 pb-28 md:pb-0 md:pl-24">
+          <div className="creatorlink-fade-in" key={pathname}>
+            {children}
+          </div>
+        </main>
+
+        {/* Workspace switch floats quietly in the corner on desktop. */}
+        <div className="fixed bottom-5 left-5 z-40 hidden w-[200px] md:block">
+          <AppRoleSwitcher role={role} />
         </div>
-      </SidebarProvider>
+      </div>
     </AppRoleContext.Provider>
   );
 }

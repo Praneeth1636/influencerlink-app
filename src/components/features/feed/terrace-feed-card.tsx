@@ -108,14 +108,6 @@ export function TerraceFeedCard({
           </span>
         </div>
 
-        <div className="mt-3 space-y-1.5 sm:mt-4">
-          {content.map((item) => (
-            <p className="text-sm leading-6 text-[#34383f] sm:text-[15px] sm:leading-7" key={item}>
-              {item}
-            </p>
-          ))}
-        </div>
-
         {imageUrl && !social && (
           <button
             className="mt-3 block w-full overflow-hidden rounded-2xl bg-[#f7f7f5] text-left sm:mt-4"
@@ -213,6 +205,16 @@ export function TerraceFeedCard({
           </div>
         </div>
         <p className="text-[13px] font-semibold tracking-[-0.01em] text-[#37352f]">{metric}</p>
+
+        {/* Caption reads Instagram-style: handle leads the first line. */}
+        <div className="mt-1.5 space-y-1">
+          {content.map((item, index) => (
+            <p className="text-sm leading-6 text-[#37352f] sm:text-[15px] sm:leading-7" key={item}>
+              {index === 0 && <span className="mr-1.5 font-semibold">{authorHandle}</span>}
+              {item}
+            </p>
+          ))}
+        </div>
         {interactionMessage ? (
           <p className="creatorlink-reveal mt-3 text-xs font-medium text-[#787774]">{interactionMessage}</p>
         ) : null}

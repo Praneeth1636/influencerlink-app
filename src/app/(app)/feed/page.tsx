@@ -7,13 +7,11 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import {
   BadgeCheck,
-  Bell,
   BriefcaseBusiness,
   Gift,
   Image as ImageIcon,
   DollarSign,
   Eye,
-  MessageSquare,
   Radio,
   Sparkles,
   TrendingUp,
@@ -377,41 +375,20 @@ function VisualFeed({
 
   return (
     <section className="min-h-screen bg-white">
-      <header className="sticky top-0 z-40 hidden bg-white/85 backdrop-blur-xl md:block">
-        <div className="mx-auto flex max-w-[1080px] items-center gap-4 px-5 py-2.5">
-          <TerraceActionSearchBar
-            className="mx-auto hidden max-w-[440px] md:block"
-            onQueryChange={setQuery}
-            query={query}
-          />
-          <div className="absolute right-5 flex items-center gap-1 text-[#37352f]">
-            <Link
-              className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-[#f7f7f5]"
-              aria-label="Notifications"
-              href="/notifications"
-            >
-              <Bell className="h-5 w-5" />
-            </Link>
-            <Link
-              className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-[#f7f7f5]"
-              aria-label="Messages"
-              href="/messages"
-            >
-              <MessageSquare className="h-5 w-5" />
-            </Link>
-            <Link
-              aria-label="Your profile"
-              className="ml-1 grid h-9 w-9 place-items-center rounded-full bg-[#fdf3ec] text-[11px] font-bold text-[#e08550] transition hover:scale-105"
-              href="/creator"
-            >
-              {initials(initialCreator.name)}
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <div className="mx-auto flex max-w-[1080px] justify-center gap-16 px-0 pb-24 sm:px-6">
-        <main className="w-full max-w-[600px] min-w-0">
+        <main className="w-full max-w-[620px] min-w-0">
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 pt-6 sm:px-0 md:pt-9">
+            <div>
+              <h1 className="text-[26px] font-semibold tracking-[-0.04em]">
+                <Greeting />
+              </h1>
+              <p className="mt-0.5 text-sm text-[#9b9a97]">
+                {role === "brand" ? "Creator proof, as it happens." : "Here's what the terrace is making."}
+              </p>
+            </div>
+            <TerraceActionSearchBar className="w-full sm:w-[260px]" onQueryChange={setQuery} query={query} />
+          </div>
+
           <StoryRail creators={creators} onOpenCreator={onOpenCreator} />
 
           <div className="creatorlink-animate-in mt-1 px-4 sm:px-0">
@@ -436,7 +413,7 @@ function VisualFeed({
                   {stream.label}
                   {active && (
                     <motion.span
-                      className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#1d1d1f]"
+                      className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#e08550]"
                       layoutId="feed-stream-underline"
                       transition={{ type: "spring", stiffness: 480, damping: 38 }}
                     />
@@ -455,7 +432,7 @@ function VisualFeed({
             )}
             {posts.map((post, index) => (
               <div
-                className="creatorlink-animate-in py-6"
+                className="creatorlink-animate-in rounded-2xl py-6 transition-colors duration-300 hover:bg-[#fffcfa] sm:-mx-4 sm:px-4"
                 key={post.id}
                 style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
               >
@@ -550,6 +527,18 @@ function VisualFeed({
       </div>
     </section>
   );
+}
+
+function Greeting() {
+  // Resolved on the client so the server render can't mismatch the local hour.
+  const [text, setText] = useState("Welcome back.");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    setText(hour < 12 ? "Good morning." : hour < 18 ? "Good afternoon." : "Good evening.");
+  }, []);
+
+  return <>{text}</>;
 }
 
 function SuggestedCreatorRow({
