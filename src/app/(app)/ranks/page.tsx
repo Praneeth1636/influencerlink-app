@@ -34,21 +34,20 @@ export default async function RanksPage() {
     <main className="min-h-screen bg-white font-sans text-[#37352f]">
       <section className="mx-auto max-w-[1180px] px-5 py-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-          <section className="rounded-[28px] border border-[#e6e8ec] bg-[#fbfcfd] p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
+          <section className="rounded-lg border border-[#e9e9e7] bg-white p-5">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Creator ranks</p>
-                <h1 className="mt-3 max-w-2xl text-5xl leading-[0.95] font-semibold tracking-[-0.065em] text-[#23272f]">
+                <h1 className="max-w-2xl text-xl font-semibold tracking-[-0.03em] text-[#23272f]">
                   Top creators by industry.
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-[#667085]">
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#787774]">
                   See the top 5 creators in fashion, food, beauty, lifestyle, and overall. Rankings use reach,
                   engagement, verification, growth signals, and open-to-collab status.
                 </p>
               </div>
               {overallLeader ? (
                 <Link
-                  className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-[#15171c] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#282d36]"
+                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-md bg-[#1d1d1f] px-3.5 text-sm font-medium text-white transition hover:bg-[#333336]"
                   href={`/profile/${overallLeader.handle}`}
                 >
                   Open #1 profile
@@ -72,15 +71,15 @@ export default async function RanksPage() {
             </div>
           </section>
 
-          <aside className="rounded-[28px] border border-[#e6e8ec] bg-[#15171c] p-6 text-white shadow-[0_20px_58px_rgba(17,24,39,0.14)]">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#f7a777] uppercase">Overall leader</p>
+          <aside className="rounded-lg border border-[#e9e9e7] bg-white p-5 text-[#37352f]">
+            <p className="text-sm font-semibold text-[#37352f]">Overall leader</p>
             {overallLeader ? (
               <>
                 <div className="mt-5 flex items-center gap-4">
                   <CreatorAvatar name={overallLeader.displayName} />
                   <div className="min-w-0">
                     <h2 className="truncate text-2xl font-semibold tracking-[-0.045em]">{overallLeader.displayName}</h2>
-                    <p className="truncate text-sm text-[#d5d9df]/68">@{overallLeader.handle}</p>
+                    <p className="truncate text-sm text-[#9b9a97]">@{overallLeader.handle}</p>
                   </div>
                 </div>
                 <div className="mt-6 grid gap-2">
@@ -90,7 +89,7 @@ export default async function RanksPage() {
                 </div>
               </>
             ) : (
-              <p className="mt-4 text-sm text-[#d5d9df]/68">No creators available yet.</p>
+              <p className="mt-4 text-sm text-[#9b9a97]">No creators available yet.</p>
             )}
           </aside>
         </div>
@@ -109,10 +108,10 @@ function RankCategoryCard({ category }: { category: RankCategory }) {
   const Icon = category.icon;
 
   return (
-    <article className="rounded-[26px] border border-[#e6e8ec] bg-white p-5 shadow-[0_14px_38px_rgba(17,24,39,0.035)]">
+    <article className="rounded-lg border border-[#e9e9e7] bg-white p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className={`grid h-11 w-11 place-items-center rounded-2xl border ${category.tone}`}>
+          <span className={`grid h-10 w-10 place-items-center rounded-md border ${category.tone}`}>
             <Icon className="h-5 w-5" />
           </span>
           <div>
@@ -125,11 +124,11 @@ function RankCategoryCard({ category }: { category: RankCategory }) {
       <div className="mt-5 grid gap-3">
         {category.creators.map((creator) => (
           <Link
-            className="group flex items-center gap-3 rounded-[18px] border border-[#e6e8ec] bg-[#fbfcfd] p-3 transition hover:-translate-y-0.5 hover:border-[#dceff8] hover:bg-white hover:shadow-[0_12px_30px_rgba(17,24,39,0.05)]"
+            className="group flex items-center gap-3 rounded-md border border-[#f1f1ef] bg-white p-3 transition hover:border-[#d9d9d6]"
             href={`/profile/${creator.handle}`}
             key={`${category.id}-${creator.id}`}
           >
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#15171c] text-sm font-semibold text-white">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[#f7f7f5] text-[13px] font-semibold text-[#37352f]">
               #{creator.rank}
             </span>
             <CreatorAvatar name={creator.displayName} small />
@@ -242,7 +241,7 @@ function RankStat({ label, value, icon: Icon }: { label: string; value: string; 
     <div className="rounded-2xl border border-[#e6e8ec] bg-white p-4">
       <div className="flex items-center justify-between gap-3">
         <span className="text-[10px] font-semibold tracking-[0.16em] text-[#98a2b3] uppercase">{label}</span>
-        <Icon accent="#e08550" className="h-5 w-5 text-[#e08550]" />
+        <Icon accent="#9b9a97" className="h-5 w-5 text-[#9b9a97]" />
       </div>
       <strong className="mt-2 block text-2xl font-semibold tracking-[-0.055em] text-[#23272f]">{value}</strong>
     </div>
@@ -251,8 +250,8 @@ function RankStat({ label, value, icon: Icon }: { label: string; value: string; 
 
 function DarkMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-2 text-sm">
-      <span className="text-[#d5d9df]/68">{label}</span>
+    <div className="flex items-center justify-between rounded-md border border-[#f1f1ef] bg-[#fbfbfa] px-3 py-2 text-sm">
+      <span className="text-[#787774]">{label}</span>
       <strong>{value}</strong>
     </div>
   );

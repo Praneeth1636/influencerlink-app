@@ -26,12 +26,11 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   const jobs = await getJobs(filters);
 
   return (
-    <main className="terrace-app-bg min-h-screen font-sans">
-      <section className="mx-auto max-w-[1280px] px-4 pt-7 pb-4 sm:px-5 sm:pt-12 sm:pb-6">
-        <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Creator gigs</p>
-        <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <main className="min-h-screen bg-[#fbfbfa] font-sans">
+      <section className="mx-auto max-w-[1280px] px-4 pt-6 pb-4 sm:px-5 sm:pt-8 sm:pb-5">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <h1 className="text-3xl leading-tight font-semibold tracking-[-0.05em] sm:text-5xl sm:leading-[1.02]">
+            <h1 className="text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
               Open work from verified brand teams.
             </h1>
             <p className="mt-3 text-sm leading-6 text-[#787774]">
@@ -52,9 +51,9 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 
       <section className="relative z-10 mx-auto grid max-w-[1280px] gap-4 px-4 pb-10 sm:px-5 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-6">
         <aside className="grid content-start gap-5 lg:sticky lg:top-24">
-          <form action="/jobs" className="terrace-panel rounded-[20px] p-4 sm:rounded-[24px] sm:p-5">
+          <form action="/jobs" className="rounded-lg border border-[#e9e9e7] bg-white p-4 sm:p-5">
             <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff4ee] text-[#e08550]">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#f7f7f5] text-[#787774]">
                 <BriefcaseBusiness className="h-4 w-4" />
               </div>
               <h2 className="text-base font-semibold tracking-[-0.02em]">Filters</h2>
@@ -117,7 +116,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           </div>
 
           {jobs.length === 0 && (
-            <div className="rounded-[24px] border border-[#e9e9e7] bg-white p-6">
+            <div className="rounded-lg border border-[#e9e9e7] bg-white p-6">
               <p className="text-lg font-semibold">No gigs found</p>
               <p className="mt-2 text-sm leading-6 text-[#787774]">
                 Try a broader niche, lower budget threshold, or include local campaigns.
@@ -155,7 +154,7 @@ async function getJobs(filters: JobBoardFilters) {
 
 function JobCard({ job }: { job: JobBoardItem }) {
   return (
-    <article className="terrace-panel rounded-[20px] p-4 transition hover:border-[#dce3ea] sm:rounded-[26px] sm:p-5">
+    <article className="rounded-lg border border-[#e9e9e7] bg-white p-4 transition hover:border-[#d9d9d6] sm:p-5">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
           <div className="flex flex-wrap items-center gap-2">
@@ -178,7 +177,7 @@ function JobCard({ job }: { job: JobBoardItem }) {
           </p>
         </div>
 
-        <div className="grid h-14 w-16 shrink-0 place-items-center rounded-2xl border border-[#f3d5c4] bg-[#faf0ea] text-center text-[#e08550] sm:h-16 sm:w-20">
+        <div className="grid h-14 w-16 shrink-0 place-items-center rounded-lg border border-[#f3d5c4] bg-[#faf0ea] text-center text-[#e08550] sm:h-16 sm:w-20">
           <strong className="text-lg font-semibold tracking-[-0.04em] sm:text-xl">{job.fitScore}%</strong>
           <span className="-mt-2 text-[10px] font-semibold tracking-[0.12em] uppercase opacity-70">fit</span>
         </div>

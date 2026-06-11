@@ -46,58 +46,32 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
   const topCreator = creators[0];
 
   return (
-    <main className="terrace-app-bg min-h-screen font-sans">
-      <header className="terrace-topbar hidden border-b md:block">
-        <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
-          <div className="hidden min-w-[220px] lg:block">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">
-              {brandView ? "Brand scout" : "Explore"}
-            </p>
-            <p className="text-sm font-medium text-[#5f6672]">
-              {brandView ? "Creator discovery and audience fit" : "Find creators to follow and message"}
-            </p>
-          </div>
-          <form action="/search" className="relative mx-auto w-full max-w-[580px]">
-            <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-[#8a94a5]" />
-            <input
-              autoComplete="off"
-              className="h-10 w-full rounded-full border border-[#dedfe3] bg-[#fbfbfc] pr-4 pl-10 text-[13px] text-[#1d1d1f] shadow-[0_1px_1px_rgba(17,24,39,0.04)] outline-none placeholder:text-[#9b9a97] focus:border-[#9dcfe5] sm:h-11 sm:pl-11 sm:text-sm"
-              defaultValue={filters.query ?? ""}
-              name="q"
-              placeholder="Search creators, audiences, niches, platforms..."
-            />
-            {filters.niche ? <input name="niche" type="hidden" value={filters.niche} /> : null}
-            {filters.minReach ? <input name="minReach" type="hidden" value={String(filters.minReach)} /> : null}
-            {filters.openToCollabs ? <input name="open" type="hidden" value="1" /> : null}
-          </form>
-          {brandView ? (
-            <Link
-              className="hidden rounded-[14px] border border-[#dedfe3] bg-[#fbfbfc] px-4 py-2.5 text-sm font-semibold text-[#1d1d1f] transition hover:bg-white md:inline-flex"
-              href="/jobs/new"
-            >
-              New brief
-            </Link>
-          ) : null}
-        </div>
-      </header>
-
-      <section className="mx-auto max-w-[1040px] px-0 py-0 sm:px-5 sm:py-5">
+    <main className="min-h-screen bg-[#fbfbfa] font-sans">
+      <section className="mx-auto max-w-[1040px] px-4 py-5 sm:px-5">
         <section className="min-w-0">
-          <section className="terrace-shell-card rounded-none border-x-0 border-t-0 p-3.5 sm:rounded-[24px] sm:border sm:p-4">
-            <div className="flex flex-col gap-3 sm:gap-4">
-              <div>
-                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">
-                  {brandView ? "Brand search" : "Creator search"}
-                </p>
-                <h1 className="mt-1 text-xl leading-tight font-semibold tracking-[-0.045em] text-[#1d1d1f] sm:text-2xl">
-                  {brandView ? "Scout creators by audience fit." : "Find creators you want in your feed."}
-                </h1>
-                <p className="mt-1.5 max-w-xl text-[13px] leading-5 text-[#667085] sm:mt-2 sm:text-sm sm:leading-6">
-                  {brandView
-                    ? "Built for brands, search by niche, audience, location, platform, or campaign idea."
-                    : "Search by name, niche, location, or platform, then follow or start a conversation."}
-                </p>
-              </div>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h1 className="text-xl font-semibold tracking-[-0.03em] text-[#1d1d1f]">
+                {brandView ? "Scout creators" : "Search"}
+              </h1>
+              <p className="mt-0.5 text-sm text-[#787774]">
+                {brandView
+                  ? "Search by niche, audience, location, platform, or campaign idea."
+                  : "Find creators to follow and message."}
+              </p>
+            </div>
+            {brandView ? (
+              <Link
+                className="rounded-md border border-[#e9e9e7] bg-white px-3.5 py-2 text-sm font-medium text-[#1d1d1f] transition hover:border-[#d9d9d6]"
+                href="/jobs/new"
+              >
+                New brief
+              </Link>
+            ) : null}
+          </div>
+
+          <section className="rounded-lg border border-[#e9e9e7] bg-white p-4">
+            <div className="flex flex-col gap-3">
               <form className="grid gap-2.5 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_160px_150px_auto]" action="/search">
                 <label className="relative">
                   <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-[#8a94a5]" />
@@ -162,7 +136,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
           </nav>
 
           {topCreator ? (
-            <article className="terrace-shell-card mt-3 overflow-hidden rounded-[18px] sm:mt-4 sm:rounded-[24px]">
+            <article className="mt-3 overflow-hidden rounded-lg border border-[#e9e9e7] bg-white sm:mt-4">
               <div className="grid md:grid-cols-[minmax(0,1fr)_260px]">
                 <div className="p-3.5 sm:p-5">
                   <span className="inline-flex items-center rounded-full border border-[#f3d5c4] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#e08550] sm:px-3 sm:text-xs">
@@ -197,7 +171,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
                     )}
                   </div>
                 </div>
-                <div className="hidden min-h-56 bg-[linear-gradient(135deg,rgba(159,201,228,0.34),rgba(226,138,119,0.24))] md:block">
+                <div className="hidden min-h-56 bg-[linear-gradient(135deg,#eaf7fd,#fff3ec)] md:block">
                   <div className="grid h-full place-items-center">
                     <span className="grid h-24 w-24 place-items-center rounded-full bg-white text-2xl font-semibold text-[#37352f] shadow-[0_18px_40px_rgba(17,24,39,0.12)]">
                       {initials(topCreator.displayName)}
@@ -241,8 +215,8 @@ function NichePill({ href, active, label }: { href: string; active: boolean; lab
     <Link
       className={
         active
-          ? "shrink-0 rounded-[14px] bg-[#1d1d1f] px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(17,24,39,0.12)]"
-          : "shrink-0 rounded-[14px] px-4 py-2 text-sm font-semibold text-[#667085] transition hover:bg-white hover:text-[#1d1d1f]"
+          ? "shrink-0 rounded-md bg-[#1d1d1f] px-3.5 py-1.5 text-sm font-medium text-white"
+          : "shrink-0 rounded-md px-3.5 py-1.5 text-sm font-medium text-[#787774] transition hover:bg-[#f1f1ef] hover:text-[#1d1d1f]"
       }
       href={href}
     >
@@ -255,10 +229,10 @@ function CreatorResultCard({ creator, role }: { creator: CreatorSearchResult; ro
   const brandView = role === "brand";
 
   return (
-    <article className="terrace-panel rounded-[22px] p-4 transition hover:border-[#cfd5dc] hover:bg-white">
+    <article className="rounded-lg border border-[#e9e9e7] bg-white p-4 transition hover:border-[#d9d9d6]">
       <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-center">
         <div className="flex min-w-0 items-start gap-2.5 sm:gap-3">
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,#cad7de,#edbda6)] text-xs font-semibold text-[#1d1d1f] ring-2 ring-white sm:h-14 sm:w-14 sm:text-sm sm:ring-4">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,#eaf7fd,#fff3ec)] text-xs font-semibold text-[#1d1d1f] ring-2 ring-white sm:h-14 sm:w-14 sm:text-sm sm:ring-4">
             {initials(creator.displayName)}
           </div>
           <div className="min-w-0">
