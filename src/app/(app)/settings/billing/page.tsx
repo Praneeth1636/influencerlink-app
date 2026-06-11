@@ -23,7 +23,7 @@ export default async function BillingSettingsPage() {
           </div>
 
           <div className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Free plan includes</p>
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Free plan includes</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Creator apps" value="5 free" />
               <Metric label="Brand DMs" value="5 free" />
@@ -56,7 +56,7 @@ export default async function BillingSettingsPage() {
             <h2 className="mt-2 text-2xl font-semibold tracking-[-0.045em]">Upgrade paths</h2>
           </div>
           <Link
-            className="hidden rounded-full border border-[#e9e9e7] px-4 py-2 text-sm font-medium text-[#787774] transition hover:border-[#f3d5c4] hover:text-[#e08550] sm:inline-flex"
+            className="hidden rounded-full border border-[#e9e9e7] px-4 py-2 text-sm font-medium text-[#787774] transition hover:border-[#d9d9d6] hover:text-[#37352f] sm:inline-flex"
             href="/contact"
           >
             Talk to sales
@@ -67,7 +67,7 @@ export default async function BillingSettingsPage() {
         <div className="grid gap-4 xl:grid-cols-3">
           {BILLING_PLANS.map((plan) => (
             <article
-              className="rounded-xl border border-[#e9e9e7] bg-white p-5 transition hover:border-[#f3d5c4]"
+              className="rounded-xl border border-[#e9e9e7] bg-white p-5 transition hover:border-[#d9d9d6]"
               key={plan.id}
             >
               <div className="flex items-start justify-between gap-4">
@@ -83,7 +83,7 @@ export default async function BillingSettingsPage() {
               <ul className="mt-4 grid gap-2 border-t border-[#e9e9e7] pt-4">
                 {plan.features.slice(0, 4).map((feature) => (
                   <li className="flex items-center gap-2 text-sm text-[#787774]" key={feature}>
-                    <Sparkles className="h-3.5 w-3.5 text-[#e08550]" />
+                    <Sparkles className="h-3.5 w-3.5 text-[#787774]" />
                     {feature}
                   </li>
                 ))}
@@ -187,7 +187,7 @@ function UsageLine({ label, limit, used }: { label: string; limit: number | null
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Gauge className="h-4 w-4 text-[#e08550]" />
+          <Gauge className="h-4 w-4 text-[#787774]" />
           <p className="text-sm font-semibold text-[#252932]">{label}</p>
         </div>
         <p className="text-xs font-medium text-[#787774]">

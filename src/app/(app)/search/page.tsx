@@ -333,7 +333,7 @@ function CreatorResultCard({ creator, role }: { creator: CreatorSearchResult; ro
 function CompactStat({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div
-      className={`min-w-0 rounded-[14px] border px-2.5 py-2 ${highlight ? "border-[#f3d5c4] bg-[#fff3ec] text-[#e08550]" : "border-[#dedfe3] bg-white/72 text-[#1d1d1f]"}`}
+      className={`min-w-0 rounded-[14px] border px-2.5 py-2 ${highlight ? "border-[#f3d5c4] bg-[#f7f7f5] text-[#787774]" : "border-[#dedfe3] bg-white/72 text-[#1d1d1f]"}`}
     >
       <span className="block truncate text-[9px] font-semibold tracking-[0.13em] text-[#98a2b3] uppercase">
         {label}

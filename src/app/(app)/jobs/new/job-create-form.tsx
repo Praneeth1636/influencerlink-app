@@ -105,7 +105,7 @@ export function JobCreateForm() {
       }}
     >
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550] ring-1 ring-[#f3d5c4]">
+        <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#f7f7f5] text-[#787774] ring-1 ring-[#f3d5c4]">
           <BriefcaseBusiness className="h-5 w-5" />
         </div>
         <div>

@@ -123,7 +123,7 @@ export default function CreatorPortalPage() {
                   key={post.title}
                 >
                   <div className="flex items-center justify-between">
-                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] text-[#e08550] hover:bg-[#faf0ea]">
+                    <Badge className="rounded-full border border-[#f3d5c4] bg-[#f7f7f5] text-[#787774] hover:bg-[#faf0ea]">
                       {post.type}
                     </Badge>
                     <Play className="h-4 w-4 text-[#9b9a97]" />
@@ -185,7 +185,7 @@ export default function CreatorPortalPage() {
 
           <article className="rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5 text-[#e08550]" />
+              <Sparkles className="h-5 w-5 text-[#787774]" />
               <SectionHeader eyebrow="AI agent" title="Profile coach" />
             </div>
             <p className="mt-4 text-sm leading-6 text-[#787774]">{buildCreatorPitch(creator)}</p>

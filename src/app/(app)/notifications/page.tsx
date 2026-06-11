@@ -28,7 +28,7 @@ export default async function NotificationsPage() {
           notifications.map((notification) => <NotificationCard key={notification.id} notification={notification} />)
         ) : (
           <div className="rounded-xl border border-[#e9e9e7] bg-white p-8 text-center">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#faf0ea] text-[#e08550]">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#f7f7f5] text-[#787774]">
               <Bell className="h-5 w-5" />
             </div>
             <p className="mt-4 text-lg font-semibold tracking-[-0.025em]">You&apos;re all caught up</p>

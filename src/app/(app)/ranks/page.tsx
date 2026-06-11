@@ -37,7 +37,7 @@ export default async function RanksPage() {
           <section className="rounded-[28px] border border-[#e6e8ec] bg-[#fbfcfd] p-6 shadow-[0_18px_50px_rgba(17,24,39,0.04)]">
             <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#e08550] uppercase">Creator ranks</p>
+                <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9b9a97] uppercase">Creator ranks</p>
                 <h1 className="mt-3 max-w-2xl text-5xl leading-[0.95] font-semibold tracking-[-0.065em] text-[#23272f]">
                   Top creators by industry.
                 </h1>
@@ -140,7 +140,7 @@ function RankCategoryCard({ category }: { category: RankCategory }) {
               </span>
               <span className="mt-0.5 block truncate text-xs text-[#667085]">{creator.rankLabel}</span>
             </span>
-            <ArrowUpRight className="h-4 w-4 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#e08550]" />
+            <ArrowUpRight className="h-4 w-4 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#37352f]" />
           </Link>
         ))}
       </div>
@@ -155,7 +155,7 @@ function buildRankCategories(creators: CreatorSearchResult[]): RankCategory[] {
       label: "Overall",
       description: "Top 5 creators across every industry.",
       icon: TerraceRanksIcon,
-      tone: "border-[#f5d5c3] bg-[#fff3ec] text-[#e08550]",
+      tone: "border-[#f5d5c3] bg-[#f7f7f5] text-[#787774]",
       creators: rankCreators(
         creators,
         (creator) => creator.matchScore,

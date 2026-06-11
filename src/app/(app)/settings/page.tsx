@@ -54,11 +54,11 @@ export default async function SettingsPage() {
             const Icon = section.icon;
             return (
               <Link
-                className="rounded-[24px] border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] transition hover:-translate-y-0.5 hover:border-[#f3d5c4]"
+                className="rounded-[24px] border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] transition hover:-translate-y-0.5 hover:border-[#d9d9d6]"
                 href={section.href}
                 key={section.title}
               >
-                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#fbfbfa] text-[#e08550] ring-1 ring-[#e9e9e7]">
+                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#fbfbfa] text-[#787774] ring-1 ring-[#e9e9e7]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <h2 className="mt-5 text-xl font-semibold tracking-[-0.035em]">{section.title}</h2>

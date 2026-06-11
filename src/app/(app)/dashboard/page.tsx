@@ -241,7 +241,7 @@ function CampaignPanel({ campaign }: { campaign: CampaignRow }) {
   return (
     <article className="group rounded-lg border border-[#e9e9e7] bg-white p-4 transition-colors hover:bg-[#fbfbfa]">
       <div className="flex items-center justify-between gap-3">
-        <span className="rounded bg-[#faf0ea] px-2 py-0.5 text-xs font-medium text-[#e08550]">{campaign.platform}</span>
+        <span className="rounded bg-[#f7f7f5] px-2 py-0.5 text-xs font-medium text-[#787774]">{campaign.platform}</span>
         <span className="text-xs font-medium text-[#9b9a97]">
           {campaign.applicantsCount} {campaign.applicantsCount === 1 ? "applicant" : "applicants"}
         </span>

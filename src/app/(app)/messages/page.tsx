@@ -21,7 +21,7 @@ export default async function MessagesPage() {
       <section className="relative z-10 mx-auto grid max-w-[1120px] gap-6 px-5 py-8 lg:grid-cols-[320px_minmax(0,1fr)]">
         <aside className="rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)]">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550] ring-1 ring-[#f3d5c4]">
+            <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#f7f7f5] text-[#787774] ring-1 ring-[#f3d5c4]">
               <Inbox className="h-5 w-5" />
             </div>
             <div>
@@ -56,7 +56,7 @@ export default async function MessagesPage() {
             </div>
           ) : (
             <div className="text-center">
-              <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#faf0ea] text-[#e08550]">
+              <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#f7f7f5] text-[#787774]">
                 <MessageCircle className="h-5 w-5" />
               </div>
               <p className="mt-4 text-lg font-semibold tracking-[-0.025em]">No messages yet</p>
@@ -98,7 +98,7 @@ async function getThreads() {
 function ThreadPreviewCard({ thread }: { thread: InboxThreadPreview }) {
   return (
     <Link
-      className="block rounded-lg border border-[#e9e9e7] bg-white p-4 transition hover:border-[#f3d5c4] hover:bg-[#fbfbfa]"
+      className="block rounded-lg border border-[#e9e9e7] bg-white p-4 transition hover:border-[#d9d9d6] hover:bg-[#fbfbfa]"
       href={`/messages/${thread.id}`}
     >
       <div className="flex items-start justify-between gap-3">

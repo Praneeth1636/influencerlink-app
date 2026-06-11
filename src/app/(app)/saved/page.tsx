@@ -40,7 +40,7 @@ export default function SavedPage() {
 
       <section className="mx-auto grid max-w-[980px] gap-6 px-5 py-7">
         <article className="rounded-[30px] border border-[#e9e9e7] bg-white p-6 shadow-[0_18px_54px_rgba(17,24,39,0.04)]">
-          <Badge className="rounded-full border border-[#f3d5c4] bg-[#faf0ea] px-3 py-1 text-[#e08550] hover:bg-[#faf0ea]">
+          <Badge className="rounded-full border border-[#e9e9e7] bg-[#f7f7f5] px-3 py-1 text-[#787774] hover:bg-[#f7f7f5]">
             <Bookmark className="mr-2 h-3.5 w-3.5" />
             Saved workspace
           </Badge>
@@ -58,11 +58,11 @@ export default function SavedPage() {
             const Icon = item.icon;
             return (
               <Link
-                className="grid gap-3 rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] transition hover:-translate-y-0.5 hover:border-[#f3d5c4] md:grid-cols-[auto_1fr_auto]"
+                className="grid gap-3 rounded-xl border border-[#e9e9e7] bg-white p-5 shadow-[0_10px_30px_rgba(17,24,39,0.035)] transition hover:-translate-y-0.5 hover:border-[#d9d9d6] md:grid-cols-[auto_1fr_auto]"
                 href={item.href}
                 key={item.title}
               >
-                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#faf0ea] text-[#e08550]">
+                <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#f7f7f5] text-[#787774]">
                   <Icon className="h-5 w-5" />
                 </span>
                 <span>
@@ -82,7 +82,7 @@ export default function SavedPage() {
 
         <article className="rounded-xl border border-[#f3d5c4] bg-[#faf0ea] p-5">
           <div className="flex items-center gap-3">
-            <Sparkles className="h-5 w-5 text-[#e08550]" />
+            <Sparkles className="h-5 w-5 text-[#787774]" />
             <p className="font-semibold">Tip</p>
           </div>
           <p className="mt-2 text-sm leading-6 text-[#7a513f]">
