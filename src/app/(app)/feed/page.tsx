@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import {
   BadgeCheck,
   Bell,
@@ -366,24 +367,19 @@ function VisualFeed({
   status: string | null;
 }) {
   const streams = [
-    { id: "all", label: "For you", count: 128, icon: Radio },
-    { id: "following", label: "Following", count: 38, icon: Users },
-    { id: "collabs", label: "Collabs", count: 14, icon: BriefcaseBusiness },
-    { id: "videos", label: "YouTube", count: 22, icon: Video },
-    { id: "reels", label: "Reels", count: 31, icon: ImageIcon },
-    { id: "open", label: "Open to collab", count: 9, icon: Eye }
+    { id: "all", label: "For you", icon: Radio },
+    { id: "following", label: "Following", icon: Users },
+    { id: "collabs", label: "Collabs", icon: BriefcaseBusiness },
+    { id: "videos", label: "YouTube", icon: Video },
+    { id: "reels", label: "Reels", icon: ImageIcon },
+    { id: "open", label: "Open to collab", icon: Eye }
   ];
 
   return (
     <section className="terrace-app-bg min-h-screen">
       <header className="terrace-topbar sticky top-0 z-40 hidden border-b md:block">
         <div className="mx-auto flex max-w-[1220px] items-center gap-4 px-5 py-3">
-          <div className="hidden min-w-[220px] lg:block">
-            <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">Home</p>
-            <p className="mt-0.5 text-sm font-medium text-[#5f6672]">
-              {role === "brand" ? "Creator proof and market signal" : "Following, posts, and creator drops"}
-            </p>
-          </div>
+          <p className="hidden min-w-[120px] text-[15px] font-semibold tracking-[-0.02em] lg:block">Feed</p>
           <TerraceActionSearchBar
             className="mx-auto hidden max-w-[560px] md:block"
             onQueryChange={setQuery}
@@ -404,10 +400,13 @@ function VisualFeed({
             >
               <MessageSquare className="h-5 w-5" />
             </Link>
-            <span
-              className="grid h-10 w-10 place-items-center rounded-[13px] bg-[linear-gradient(135deg,#cad7de,#edbda6)] shadow-[inset_0_0_0_1px_rgba(17,24,39,0.08)]"
-              aria-hidden
-            />
+            <Link
+              aria-label="Your profile"
+              className="grid h-10 w-10 place-items-center rounded-full bg-[#fdf3ec] text-xs font-bold text-[#e08550] ring-1 ring-[#f3d5c4] transition hover:ring-[#e7b598]"
+              href="/creator"
+            >
+              {initials(initialCreator.name)}
+            </Link>
           </div>
         </div>
       </header>
@@ -429,20 +428,22 @@ function VisualFeed({
               const Icon = stream.icon;
               return (
                 <button
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-[13px] px-3 py-2 text-sm font-semibold transition duration-150 active:scale-[0.98] ${
-                    active ? "bg-[#1d1d1f] text-[#fbfbfc]" : "text-[#667085] hover:bg-white hover:text-[#1d1d1f]"
+                  className={`relative inline-flex shrink-0 items-center gap-2 rounded-[13px] px-3.5 py-2 text-sm font-semibold transition-colors duration-200 active:scale-[0.98] ${
+                    active ? "text-[#fbfbfc]" : "text-[#667085] hover:bg-white hover:text-[#1d1d1f]"
                   }`}
                   key={stream.id}
                   onClick={() => onStreamSelect(stream.id)}
                   type="button"
                 >
-                  <Icon className={`h-4 w-4 ${active ? "text-[#f7a777]" : "text-[#98a2b3]"}`} />
-                  {stream.label}
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] ${active ? "bg-white/10 text-[#fbfcfd]" : "bg-[#f1f4f7] text-[#98a2b3]"}`}
-                  >
-                    {stream.count}
-                  </span>
+                  {active && (
+                    <motion.span
+                      className="absolute inset-0 rounded-[13px] bg-[#1d1d1f]"
+                      layoutId="feed-stream-pill"
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    />
+                  )}
+                  <Icon className={`relative z-10 h-4 w-4 ${active ? "text-[#f5b38e]" : "text-[#98a2b3]"}`} />
+                  <span className="relative z-10">{stream.label}</span>
                 </button>
               );
             })}
@@ -511,8 +512,6 @@ function VisualFeed({
         </main>
 
         <aside className="hidden content-start gap-4 xl:sticky xl:top-24 xl:grid">
-          {role === "brand" ? <BrandFeedInspector /> : <CreatorFeedPulse />}
-
           <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold tracking-[-0.03em]">
@@ -616,12 +615,17 @@ function StoryRail({
   return (
     <section className="terrace-panel overflow-hidden rounded-none border-x-0 border-t-0 px-3 py-2.5 sm:rounded-[22px] sm:border sm:px-4 sm:py-3">
       <div className="flex gap-3 overflow-x-auto pb-1 sm:gap-4 [&::-webkit-scrollbar]:hidden">
-        {visibleCreators.map((creator) => (
-          <button
+        {visibleCreators.map((creator, index) => (
+          <motion.button
+            animate={{ opacity: 1, y: 0 }}
             className="grid w-[58px] shrink-0 justify-items-center gap-1.5 text-center sm:w-[68px] sm:gap-2"
+            initial={{ opacity: 0, y: 14 }}
             key={creator.id}
             onClick={() => onOpenCreator(creator)}
+            transition={{ delay: index * 0.05, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             type="button"
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.94 }}
           >
             <span className="terrace-story-ring grid h-14 w-14 place-items-center rounded-full p-1 sm:h-16 sm:w-16">
               <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#edf8ff,#fff3ec)] text-xs font-semibold text-[#1d1d1f] sm:text-sm">
@@ -629,48 +633,8 @@ function StoryRail({
               </span>
             </span>
             <span className="w-full truncate text-[11px] font-medium text-[#5f6672] sm:text-xs">{creator.handle}</span>
-          </button>
+          </motion.button>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function DarkRailMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-[14px] border border-[#dedfe3] bg-white/72 px-3 py-2 text-sm">
-      <span className="text-[#667085]">{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function BrandFeedInspector() {
-  return (
-    <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 text-[#1d1d1f] shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] backdrop-blur-xl">
-      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Inspector</p>
-      <h2 className="mt-2 text-xl leading-tight font-semibold tracking-[-0.045em]">Beauty reels are moving fastest.</h2>
-      <div className="mt-4 grid gap-2">
-        <DarkRailMetric label="Views this month" value="4.3M" />
-        <DarkRailMetric label="Avg engagement" value="8.4%" />
-        <DarkRailMetric label="Fastest growth" value="+32%" />
-      </div>
-    </section>
-  );
-}
-
-function CreatorFeedPulse() {
-  return (
-    <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 text-[#1d1d1f] shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] backdrop-blur-xl">
-      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#d06b3f] uppercase">Your feed</p>
-      <h2 className="mt-2 text-xl leading-tight font-semibold tracking-[-0.045em]">Share what you posted today.</h2>
-      <p className="mt-2 text-sm leading-6 text-[#667085]">
-        Creator home is for posts, follows, replies, and gigs. Brand pricing and fit scores stay out of this view.
-      </p>
-      <div className="mt-4 grid gap-2">
-        <DarkRailMetric label="New posts seen" value="18" />
-        <DarkRailMetric label="Replies waiting" value="4" />
-        <DarkRailMetric label="Gigs saved" value="3" />
       </div>
     </section>
   );
