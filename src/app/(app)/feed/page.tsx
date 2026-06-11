@@ -376,25 +376,24 @@ function VisualFeed({
   ];
 
   return (
-    <section className="terrace-app-bg min-h-screen">
-      <header className="terrace-topbar sticky top-0 z-40 hidden border-b md:block">
-        <div className="mx-auto flex max-w-[1220px] items-center gap-4 px-5 py-3">
-          <p className="hidden min-w-[120px] text-[15px] font-semibold tracking-[-0.02em] lg:block">Feed</p>
+    <section className="min-h-screen bg-white">
+      <header className="sticky top-0 z-40 hidden bg-white/85 backdrop-blur-xl md:block">
+        <div className="mx-auto flex max-w-[1080px] items-center gap-4 px-5 py-2.5">
           <TerraceActionSearchBar
-            className="mx-auto hidden max-w-[560px] md:block"
+            className="mx-auto hidden max-w-[440px] md:block"
             onQueryChange={setQuery}
             query={query}
           />
-          <div className="ml-auto flex items-center gap-2 text-[#787774]">
+          <div className="absolute right-5 flex items-center gap-1 text-[#37352f]">
             <Link
-              className="grid h-10 w-10 place-items-center rounded-[13px] border border-[#dedfe3] bg-[#fbfbfc] shadow-[0_1px_1px_rgba(17,24,39,0.04)] transition hover:bg-white"
+              className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-[#f7f7f5]"
               aria-label="Notifications"
               href="/notifications"
             >
               <Bell className="h-5 w-5" />
             </Link>
             <Link
-              className="grid h-10 w-10 place-items-center rounded-[13px] border border-[#dedfe3] bg-[#fbfbfc] shadow-[0_1px_1px_rgba(17,24,39,0.04)] transition hover:bg-white"
+              className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-[#f7f7f5]"
               aria-label="Messages"
               href="/messages"
             >
@@ -402,7 +401,7 @@ function VisualFeed({
             </Link>
             <Link
               aria-label="Your profile"
-              className="grid h-10 w-10 place-items-center rounded-full bg-[#fdf3ec] text-xs font-bold text-[#e08550] ring-1 ring-[#f3d5c4] transition hover:ring-[#e7b598]"
+              className="ml-1 grid h-9 w-9 place-items-center rounded-full bg-[#fdf3ec] text-[11px] font-bold text-[#e08550] transition hover:scale-105"
               href="/creator"
             >
               {initials(initialCreator.name)}
@@ -411,54 +410,52 @@ function VisualFeed({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1220px] gap-5 px-0 py-0 sm:px-5 sm:py-5 xl:grid-cols-[minmax(0,680px)_320px]">
-        <main className="min-w-0">
+      <div className="mx-auto flex max-w-[1080px] justify-center gap-16 px-0 pb-24 sm:px-6">
+        <main className="w-full max-w-[600px] min-w-0">
           <StoryRail creators={creators} onOpenCreator={onOpenCreator} />
 
-          <div className="creatorlink-animate-in">
+          <div className="creatorlink-animate-in mt-1 px-4 sm:px-0">
             <FeedComposer isPosting={isPosting} onSubmit={onPostSubmit} status={status} />
           </div>
 
           <nav
-            className="terrace-panel mt-3 flex gap-1.5 overflow-x-auto rounded-none border-x-0 p-1.5 sm:rounded-[18px] sm:border-x"
+            className="sticky top-[56px] z-30 flex gap-2 overflow-x-auto border-b border-[#f1f1ef] bg-white/90 px-4 backdrop-blur-xl sm:px-0 [&::-webkit-scrollbar]:hidden"
             aria-label="Feed filters"
           >
             {streams.map((stream) => {
               const active = activeStream === stream.id;
-              const Icon = stream.icon;
               return (
                 <button
-                  className={`relative inline-flex shrink-0 items-center gap-2 rounded-[13px] px-3.5 py-2 text-sm font-semibold transition-colors duration-200 active:scale-[0.98] ${
-                    active ? "text-[#fbfbfc]" : "text-[#667085] hover:bg-white hover:text-[#1d1d1f]"
+                  className={`relative shrink-0 px-3 py-3 text-sm font-medium transition-colors duration-200 ${
+                    active ? "text-[#1d1d1f]" : "text-[#9b9a97] hover:text-[#37352f]"
                   }`}
                   key={stream.id}
                   onClick={() => onStreamSelect(stream.id)}
                   type="button"
                 >
+                  {stream.label}
                   {active && (
                     <motion.span
-                      className="absolute inset-0 rounded-[13px] bg-[#1d1d1f]"
-                      layoutId="feed-stream-pill"
-                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-[#1d1d1f]"
+                      layoutId="feed-stream-underline"
+                      transition={{ type: "spring", stiffness: 480, damping: 38 }}
                     />
                   )}
-                  <Icon className={`relative z-10 h-4 w-4 ${active ? "text-[#f5b38e]" : "text-[#98a2b3]"}`} />
-                  <span className="relative z-10">{stream.label}</span>
                 </button>
               );
             })}
           </nav>
 
-          <div className="mt-3 grid gap-3.5 sm:mt-4">
+          <div className="divide-y divide-[#f1f1ef] px-4 sm:px-0">
             {posts.length === 0 && (
-              <div className="rounded-xl border border-dashed border-[#e1e1de] bg-white p-10 text-center">
+              <div className="py-16 text-center">
                 <p className="text-sm font-semibold">No posts match this section.</p>
-                <p className="mt-1 text-xs text-[#787774]">Try another feed section or search term.</p>
+                <p className="mt-1 text-xs text-[#9b9a97]">Try another section or search term.</p>
               </div>
             )}
             {posts.map((post, index) => (
               <div
-                className="creatorlink-animate-in"
+                className="creatorlink-animate-in py-6"
                 key={post.id}
                 style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
               >
@@ -511,52 +508,44 @@ function VisualFeed({
           </div>
         </main>
 
-        <aside className="hidden content-start gap-4 xl:sticky xl:top-24 xl:grid">
-          <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold tracking-[-0.03em]">
-                {role === "brand" ? "Suggested creators" : "People to follow"}
-              </h2>
-              <Link className="text-sm text-[#787774] hover:text-[#37352f]" href="/search">
-                See all
-              </Link>
-            </div>
-            <div className="mt-4 divide-y divide-[#e9e9e7]">
-              {creators.slice(1, 4).map((creator) => (
-                <SuggestedCreatorRow key={creator.id} creator={creator} onOpenCreator={onOpenCreator} />
-              ))}
-            </div>
-          </section>
-
-          <section className="rounded-[24px] border border-[#dedfe3] bg-[#fbfbfc]/92 p-4 shadow-[0_1px_2px_rgba(17,24,39,0.04)] backdrop-blur-xl">
-            <h2 className="text-base font-semibold tracking-[-0.03em]">
-              {role === "brand" ? "Active briefs" : "Gigs for you"}
-            </h2>
-            <div className="mt-4 grid gap-5">
-              {seedCampaigns.slice(0, 2).map((campaign, index) => (
-                <Link className="block text-left" href={`/jobs/${campaign.id}`} key={campaign.id}>
-                  <p className="text-sm font-semibold">
-                    {index === 0 ? "Autumn skincare launch — 6 creators" : campaign.title}
-                  </p>
-                  <p className="mt-1 text-xs text-[#787774]">
-                    {campaign.brand} · {campaign.budgetRange}
-                  </p>
-                  <div className="mt-2 flex gap-2">
-                    {(index === 0 ? ["Beauty", "Reel"] : ["Travel", "Video"]).map((tag) => (
-                      <span
-                        className="rounded-full border border-[#e9e9e7] bg-[#f7f7f5] px-3 py-1 text-xs font-medium text-[#37352f]"
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+        <aside className="hidden w-[300px] shrink-0 xl:block">
+          <div className="sticky top-20 grid content-start gap-9 pt-6">
+            <section>
+              <div className="flex items-baseline justify-between">
+                <h2 className="text-sm font-semibold text-[#9b9a97]">
+                  {role === "brand" ? "Suggested creators" : "Suggested for you"}
+                </h2>
+                <Link className="text-xs font-semibold text-[#37352f] hover:text-[#9b9a97]" href="/search">
+                  See all
                 </Link>
-              ))}
-            </div>
-          </section>
+              </div>
+              <div className="mt-1.5">
+                {creators.slice(1, 5).map((creator) => (
+                  <SuggestedCreatorRow key={creator.id} creator={creator} onOpenCreator={onOpenCreator} />
+                ))}
+              </div>
+            </section>
 
-          <p className="px-1 text-xs text-[#787774]">Privacy · Terms · Trust · About · © Terrace</p>
+            <section>
+              <h2 className="text-sm font-semibold text-[#9b9a97]">
+                {role === "brand" ? "Active briefs" : "Gigs for you"}
+              </h2>
+              <div className="mt-3 grid gap-4">
+                {seedCampaigns.slice(0, 2).map((campaign, index) => (
+                  <Link className="group block text-left" href={`/jobs/${campaign.id}`} key={campaign.id}>
+                    <p className="text-sm font-semibold text-[#37352f] group-hover:underline">
+                      {index === 0 ? "Autumn skincare launch — 6 creators" : campaign.title}
+                    </p>
+                    <p className="mt-0.5 text-[13px] text-[#9b9a97]">
+                      {campaign.brand} · {campaign.budgetRange}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            <p className="text-xs leading-6 text-[#c9c8c5]">Privacy · Terms · Trust · About · © Terrace</p>
+          </div>
         </aside>
       </div>
     </section>
@@ -573,26 +562,24 @@ function SuggestedCreatorRow({
   const [following, setFollowing] = useState(false);
 
   return (
-    <div className="flex w-full items-center gap-3 py-3">
+    <div className="flex w-full items-center gap-3 py-2">
       <button
         className="flex min-w-0 flex-1 items-center gap-3 text-left"
         onClick={() => onOpenCreator(creator)}
         type="button"
       >
-        <CreatorAvatar creator={creator} className="h-11 w-11 text-xs" showBadge />
+        <CreatorAvatar creator={creator} className="h-9 w-9 text-[10px]" showBadge />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-semibold">
+          <span className="block truncate text-[13px] font-semibold text-[#37352f]">
             {creator.name}
             {creator.verified ? <BadgeCheck className="ml-1 inline h-3.5 w-3.5 text-[#8CC9E8]" /> : null}
           </span>
-          <span className="block truncate text-xs text-[#787774]">{creator.niche} · Lifestyle</span>
+          <span className="block truncate text-xs text-[#9b9a97]">{creator.niche}</span>
         </span>
       </button>
       <button
-        className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-150 active:scale-95 ${
-          following
-            ? "border-[#d6eaf8] bg-[#edf8ff] text-[#2f83b7]"
-            : "border-[#e9e9e7] bg-white text-[#37352f] hover:border-[#f3d5c4] hover:text-[#e08550]"
+        className={`text-xs font-semibold transition-colors duration-150 active:scale-95 ${
+          following ? "text-[#9b9a97]" : "text-[#2b8fc4] hover:text-[#1c6c99]"
         }`}
         onClick={() => setFollowing((current) => !current)}
         type="button"
@@ -613,7 +600,7 @@ function StoryRail({
   const visibleCreators = creators.slice(0, 8);
 
   return (
-    <section className="terrace-panel overflow-hidden rounded-none border-x-0 border-t-0 px-3 py-2.5 sm:rounded-[22px] sm:border sm:px-4 sm:py-3">
+    <section className="px-4 pt-4 pb-1 sm:px-0 sm:pt-6">
       <div className="flex gap-3 overflow-x-auto pb-1 sm:gap-4 [&::-webkit-scrollbar]:hidden">
         {visibleCreators.map((creator, index) => (
           <motion.button
@@ -675,34 +662,22 @@ function FeedComposer({
   }
 
   return (
-    <Panel className="p-3 sm:p-4">
+    <div className="border-b border-[#f1f1ef] pb-4">
       <button
         className={`flex w-full items-center gap-3 text-left sm:hidden ${expanded ? "hidden" : ""}`}
         onClick={() => setExpanded(true)}
         type="button"
       >
-        <CreatorAvatar creator={initialCreator} className="h-9 w-9 text-xs ring-2 ring-white" showBadge />
-        <span className="min-w-0 flex-1 rounded-full border border-[#dedfe3] bg-[#f8f8fa] px-4 py-2.5 text-sm text-[#98a2b3]">
-          Share an update...
-        </span>
+        <CreatorAvatar creator={initialCreator} className="h-9 w-9 text-xs" showBadge />
+        <span className="min-w-0 flex-1 py-2.5 text-[15px] text-[#9b9a97]">Share an update...</span>
       </button>
 
-      <form className={`${expanded ? "grid" : "hidden"} gap-3 sm:grid sm:gap-4`} onSubmit={submitComposer}>
-        <div className="flex items-start gap-3 sm:gap-3.5">
-          <CreatorAvatar
-            creator={initialCreator}
-            className="h-9 w-9 text-xs ring-2 ring-white sm:h-11 sm:w-11 sm:text-sm sm:ring-4"
-            showBadge
-          />
+      <form className={`${expanded ? "grid" : "hidden"} gap-2 sm:grid`} onSubmit={submitComposer}>
+        <div className="flex items-start gap-3">
+          <CreatorAvatar creator={initialCreator} className="h-10 w-10 text-xs sm:h-11 sm:w-11 sm:text-sm" showBadge />
           <div className="min-w-0 flex-1">
-            <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
-              <span className="text-[13px] font-semibold text-[#1d1d1f] sm:text-sm">Create post</span>
-              <span className="rounded-full border border-[#dceff8] bg-[#f1faff] px-2 py-0.5 text-[10px] font-semibold tracking-[0.12em] text-[#2b8fc4] uppercase">
-                Public
-              </span>
-            </div>
             <textarea
-              className="min-h-16 w-full resize-none rounded-[14px] border border-[#dedfe3] bg-[#f8f8fa] px-3 py-2.5 text-sm leading-5 text-[#1d1d1f] transition outline-none placeholder:text-[#98a2b3] focus:border-[#b9def0] focus:bg-white focus:shadow-[0_0_0_4px_rgba(140,201,232,0.14)] sm:min-h-20 sm:rounded-[16px] sm:px-4 sm:py-3 sm:text-[15px] sm:leading-6"
+              className="min-h-12 w-full resize-none border-0 bg-transparent pt-2.5 text-[15px] leading-6 text-[#1d1d1f] outline-none placeholder:text-[#9b9a97] sm:min-h-14"
               onChange={(event) => {
                 setLocalMessage(null);
                 setDraft((current) => ({ ...current, body: event.target.value }));
@@ -712,7 +687,7 @@ function FeedComposer({
             />
             {draft.type === "content_drop" && (
               <input
-                className="mt-3 h-11 w-full rounded-[16px] border border-[#e6e8ec] bg-white px-4 text-sm text-[#37352f] outline-none placeholder:text-[#9b9a97] focus:border-[#8CC9E8]"
+                className="mt-1 h-10 w-full rounded-full border border-[#f1f1ef] bg-[#fbfbfa] px-4 text-sm text-[#37352f] outline-none placeholder:text-[#9b9a97] focus:border-[#8CC9E8] focus:bg-white"
                 onChange={(event) => setDraft((current) => ({ ...current, sourceUrl: event.target.value }))}
                 placeholder="Paste content URL"
                 value={draft.sourceUrl}
@@ -720,8 +695,8 @@ function FeedComposer({
             )}
           </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <div className="flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#787774] sm:gap-2 sm:text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 pl-[52px] sm:gap-3 sm:pl-[56px]">
+          <div className="flex flex-wrap items-center gap-1 text-[13px] font-medium text-[#787774] sm:text-sm">
             <ComposerTypeButton
               active={draft.type === "update"}
               icon={ImageIcon}
@@ -748,7 +723,7 @@ function FeedComposer({
             />
           </div>
           <AttractButton
-            className="h-9 rounded-[12px] bg-[#1d1d1f] px-4 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(17,24,39,0.1)] hover:bg-[#333336] sm:h-10 sm:rounded-[14px] sm:px-5"
+            className="h-9 rounded-full border-0 bg-[#1d1d1f] px-5 text-sm font-semibold text-white shadow-none transition-transform hover:scale-[1.04] hover:bg-[#333336] active:scale-[0.97] disabled:opacity-40"
             disabled={isPosting || !validation.ok}
             particleCount={0}
             type="submit"
@@ -765,7 +740,7 @@ function FeedComposer({
         </div>
         {visibleMessage && <p className="text-xs font-medium text-[#787774]">{visibleMessage}</p>}
       </form>
-    </Panel>
+    </div>
   );
 }
 
@@ -893,16 +868,6 @@ function CreatorProfileSheet({
         </SheetFooter>
       </div>
     </SheetContent>
-  );
-}
-
-function Panel({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <article
-      className={`border-y border-[#dedfe3] bg-[#fbfbfc]/92 shadow-[0_1px_2px_rgba(17,24,39,0.035)] backdrop-blur-xl sm:rounded-[24px] sm:border sm:shadow-[0_1px_2px_rgba(17,24,39,0.04),0_18px_48px_rgba(17,24,39,0.045)] ${className}`}
-    >
-      {children}
-    </article>
   );
 }
 

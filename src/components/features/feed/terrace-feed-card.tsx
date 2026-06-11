@@ -80,42 +80,30 @@ export function TerraceFeedCard({
   }
 
   return (
-    <article
-      className={cn(
-        "relative isolate overflow-hidden border-y border-[#dedfe3] bg-[#fbfbfc] shadow-[0_1px_2px_rgba(17,24,39,0.035)] transition duration-200 hover:border-[#cfd5dc] hover:bg-white sm:rounded-[22px] sm:border sm:shadow-[0_1px_2px_rgba(17,24,39,0.04),0_14px_34px_rgba(17,24,39,0.035)]",
-        className
-      )}
-    >
-      <div className="relative p-3 sm:p-5">
+    <article className={cn("relative", className)}>
+      <div className="relative">
         <div className="flex items-start justify-between gap-3 sm:gap-4">
-          <div className="flex min-w-0 gap-3">
-            <Avatar className="h-9 w-9 shrink-0 border border-[#dedfe3] bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[11px] font-semibold text-[#e08550] ring-2 ring-white sm:h-11 sm:w-11 sm:text-xs sm:ring-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <Avatar className="h-10 w-10 shrink-0 bg-[linear-gradient(135deg,#f1faff,#fff3ec)] text-[11px] font-semibold text-[#e08550] sm:h-11 sm:w-11 sm:text-xs">
               <AvatarFallback className="bg-transparent text-[#e08550]">{avatarFallback}</AvatarFallback>
               <AvatarBadge className="bg-emerald-400" />
             </Avatar>
             <div className="min-w-0">
               <button
-                className="inline-flex max-w-full items-center gap-1.5 text-left text-sm font-semibold tracking-[-0.02em] text-[#1d1d1f] hover:text-[#e08550] sm:text-[15px]"
+                className="inline-flex max-w-full items-center gap-1.5 text-left text-sm font-semibold tracking-[-0.02em] text-[#1d1d1f] hover:underline sm:text-[15px]"
                 onClick={onAuthorClick}
                 type="button"
               >
                 <span className="truncate">{authorName}</span>
-                {verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[#e08550]" />}
+                {verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[#8CC9E8]" />}
               </button>
-              <p className="mt-0.5 truncate text-xs text-[#6b7280]">
+              <p className="mt-0.5 truncate text-[13px] text-[#9b9a97]">
                 @{authorHandle} · {authorMeta} · {timestamp}
               </p>
             </div>
           </div>
 
-          <span
-            className="shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold sm:px-2.5 sm:py-1 sm:text-[11px]"
-            style={{
-              backgroundColor: "#fbfcfd",
-              borderColor: `${accent}34`,
-              color: accent
-            }}
-          >
+          <span className="shrink-0 pt-1 text-[11px] font-semibold tracking-[0.04em]" style={{ color: accent }}>
             {label}
           </span>
         </div>
@@ -130,7 +118,7 @@ export function TerraceFeedCard({
 
         {imageUrl && !social && (
           <button
-            className="mt-3 block w-full overflow-hidden rounded-[14px] border border-[#dedfe3] bg-[#f5f5f7] text-left sm:mt-4 sm:rounded-[18px]"
+            className="mt-3 block w-full overflow-hidden rounded-2xl bg-[#f7f7f5] text-left sm:mt-4"
             onClick={onAuthorClick}
             type="button"
           >
@@ -144,14 +132,14 @@ export function TerraceFeedCard({
         {social && <SocialEmbed social={social} />}
 
         {brief && (
-          <div className="mt-3 rounded-[14px] border border-[#dedfe3] bg-white/72 p-3 sm:mt-4 sm:rounded-[18px] sm:p-4">
+          <div className="mt-3 rounded-2xl border border-[#f1f1ef] bg-[#fbfbfa] p-4 sm:mt-4">
             <p className="text-[11px] font-semibold tracking-[0.16em] text-[#e08550] uppercase">Hiring brief</p>
             <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em] text-[#37352f]">{brief.title}</h3>
             <p className="mt-2 text-sm leading-6 text-[#787774]">{brief.description}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {brief.meta.map((item) => (
                 <span
-                  className="rounded-full border border-[#e6e8ec] bg-white px-3 py-1 text-xs font-medium text-[#667085]"
+                  className="rounded-full border border-[#f1f1ef] bg-white px-3 py-1 text-xs font-medium text-[#787774]"
                   key={item}
                 >
                   {item}
@@ -162,7 +150,7 @@ export function TerraceFeedCard({
         )}
 
         {reply && (
-          <div className="mt-3 rounded-[14px] border border-[#dedfe3] bg-white/72 p-3 sm:mt-4 sm:rounded-[18px] sm:p-4">
+          <div className="mt-3 rounded-2xl bg-[#fbfbfa] p-4 sm:mt-4">
             <div className="flex gap-3">
               <Avatar className="h-10 w-10 shrink-0 bg-[#f0f7fb] text-xs font-semibold text-[#243447]">
                 <AvatarFallback className="bg-transparent">{reply.avatarFallback}</AvatarFallback>
@@ -181,16 +169,8 @@ export function TerraceFeedCard({
           </div>
         )}
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#eceef2] pt-2.5 sm:mt-4 sm:gap-3 sm:pt-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-[#e6e8ec] bg-[#fbfcfd] px-2.5 py-1 text-[11px] font-medium text-[#667085] sm:px-3 sm:text-xs">
-              {metric}
-            </span>
-            <span className="rounded-full border border-[#dceff8] bg-[#f1faff] px-2.5 py-1 text-[11px] font-medium text-[#2b8fc4] sm:px-3 sm:text-xs">
-              Verified signal
-            </span>
-          </div>
-          <div className="flex items-center gap-0.5 text-[#787774]">
+        <div className="mt-2 flex items-center sm:mt-2.5">
+          <div className="-ml-2 flex items-center gap-0.5 text-[#37352f]">
             <LikeAction
               liked={liked}
               onClick={() => {
@@ -217,6 +197,9 @@ export function TerraceFeedCard({
                 note(reposted ? "Repost removed." : "Repost added to your feed.");
               }}
             />
+            <SocialButton />
+          </div>
+          <div className="-mr-2 ml-auto">
             <IconAction
               active={saved}
               activeClassName="bg-[#faf0ea] text-[#e08550]"
@@ -227,15 +210,15 @@ export function TerraceFeedCard({
                 setSaved((current) => !current);
               }}
             />
-            <SocialButton />
           </div>
         </div>
+        <p className="text-[13px] font-semibold tracking-[-0.01em] text-[#37352f]">{metric}</p>
         {interactionMessage ? (
           <p className="creatorlink-reveal mt-3 text-xs font-medium text-[#787774]">{interactionMessage}</p>
         ) : null}
         {replyOpen ? (
           <form
-            className="creatorlink-reveal mt-4 flex items-center gap-2 rounded-lg border border-[#e9e9e7] bg-[#fbfbfa] p-2"
+            className="creatorlink-reveal mt-3 flex items-center gap-2"
             onSubmit={(event) => {
               event.preventDefault();
               if (!replyText.trim()) {
@@ -248,7 +231,7 @@ export function TerraceFeedCard({
             }}
           >
             <input
-              className="h-10 min-w-0 flex-1 rounded-full border border-transparent bg-white px-4 text-sm text-[#37352f] outline-none placeholder:text-[#9b9a97] focus:border-[#9dcfe5]"
+              className="h-10 min-w-0 flex-1 rounded-full border border-[#f1f1ef] bg-[#fbfbfa] px-4 text-sm text-[#37352f] outline-none placeholder:text-[#9b9a97] focus:border-[#9dcfe5] focus:bg-white"
               onChange={(event) => setReplyText(event.target.value)}
               placeholder={`Reply to ${authorName}...`}
               value={replyText}
@@ -370,7 +353,7 @@ function SocialEmbed({ social }: { social: TerraceFeedSocial }) {
       href={social.externalUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group mt-5 block overflow-hidden rounded-[22px] border border-[#e6e8ec] bg-white transition-colors hover:border-[#dceff8]"
+      className="group mt-3 block overflow-hidden rounded-2xl sm:mt-4"
     >
       <div
         className="relative overflow-hidden bg-cover bg-center"
@@ -415,12 +398,9 @@ function SocialEmbed({ social }: { social: TerraceFeedSocial }) {
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between gap-4 px-4 py-3.5">
+      <div className="flex items-center justify-between gap-4 pt-2.5">
         <div className="min-w-0">
-          {social.title && <p className="truncate text-sm font-semibold text-[#37352f]">{social.title}</p>}
-          {stats.length > 0 && (
-            <p className={`truncate text-xs text-[#787774] ${social.title ? "mt-1" : ""}`}>{stats.join("  ·  ")}</p>
-          )}
+          {stats.length > 0 && <p className="truncate text-xs text-[#9b9a97]">{stats.join("  ·  ")}</p>}
         </div>
         <span
           className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold transition group-hover:gap-1.5"
