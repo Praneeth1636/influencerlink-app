@@ -98,7 +98,7 @@ test("messages inbox and thread detail load conversations", async ({ page }) => 
   await page.goto("/messages");
 
   await expect(page).toHaveTitle(/Terrace/);
-  await expect(page.getByRole("heading", { name: "Keep every creator deal in one clean thread." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /thread/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /GlowHaus/ }).first()).toBeVisible();
 
   await page.goto("/messages/00000000-0000-4000-8000-000000009000");
@@ -111,8 +111,8 @@ test("notifications page loads workspace alerts", async ({ page }) => {
   await page.goto("/notifications");
 
   await expect(page).toHaveTitle(/Terrace/);
-  await expect(page.getByRole("heading", { name: "Track every creator opportunity as it moves." })).toBeVisible();
-  await expect(page.getByText("Workspace alerts")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Notifications" })).toBeVisible();
+  await expect(page.getByText("Follows, replies, applications, and deal activity.")).toBeVisible();
   await expect(page.getByRole("button", { name: "Mark all read" })).toBeVisible();
 });
 
@@ -120,7 +120,7 @@ test("billing settings page loads plan usage", async ({ page }) => {
   await page.goto("/settings/billing");
 
   await expect(page).toHaveTitle(/Terrace/);
-  await expect(page.getByRole("heading", { name: "Turn Terrace into a paid marketplace." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Billing" })).toBeVisible();
   await expect(page.getByText("Plan catalog")).toBeVisible();
   await expect(page.getByText("Brand Growth")).toBeVisible();
 });

@@ -13,9 +13,9 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-const navItems = [
+const navItems: Array<{ href: string; label: string; prefetch?: boolean }> = [
   { href: "/jobs", label: "Gigs" },
-  { href: "/search", label: "Creators", prefetch: false },
+  { href: "/creators", label: "Creators" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }

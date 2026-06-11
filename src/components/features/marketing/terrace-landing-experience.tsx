@@ -164,8 +164,7 @@ function Hero({ creatorRows, reducedMotion }: { creatorRows: LandingCreatorRow[]
                 &amp; more are already seated.{" "}
                 <Link
                   className="font-semibold text-[#37352f] underline decoration-[#8CC9E8] decoration-2 underline-offset-4 transition-colors hover:decoration-[#2b8fc4]"
-                  href="/search"
-                  prefetch={false}
+                  href="/creators"
                 >
                   Browse them
                 </Link>
@@ -534,10 +533,9 @@ function BrandStory({ reducedMotion }: { reducedMotion: boolean | null }) {
           </p>
           <Link
             className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#37352f]"
-            href="/jobs/new"
-            prefetch={false}
+            href="/signup?intent=brand"
           >
-            Post your first gig
+            Start hiring creators
             <ArrowUpRight className="h-4 w-4 text-[#2b8fc4] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </Reveal>
