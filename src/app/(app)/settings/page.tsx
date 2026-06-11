@@ -37,10 +37,10 @@ export default async function SettingsPage() {
 
   return (
     <main className="min-h-screen bg-white font-sans text-[#37352f]">
-      <header className="sticky top-0 z-40 border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
+      <header className="border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[980px] items-center gap-4 px-5 py-4">
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Settings</p>
+            <p className="text-lg font-semibold tracking-[-0.03em]">Settings</p>
             <p className="hidden text-sm text-[#787774] sm:block">
               Account, billing, notifications, and trust controls
             </p>
@@ -49,8 +49,6 @@ export default async function SettingsPage() {
       </header>
 
       <section className="mx-auto grid max-w-[980px] gap-6 px-5 py-7">
-        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.045em]">Settings</h1>
-
         <div className="grid gap-4 md:grid-cols-2">
           {sections.map((section) => {
             const Icon = section.icon;

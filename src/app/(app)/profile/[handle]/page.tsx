@@ -35,7 +35,7 @@ export default async function CreatorPublicProfilePage({ params }: ProfilePagePr
 
   return (
     <main className="terrace-app-bg min-h-screen font-sans">
-      <header className="terrace-topbar sticky top-0 z-40 border-b">
+      <header className="terrace-topbar border-b">
         <div className="mx-auto flex max-w-[935px] items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
           <h1 className="min-w-0 truncate text-base font-semibold tracking-[-0.04em] text-[#1d1d1f] sm:text-lg">
             @{profile.creator.handle}

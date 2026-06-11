@@ -6,7 +6,15 @@ import { BriefcaseBusiness, Loader2, UserRound } from "lucide-react";
 import { setAppRolePreference } from "@/lib/auth/role-actions";
 import type { AppRole } from "@/lib/auth/role";
 
-export function AppRoleSwitcher({ role, compact = false }: { role: AppRole; compact?: boolean }) {
+export function AppRoleSwitcher({
+  role,
+  compact = false,
+  variant = "card"
+}: {
+  role: AppRole;
+  compact?: boolean;
+  variant?: "card" | "inline";
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -24,6 +32,36 @@ export function AppRoleSwitcher({ role, compact = false }: { role: AppRole; comp
     { role: "creator" as const, label: "Creator", icon: UserRound },
     { role: "brand" as const, label: "Brand", icon: BriefcaseBusiness }
   ];
+
+  // Slim segmented control for the top navigation: no card, no label.
+  if (variant === "inline") {
+    return (
+      <div aria-label="Workspace mode" className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 rounded-md border border-[#e9e9e7] bg-[#fbfbfa] p-0.5">
+          {options.map((option) => {
+            const selected = role === option.role;
+            return (
+              <button
+                aria-pressed={selected}
+                className={`h-7 rounded-[5px] px-2.5 text-[13px] font-medium transition-all duration-150 active:scale-[0.97] ${
+                  selected
+                    ? "bg-white text-[#37352f] shadow-[0_1px_2px_rgba(17,24,39,0.08)] ring-1 ring-[#e9e9e7]"
+                    : "text-[#787774] hover:text-[#37352f]"
+                }`}
+                disabled={pending}
+                key={option.role}
+                onClick={() => chooseRole(option.role)}
+                type="button"
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+        {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-[#9b9a97]" />}
+      </div>
+    );
+  }
 
   return (
     <section

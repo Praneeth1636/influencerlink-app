@@ -497,9 +497,12 @@ function VisualFeed({
                 </Link>
               </div>
               <div className="mt-1 divide-y divide-[#f1f1ef]">
-                {creators.slice(1, 5).map((creator) => (
-                  <SuggestedCreatorRow key={creator.id} creator={creator} onOpenCreator={onOpenCreator} />
-                ))}
+                {creators
+                  .filter((creator) => creator.handle.replace(/^@/, "") !== "you" && creator.name !== "You")
+                  .slice(0, 4)
+                  .map((creator) => (
+                    <SuggestedCreatorRow key={creator.id} creator={creator} onOpenCreator={onOpenCreator} />
+                  ))}
               </div>
             </section>
 
@@ -533,6 +536,7 @@ function VisualFeed({
               </div>
               <div className="mt-1 divide-y divide-[#f1f1ef]">
                 {[...creators]
+                  .filter((creator) => creator.handle.replace(/^@/, "") !== "you" && creator.name !== "You")
                   .sort((a, b) => b.totalReach - a.totalReach)
                   .slice(0, 3)
                   .map((creator, index) => (

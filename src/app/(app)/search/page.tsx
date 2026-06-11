@@ -47,7 +47,7 @@ export default async function CreatorSearchPage({ searchParams }: SearchPageProp
 
   return (
     <main className="terrace-app-bg min-h-screen font-sans">
-      <header className="terrace-topbar sticky top-0 z-40 hidden border-b md:block">
+      <header className="terrace-topbar hidden border-b md:block">
         <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
           <div className="hidden min-w-[220px] lg:block">
             <p className="text-[11px] font-semibold tracking-[0.2em] text-[#9a8b83] uppercase">

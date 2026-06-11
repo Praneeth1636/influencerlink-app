@@ -45,7 +45,7 @@ export function AppTopNav({ role }: { role: AppRole }) {
           /
         </span>
         <div className="min-w-0">
-          <AppRoleSwitcher role={role} />
+          <AppRoleSwitcher role={role} variant="inline" />
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-0.5">

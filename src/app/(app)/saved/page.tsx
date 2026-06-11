@@ -29,10 +29,10 @@ const savedItems = [
 export default function SavedPage() {
   return (
     <main className="min-h-screen bg-white font-sans text-[#37352f]">
-      <header className="sticky top-0 z-40 border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
+      <header className="border-b border-[#e9e9e7] bg-white/94 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[980px] items-center gap-4 px-5 py-4">
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.24em] text-[#9b9a97] uppercase">Saved</p>
+            <p className="text-lg font-semibold tracking-[-0.03em]">Saved</p>
             <p className="hidden text-sm text-[#787774] sm:block">Creators, briefs, and searches to revisit</p>
           </div>
         </div>
